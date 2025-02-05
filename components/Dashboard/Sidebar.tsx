@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Settings,
   HelpCircle,
-  FolderOpen,
   BookOpen,
 } from "lucide-react";
 import gitdoc_ai from "@/public/gitdoc_ai.png"
@@ -41,12 +40,11 @@ export default function Sidebar() {
 
   ];
 
-
   return (
-      <div className="min-h-screen flex fixed top-0 left-0">
+      <div className="min-h-screen md:flex fixed top-0 left-0 hidden">
         <div
           className={cn(
-            "h-screen bg-[#18181B] border-r border-[#3D444D] relative flex flex-col transition-all duration-300",
+            "h-screen bg-[#18181B] border-r  border-[#3D444D] relative flex flex-col transition-all duration-300",
             collapsed ? "w-20" : "w-64"
           )}
         >
@@ -72,36 +70,29 @@ export default function Sidebar() {
           </div>
 
           {/* Navigation Items */}
-          <nav className="flex-1 px-1.5 py-2.5">
+          <nav className="flex-1 px-1.5 py-2.5 overflow-hidden">
             <ul>
               {menuItems.map((item, index) => (
                 <li key={index}>
                   {collapsed ? (
-                        <a
-                          href={item.href}
-                          className={`flex flex-col w-full items-center gap-2 py-2 px-0.5 text-[#cfcfd1] rounded-xl transition-colors group hover:bg-[#232A34]`}
-                        >
-                          {item.image ? (
-                            <Image src={item.icon} alt={item.label} width={40} height={40} />
-                          ) : (
-                            <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
-                          )}
-                          <span className="text-xs font-medium group-hover:text-blue-600 text-center w-full truncate">{item.label}</span>
-                        </a>
-
-
-
-
+                    <a
+                      href={item.href}
+                      className={`flex flex-col w-full items-center gap-2 py-2 px-0.5 text-[#cfcfd1] rounded-xl group origin-top hover:bg-[#232A34]`}
+                    >
+                      {item.image ? (
+                        <Image src={item.icon} alt={item.label} width={40} height={40} />
+                      ) : (
+                        <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
+                      )}
+                      <span className="text-xs font-medium group-hover:text-blue-600 text-center w-full truncate">{item.label}</span>
+                    </a>
                   ) : (
                     <a
                       href={item.href}
-                      className={`flex items-center gap-3 py-2 my-1 text-[#cfcfd1] rounded-xl transition-colors group hover:bg-[#232A34] px-4`}
+                      className={`flex items-center my-1 text-[#cfcfd1] rounded-xl transition-colors group hover:bg-[#232A34] ${item.label === "Gitdocs AI" ? "gap-2 py-1 px-2.5" : "gap-3 py-3 px-4"}`}
                     >
-
-
-
                       {item.image ? (
-                        <Image src={item.icon} alt={item.label} width={40} height={40} />
+                        <Image src={item.icon} alt={item.label} width={35} height={35} />
                       ) : (
                         <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
                       )}
@@ -144,7 +135,7 @@ export default function Sidebar() {
                   <LuUser size={22} />
 
                   </div>
-                  <Button className="rounded-full overflow-hidden" variant={"default"} size={"lg"}>
+                  <Button variant={"default"} size={"lg"}>
                     <SignInButton />
                   </Button>
                 </SignedOut>

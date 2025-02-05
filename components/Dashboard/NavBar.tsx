@@ -1,7 +1,7 @@
 "use client"
 
 import { BsLayoutSidebar } from "react-icons/bs";
-import { LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
+import { LuArrowLeft, LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
 import SearchBar from "../common/SearchBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useState } from "react";
@@ -10,24 +10,34 @@ import { useContext, useState } from "react";
 interface AppContextType {
     collapsed: boolean;
     setCollapsed: (collapsed: boolean) => void;
+    navbarTitle: string;
+    isSidebarUsed: boolean;
 }
 
+
 import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 const NavBar = () => {
 
     const [notifications, setNotifications] = useState(true);
-
-    const { collapsed, setCollapsed } = useContext(AppContext) as AppContextType;
+    const { collapsed, setCollapsed, navbarTitle, isSidebarUsed } = useContext(AppContext) as AppContextType;
 
     return (
         <div>
-            <div className={`flex justify-between items-center px-6 py-4 h-16 border-b border-[#3D444D] transition-all duration-300 ${collapsed ? "ms-20" : "ms-64"}`}>
+            <div className={`flex justify-between items-center px-6 py-4 h-16 border-b border-[#3D444D]`}>
                 <div className="flex items-center gap-4">
-                <BsLayoutSidebar className="cursor-pointer" onClick={() => setCollapsed(!collapsed)} />
-                <h1 className="font-bold border-l border-[#3D444D] pl-4 py-2">Dashboard</h1>
+                {isSidebarUsed 
+                ? <BsLayoutSidebar className="cursor-pointer" onClick={() => setCollapsed(!collapsed)} /> 
+                : <Link href="/" className="text-[#8b929d] flex items-center gap-2">
+                    <LuArrowLeft size={18} />
+                    <p className="text-xs">Back Home</p>
+                </Link>}
 
+                <h1 className="font-bold text border-l border-[#3D444D] pl-4 py-2">{navbarTitle}</h1>
                 </div>
+
+
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-800">
                         <p className="text-xs">Feedback</p>
@@ -37,16 +47,14 @@ const NavBar = () => {
                         <TooltipProvider delayDuration={0}>
                             <Tooltip>
                                 <TooltipTrigger>
-
                                     <div className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                         <LuPlus size={18} />
                                         <p className="text-xs">New</p>
                                     </div>
                                 </TooltipTrigger>
-                            <TooltipContent className="bg-gray-800 text-white">
-                                <p className="text-xs">New ...</p>
-                            </TooltipContent>
-                            
+                                <TooltipContent className="bg-gray-800 text-white">
+                                    <p className="text-xs">Add New Repository</p>
+                                </TooltipContent>
                             </Tooltip>
 
                             <Tooltip>
@@ -59,7 +67,7 @@ const NavBar = () => {
                                 </TooltipTrigger>
 
                             <TooltipContent className="bg-gray-800 text-white">
-                                <p className="text-xs">remaining Credits</p>
+                                <p className="text-xs">Remaining Credits</p>
                             </TooltipContent>
                             
                             </Tooltip>

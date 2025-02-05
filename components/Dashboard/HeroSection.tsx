@@ -13,7 +13,6 @@ import RepoCards from "../common/RepoCards";
 
 interface AppContextType {
     collapsed: boolean;
-    setCollapsed: (collapsed: boolean) => void;
 }
 
 const HeroSection = () => {
@@ -21,8 +20,6 @@ const HeroSection = () => {
     const { user } = useUser();
     const { collapsed } = useContext(AppContext) as AppContextType;
 
-    
-    
     const initialRepositories = [
         {
             name: 'project-alpha',
@@ -43,6 +40,17 @@ const HeroSection = () => {
             recentCommitDescription: 'Added new feature',
             suggestions: 0,
             score: 95,
+            visibility: 'Public',
+            starred: false,
+        },
+        {
+            name: 'gamma-project',
+            gitLink: 'https://github.com/gamma-project',
+            lastUpdated: new Date('2025-03-09'),
+            status: 'Updated',
+            recentCommitDescription: 'Added new feature',
+            suggestions: 0,
+            score: 100,
             visibility: 'Public',
             starred: false,
         },
@@ -82,7 +90,7 @@ const HeroSection = () => {
       }
 
     return (
-        <div className={`flex flex-col transition-all duration-300 ${collapsed ? "ms-20" : "ms-64"} gap-4 px-10 py-5`}>
+        <div className={`flex flex-col gap-4 px-10 py-5`}>
 
 
             <div className="gap-4">

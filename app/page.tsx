@@ -1,15 +1,8 @@
-import Sidebar from "@/components/Dashboard/Sidebar"
-import NavBar from "@/components/Dashboard/NavBar"
-import HeroSection from "@/components/Dashboard/HeroSection"
+import DashboardPage from "@/components/Dashboard/DashboardPage"
+
 const Dashboard = () => {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1">
-        <NavBar />
-        <HeroSection />
-      </div>
-    </div>
+    <DashboardPage />
   )
 }
 

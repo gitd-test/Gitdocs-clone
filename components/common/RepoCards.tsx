@@ -2,6 +2,8 @@ import { LuFolder } from "react-icons/lu";
 import { FaGithub } from "react-icons/fa";
 import { Star } from "lucide-react";
 import updatedAgo from "@/lib/UpdatedDate";
+import RepoTools from "./RepoTools";
+import Link from "next/link";
 
 interface Repo {
     name: string;
@@ -12,20 +14,21 @@ interface Repo {
     suggestions: number;
     visibility: string;
     starred: boolean;
+    score: number;
 }
 
 const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (repoName: string) => void }) => {
 
-
     return (
-        <div className="border cursor-pointer border-[#888282] hover:border-[#3196e3] transition-all duration-150 p-4 rounded-lg shadow-sm">
+        <div className="border border-[#888282] hover:border-[#3196e3] transition-all duration-150 p-4 rounded-lg shadow-sm">
             <h3 className="text-xl mb-3 flex items-center justify-between font-medium text-white">
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center truncate gap-2">
                 <LuFolder size={20} />
                 {repo.name}
                 <p className="text-xs rounded-full bg-[#171717] px-2 py-1 text-gray-500">{repo.visibility}</p>
                 </div>
+
                 {repo.starred ? (
                     <Star size={20} className="text-[#F8C75D] cursor-pointer" onClick={() => handleStarClick(repo.name)} />
                 ) : (
@@ -34,10 +37,10 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
 
             </h3>
 
-            <p className="text-xs truncate mb-3 text-white flex items-center gap-2 rounded-full bg-[#1A1A1A]  px-4 py-2 w-fit">
+            <Link href={repo.gitLink} target="_blank" className="text-xs truncate mb-3 text-white flex items-center gap-2 rounded-full bg-[#1A1A1A] px-4 py-2 w-fit">
                 <FaGithub size={16} />
                 {repo.gitLink}
-            </p>
+            </Link>
 
             <p className="text-sm text-gray-500">
                 {repo.recentCommitDescription}
@@ -46,7 +49,6 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
             ? updatedAgo(new Date(repo.lastUpdated)) + ' days ago' 
             : 'on ' + new Date(repo.lastUpdated).toLocaleDateString()}  
              </p>
-
 
             <div className="flex items-center gap-3">
             {repo.status === 'Needs Attention' ? (
@@ -66,7 +68,8 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
                 </p>
             )}
             </div>
-    </div>
+            <RepoTools doc_name={repo.name} doc_score={repo.score} />
+        </div>
     )
 }
 export default RepoCards
