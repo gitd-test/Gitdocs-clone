@@ -11,7 +11,5 @@ export default function SearchBar() {
             <LuSearch className="text-gray-400" size={16} />
             <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Type  /  to search" className="bg-transparent text-xs outline-none w-28" />
         </div>
-
     )
-
 }

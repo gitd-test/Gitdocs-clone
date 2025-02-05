@@ -7,7 +7,11 @@ const Dashboard = () => {
 }
 
 export const metadata = {
-  title: "Dashboard | Gitdocs AI",
+  title: {
+    absolute : "Dashboard | Gitdocs AI",
+    default : "Update Readme | Gitdocs AI",
+    template : "%s | Gitdocs AI"
+  },
   description: "Gitdocs AI",
 }
 
