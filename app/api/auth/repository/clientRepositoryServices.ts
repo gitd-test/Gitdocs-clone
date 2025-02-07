@@ -35,3 +35,10 @@ export const getRepositoryByOwner = async (owner: string) => {
     await connectMongo();
     const repository = await Repository.find({ owner: owner });
     return repository;
+};
+
+export const getRepositoryByOwnerAndRepositoryId = async (owner: string, repositoryId: string) => {
+    await connectMongo();
+    const repository = await Repository.findOne({ owner: owner, repositoryId: repositoryId });
+    return repository;
+};
