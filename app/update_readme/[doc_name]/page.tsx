@@ -1,11 +1,5 @@
 import UpdateReadmePage from "@/components/Update_Readme/UpdateReadmePage";
 
-interface UpdateReadmeProps {
-  params: {
-    doc_name: string;
-  };
-}
-
 // Generate metadata for the page
 export const generateMetadata = async ({ params }: { params: { doc_name: string } }) => {
   const { doc_name } = params;
