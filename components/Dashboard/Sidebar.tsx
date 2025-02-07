@@ -16,7 +16,6 @@ import {
   HelpCircle,
   BookOpen,
 } from "lucide-react";
-import gitdoc_ai from "@/public/gitdoc_ai.png";
 
 interface AppContextType {
   collapsed: boolean;
@@ -37,7 +36,6 @@ export default function Sidebar() {
     { icon: BookOpen, label: "Documentation", image: false, href: "#" },
     { icon: Settings, label: "Settings", image: false, href: "#" },
     { icon: HelpCircle, label: "Help & Support", image: false, href: "#" },
-    { icon: gitdoc_ai, label: "Gitdocs AI", image: true, href: "#" },
   ];
 
   if (!isClient) {
@@ -84,16 +82,7 @@ export default function Sidebar() {
                     href={item.href}
                     className="flex flex-col w-full items-center gap-1 py-1.5 mb-1 px-0.5 text-[#cfcfd1] rounded-xl group origin-top hover:bg-[#232A34]"
                   >
-                    {item.image ? (
-                      <Image
-                        src={item.icon}
-                        alt={item.label}
-                        width={40}
-                        height={40}
-                      />
-                    ) : (
                       <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
-                    )}
                     <span className="text-xs font-medium group-hover:text-blue-600 text-center w-full truncate">
                       {item.label}
                     </span>
@@ -105,16 +94,7 @@ export default function Sidebar() {
                       item.label === "Gitdocs AI" ? "gap-2 py-1 px-2.5" : "gap-3 py-3 px-4"
                     }`}
                   >
-                    {item.image ? (
-                      <Image
-                        src={item.icon}
-                        alt={item.label}
-                        width={35}
-                        height={35}
-                      />
-                    ) : (
                       <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
-                    )}
 
                     <span className="text-normal font-medium group-hover:text-blue-600 overflow-hidden whitespace-nowrap">
                       {item.label}
