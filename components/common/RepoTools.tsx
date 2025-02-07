@@ -7,9 +7,14 @@ import LoadingAnimation from "./LoadingAnimation";
 import { useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
 
+type AppContextType = {
+    gridView: boolean;
+};
+
 const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: number }) => {
 
-    const { gridView } = useContext(AppContext);
+
+    const { gridView } = useContext(AppContext) as AppContextType;
 
     const [loading, setLoading] = useState(false)
 
