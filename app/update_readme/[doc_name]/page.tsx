@@ -6,8 +6,8 @@ interface UpdateReadmeProps {
   };
 }
 
-export const generateMetadata = async ({ params }: UpdateReadmeProps) => {
-  const { doc_name } = await params;
+export const generateMetadata = ({ params }: UpdateReadmeProps) => {
+  const { doc_name } = params;
 
   return {
     title: `Update Readme: ${doc_name} | Gitdocs AI`,
@@ -15,8 +15,8 @@ export const generateMetadata = async ({ params }: UpdateReadmeProps) => {
   };
 };
 
-const UpdateReadme = async ({ params }: UpdateReadmeProps) => {
-  const { doc_name } = await params;
+const UpdateReadme = ({ params }: UpdateReadmeProps) => {
+  const { doc_name } = params;
 
   return <UpdateReadmePage doc_name={doc_name} />;
 };
