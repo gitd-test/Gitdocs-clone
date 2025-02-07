@@ -2,7 +2,6 @@ import { connectGemini } from "@/app/api/lib/ai/connectGemini";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-
   const userId = request.headers.get("Authorization")?.split(" ")[1];
 
   if (!userId) {
@@ -18,13 +17,22 @@ export async function POST(request: Request) {
 
   const result = await connectGemini(userId, prompt);
 
+  // Check if result contains an error
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
+  }
+
   // Create a ReadableStream to handle the chunks
   const stream = new ReadableStream({
     async start(controller) {
-      for await (const chunk of result.stream) {
-        controller.enqueue(new TextEncoder().encode(chunk.text())); // Send each chunk
+      try {
+        for await (const chunk of result.stream) {
+          controller.enqueue(new TextEncoder().encode(chunk.text())); // Send each chunk
+        }
+        controller.close(); // Close the stream when done
+      } catch (error) {
+        controller.error(error);
       }
-      controller.close(); // Close the stream when done
     },
   });
 
@@ -34,5 +42,4 @@ export async function POST(request: Request) {
       "Cache-Control": "no-cache",
     },
   });
-
 }
