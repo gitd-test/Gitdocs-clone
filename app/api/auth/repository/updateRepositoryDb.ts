@@ -37,7 +37,6 @@ export const parseRepositories = async (repositories: any) => {
     return parsedRepositories;
 };
 
-
 export const updateRepositoryDb = async (repositories: Repository[], userId: string) => {
     await connectMongo();
 
@@ -49,7 +48,7 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                 const result = await Repository.updateOne(
                     { repositoryId: repo.repositoryId },
                     { $set: repo },
-                    { upsert: true } 
+                    { upsert: true }
                 );
 
                 if (result.upsertedId) {
@@ -58,11 +57,10 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                         { clerkUid: userId }, 
                         { $addToSet: { repositories: repo.repositoryId } }
                     );
-                    console.log(`Added repository ${repo.repositoryId} to users' repositories.`);
                 }
 
             } catch (error) {
-                if (error.code === 11000) {
+                if (isMongoError(error) && error.code === 11000) {
                     console.error(`Repository with ID ${repo.repositoryId} already exists.`);
                 } else {
                     throw error; // Rethrow other types of errors
@@ -75,7 +73,6 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
 
         // If some repositories were deleted, also remove them from the user's repositories array
         if (deletedRepoIds.deletedCount > 0) {
-            // Remove deleted repository IDs from the user's repositories array
             const deletedRepositoryIds = await Repository.find({ repositoryId: { $nin: repositories.map(repo => repo.repositoryId) } }).select('repositoryId');
             const deletedRepoIdsList = deletedRepositoryIds.map(repo => repo.repositoryId);
 
@@ -83,11 +80,15 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                 { clerkUid: userId }, 
                 { $pull: { repositories: { $in: deletedRepoIdsList } } }
             );
-            console.log(`Removed deleted repositories from users' repositories.`);
         }
 
     } catch (error) {
         console.error('Error syncing repositories:', error);
         throw error; // You can handle the error in your desired way
     }
+};
+
+// Utility function to narrow error to MongoDB error
+const isMongoError = (error: any): error is { code: number } => {
+    return typeof error === "object" && error !== null && "code" in error;
 };
