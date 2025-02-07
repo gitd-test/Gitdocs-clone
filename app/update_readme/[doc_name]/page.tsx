@@ -6,7 +6,8 @@ interface UpdateReadmeProps {
   };
 }
 
-export const generateMetadata = ({ params }: UpdateReadmeProps) => {
+// Generate metadata for the page
+export const generateMetadata = async ({ params }: { params: { doc_name: string } }) => {
   const { doc_name } = params;
 
   return {
@@ -15,7 +16,8 @@ export const generateMetadata = ({ params }: UpdateReadmeProps) => {
   };
 };
 
-const UpdateReadme = ({ params }: UpdateReadmeProps) => {
+// Main component for the page
+const UpdateReadme = ({ params }: { params: { doc_name: string } }) => {
   const { doc_name } = params;
 
   return <UpdateReadmePage doc_name={doc_name} />;
