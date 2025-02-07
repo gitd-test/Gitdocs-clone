@@ -4,16 +4,29 @@ import {
 import './globals.css'
 import { Theme } from "@radix-ui/themes";
 import { AppProvider } from "@/contexts/AppContext";
+import SessionWrapper from "@/lib/SessionWrapper";
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body style={{"backgroundColor" : "#0D0D0D"}}>
-          <Theme>
+    <SessionWrapper>
+      <ClerkProvider dynamic>
+        <html lang="en">
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta name="description" content="AI-powered code analysis tool for GitHub repositories" />
+            <meta name="keywords" content="GitHub, code analysis, AI, repository analysis, code quality, code review" />
+            <meta name="author" content="Your Name or Organization" />
+            <meta name="robots" content="index, follow" />
+            <meta name="googlebot" content="index, follow" />
+            <meta name="bingbot" content="index, follow" />
+            <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+          </head>
+          <body style={{"backgroundColor" : "#0D0D0D"}}>
+            <Theme>
             <AppProvider>
               {children}
             </AppProvider>
@@ -21,5 +34,6 @@ export default function RootLayout({
         </body>
       </html>
     </ClerkProvider>
+    </SessionWrapper>
   )
 }

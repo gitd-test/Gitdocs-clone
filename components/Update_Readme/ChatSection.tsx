@@ -4,6 +4,8 @@ import { LuChevronDown, LuPaperclip, LuSend } from "react-icons/lu";
 import { HiArrowPath } from "react-icons/hi2";
 import { useState, useRef, useEffect } from "react";
 import Chat from "./Chat";
+import { fetchStreamedResponse } from "@/lib/fetchStreamedAiResponse";
+import { useUser } from "@clerk/nextjs";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -11,31 +13,76 @@ interface ChatSectionProps {
 }
 
 const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
+  const { user } = useUser();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const [message, setMessage] = useState<{ role: string; content: string }[]>(
-    []
-  );
+  const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
 
   const handleReset = () => {
     setMessage([]);
   };
-
-  const handleSend = () => {
+  
+  const handleSend = async () => {
     const inputValue = textareaRef.current?.value.trim();
+  
+    if (!inputValue) return;
 
-    if (inputValue) {
-      setMessage((prev) => [
-        ...prev,
-        { role: "user", content: inputValue },
-      ]);
-      if (textareaRef.current) {
-        textareaRef.current.value = "";
-        handleInput();
-      }
+    if (isAiGenerating) return;
+  
+    // Clear the textarea and adjust its height
+    textareaRef.current!.value = "";
+    handleInput();
+
+
+    // Add the user's message and an empty assistant message to the state
+    setMessage((prev) => [...prev, { role: "user", content: inputValue }, { role: "assistant", content: "" }]);
+  
+    try {
+      setIsAiGenerating(true);
+
+      const promptWithContext = `
+      You are a helpful assistant that updates the README.md file for a project.
+      
+      The project is ${doc_name}.
+      The user's message is: ${inputValue}.
+      The previous messages are: ${message.map((msg) => `${msg.role}: ${msg.content}`).join("\n")}.`;
+      
+      // Fetch the streamed response and update the assistant's message dynamically
+
+      await fetchStreamedResponse(user?.id || "", promptWithContext, (chunk) => {
+        setMessage((prev) => {
+
+
+          const updatedMessages = [...prev];
+          const lastMessageIndex = updatedMessages.length - 1;
+  
+          // Ensure we only update the last assistant message
+          if (updatedMessages[lastMessageIndex]?.role === "assistant") {
+            updatedMessages[lastMessageIndex].content += chunk;
+          }
+  
+          return updatedMessages;
+        });
+      });
+      setIsAiGenerating(false);
+    } catch (error) {
+
+      console.error("Error fetching response:", error);
+      setMessage((prev) => {
+        // Replace the last assistant message with an error message
+        const updatedMessages = [...prev];
+        updatedMessages[updatedMessages.length - 1] = {
+          role: "assistant",
+          content: "Something went wrong. Please try again.",
+        };
+        return updatedMessages;
+      });
     }
   };
-
+  
+  
+  
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -130,11 +177,12 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
 
       <div
         ref={chatContainerRef}
-        className="chat-container flex flex-col gap-2 py-4 px-10 overflow-y-scroll h-[calc(100vh-13.5rem)]"
+        className={`chat-container flex flex-col gap-2 py-4 overflow-y-scroll h-[calc(100vh-13.5rem)] ${isPreview ? "px-3" : "px-10"}`}
       >
 
+
         {message.map((msg, index) => (
-          <Chat key={index} role={msg.role} content={msg.content} />
+          <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} />
         ))}
       </div>
 
@@ -152,9 +200,11 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
             onKeyDown={handleKeyDown}
             className="bg-transparent flex-1 h-6 text-white outline-none resize-none"
             rows={1}
+            disabled={isAiGenerating}
           />
           <LuSend
             className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5"
+
             onClick={handleSend}
           />
         </div>

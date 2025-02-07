@@ -5,7 +5,9 @@ import { LuArrowLeft, LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
 import SearchBar from "../common/SearchBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useState } from "react";
-
+import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
+import Link from "next/link";
+import LoadingAnimation from "../common/LoadingAnimation";
 
 interface AppContextType {
     collapsed: boolean;
@@ -14,13 +16,10 @@ interface AppContextType {
     isSidebarUsed: boolean;
 }
 
-
-import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
-import Link from "next/link";
-
 const NavBar = () => {
 
     const [notifications, setNotifications] = useState(true);
+    const [backHomeLoading, setBackHomeLoading] = useState(false);
     const { collapsed, setCollapsed, navbarTitle, isSidebarUsed } = useContext(AppContext) as AppContextType;
 
     return (
@@ -30,7 +29,9 @@ const NavBar = () => {
                 {isSidebarUsed 
                 ? <BsLayoutSidebar className="cursor-pointer" onClick={() => setCollapsed(!collapsed)} /> 
                 : <Link href="/" className="text-[#8b929d] flex items-center gap-2">
-                    <LuArrowLeft size={18} />
+                    
+                    {backHomeLoading ? <LoadingAnimation /> : <LuArrowLeft size={18} onClick={() => setBackHomeLoading(true)} />}
+                    
                     <p className="text-xs">Back Home</p>
                 </Link>}
 
@@ -47,12 +48,18 @@ const NavBar = () => {
                         <TooltipProvider delayDuration={0}>
                             <Tooltip>
                                 <TooltipTrigger>
-                                    <div className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
+                                    <a 
+                                    href={`https://github.com/apps/gitdocs-ai/installations/new`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                         <LuPlus size={18} />
-                                        <p className="text-xs">New</p>
-                                    </div>
+                                        <p
+                                        className="text-xs">New</p>
+                                    </a>
                                 </TooltipTrigger>
                                 <TooltipContent className="bg-gray-800 text-white">
+
                                     <p className="text-xs">Add New Repository</p>
                                 </TooltipContent>
                             </Tooltip>

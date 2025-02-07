@@ -3,13 +3,15 @@ import { UserButton } from "@clerk/nextjs";
 import { LuCheck, LuCopy } from "react-icons/lu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
+import LoadingAnimation from "../common/LoadingAnimation";
 
 type ChatProps = {
     role: string;
     content: string;
+    isPreview: boolean;
 }
 
-const Chat = ({role, content}: ChatProps) => {
+const Chat = ({role, content, isPreview}: ChatProps) => {
     const [copied, setCopied] = useState(false);
 
     useEffect(() => {
@@ -29,14 +31,14 @@ const Chat = ({role, content}: ChatProps) => {
     };
 
     return (
-        <div className={`flex items-center mb-2 gap-5 ${role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+        <div className={`flex items-start mb-2 ${role === "user" ? "flex-row-reverse" : "flex-row"} ${isPreview ? "gap-2" : "gap-5"}`}>
             {role === "user" ? (
                 <UserButton />
             ) : (
                 <Image src="/gitdoc_ai.png" alt="logo" width={40} height={40} />
             )}
-            <div className={`${role === "user" ? "bg-[#303030]" : "bg-[#1d1c1c]"} py-2 px-4 min-w-[12%] max-w-[60%] rounded-lg`}>
-                <div className="flex items-center justify-between">
+            <div className={`${role === "user" ? "bg-[#303030]" : "bg-[#1d1c1c]"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : "max-w-[60%]"}`}>
+                <div className="flex items-start justify-between">
                     <h1 className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</h1>
                     <TooltipProvider delayDuration={0}>
                         <Tooltip>
@@ -57,7 +59,15 @@ const Chat = ({role, content}: ChatProps) => {
                         </Tooltip>
                     </TooltipProvider>
                 </div>
-                <p className="text-gray-500">{content}</p>
+                {content === "" 
+                ?
+                <div className="flex items-center gap-2">
+                    <LoadingAnimation />
+                    <p className="text-gray-500">Generating README.md file...</p> 
+                </div>
+                : 
+                <p className="text-gray-500">{content}</p>}
+
             </div>
         </div>
     );

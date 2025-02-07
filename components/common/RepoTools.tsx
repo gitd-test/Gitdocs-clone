@@ -1,11 +1,15 @@
 'use client'
 
-import { LuHistory } from "react-icons/lu"
 import { TfiWrite } from "react-icons/tfi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoadingAnimation from "./LoadingAnimation";
+import { useContext } from "react";
+import { AppContext } from "@/contexts/AppContext";
+
 const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: number }) => {
+
+    const { gridView } = useContext(AppContext);
 
     const [loading, setLoading] = useState(false)
 
@@ -36,16 +40,10 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
     }
 
     return (
-        <div className="flex items-center mt-3 justify-between">
+        <div className={`flex ${gridView ? 'mt-3 justify-between items-center' : 'flex-col-reverse w-full'}`}>
             <div className="flex items-center">
-            <button className="text-sm px-3 py-[9px] border-r border-[#383737] flex items-center hover:bg-[#1f1f1f]" onClick={() => {
-                window.open(`https://github.com/${doc_name}`, '_blank')
-            }}>
-                <LuHistory size={16} />
-            </button>
 
-
-            <button className="text-sm px-3 py-[9px] border-r border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f]" onClick={() => {
+            <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] ${gridView ? 'border-x px-3 py-[9px]' : 'border px-2 py-[7px] mt-2'}`} onClick={() => {
                 handleUpdateReadme()
             }}>
                 

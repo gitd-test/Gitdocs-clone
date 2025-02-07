@@ -82,7 +82,7 @@ export default function Sidebar() {
                 {collapsed ? (
                   <a
                     href={item.href}
-                    className="flex flex-col w-full items-center gap-2 py-2 px-0.5 text-[#cfcfd1] rounded-xl group origin-top hover:bg-[#232A34]"
+                    className="flex flex-col w-full items-center gap-1 py-1.5 mb-1 px-0.5 text-[#cfcfd1] rounded-xl group origin-top hover:bg-[#232A34]"
                   >
                     {item.image ? (
                       <Image
@@ -137,11 +137,13 @@ export default function Sidebar() {
               </SignedOut>
 
               <SignedIn>
-                <div className="flex items-center gap-3 relative px-1">
-                  <div className="absolute text-[6px] px-1 z-10 -bottom-1.5 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
-                    Basic
+                <div className="flex items-center gap-3 px-1">
+                  <div className="flex items-center relative">
+                  <div className="absolute text-[6px] left-1/2 -translate-x-1/2 px-1 z-10 -bottom-1.5 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
+                    Free
                   </div>
                   <UserButton />
+                  </div>
                 </div>
               </SignedIn>
             </div>
@@ -157,12 +159,13 @@ export default function Sidebar() {
               </SignedOut>
 
               <SignedIn>
-                <div className="scale-125 flex items-center gap-3 relative px-5 overflow-hidden h-full">
-                  <div className="absolute text-[6px] px-1 z-10 -bottom-1 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
-                    Basic
-                  </div>
-
+                <div className="scale-125 flex items-center gap-3 px-5 overflow-hidden h-full">
+                  <div className="flex items-center relative">
+                    <div className="absolute text-[6px] left-1/2 -translate-x-1/2 px-1 z-10 -bottom-1 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
+                      Free
+                    </div>
                   <UserButton />
+                  </div>
                   <div className="text-sm font-medium transition-all duration-500 text-nowrap whitespace-nowrap">
                     {user?.fullName || user?.firstName || "User"}
                   </div>
