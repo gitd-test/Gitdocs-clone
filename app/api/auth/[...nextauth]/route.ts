@@ -1,6 +1,16 @@
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+  }
+
+  interface JWT {
+    accessToken?: string;
+  }
+}
+
 const handler = NextAuth({
   providers: [
     GitHubProvider({
@@ -11,12 +21,12 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
-        token.accessToken = account.access_token;
+        token.accessToken = account.access_token; // Assigning access token from account
       }
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
+      session.accessToken = typeof token.accessToken === "string" ? token.accessToken : undefined; // Type check for safety
       return session;
     },
   },
