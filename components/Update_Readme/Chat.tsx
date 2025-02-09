@@ -44,7 +44,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                         <Tooltip>
                             <TooltipTrigger>
                                 {copied ? (
-                                    <LuCheck className="text-green-500" size={14} />
+                                    <LuCheck className="text-[#56a85a]" size={14} />
                                 ) : (
                                     <LuCopy className="text-gray-500 hover:text-white cursor-pointer" size={14} onClick={handleCopy} />
                                 )}
@@ -63,10 +63,10 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                 ?
                 <div className="flex items-center gap-2">
                     <LoadingAnimation />
-                    <p className="text-gray-500">Generating Response...</p> 
+                    <p className="text-gray-500">Gitdocs AI is thinking...</p> 
                 </div>
                 : 
-                <p className="text-gray-500">{content}</p>}
+                <p className="text-gray-300 whitespace-pre-wrap">{content.replace(/\\n/g, "\n")}</p>}
 
             </div>
         </div>

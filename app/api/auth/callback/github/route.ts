@@ -41,12 +41,14 @@ export async function GET(req: NextRequest) {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
-    const githubUserId = userData.id;  // This is the user's GitHub ID
+    const githubUserId = userData.id; 
+    const githubUsername = userData.login;
     (async () => {
       if (userId) {
         await updateUserDb(userId, githubUserId);
       }
     })();
+
 
     if (!access_token) {
       return NextResponse.json({ error: "Failed to get access token" }, { status: 500 });
@@ -73,7 +75,7 @@ export async function GET(req: NextRequest) {
       try {
         const repositories = await fetchRepositoriesForInstallation(Number(installationId));
         const parsedRepositories = await parseRepositories(repositories);
-        await updateRepositoryDb(parsedRepositories, userId || "");
+        await updateRepositoryDb(parsedRepositories, userId || "", Number(installationId), githubUsername);
       } catch (error: any) {
         console.error("Error fetching repositories:", error.message);
       }

@@ -10,75 +10,99 @@ import { useUser } from "@clerk/nextjs";
 interface ChatSectionProps {
   doc_name: string;
   isPreview: boolean;
+  setIsPreview: (isPreview: boolean) => void;
+  setContent: (content: string | ((prev: string) => string)) => void;
 }
 
-const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
+const ChatSection = ({ doc_name, isPreview, setContent, setIsPreview }: ChatSectionProps) => {
   const { user } = useUser();
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-
+  let previewContent = false;
   const handleReset = () => {
     setMessage([]);
   };
-  
+
   const handleSend = async () => {
     const inputValue = textareaRef.current?.value.trim();
   
-    if (!inputValue) return;
-
-    if (isAiGenerating) return;
+    if (!inputValue || isAiGenerating) return;
   
-    // Clear the textarea and adjust its height
+    // Clear the textarea and reset its height
     textareaRef.current!.value = "";
     handleInput();
-
-
-    // Add the user's message and an empty assistant message to the state
-    setMessage((prev) => [...prev, { role: "user", content: inputValue }, { role: "assistant", content: "" }]);
+  
+    // Add the user's message and prepare an empty assistant response in the state
+    setMessage((prev) => [
+      ...prev,
+      { role: "user", content: inputValue },
+      { role: "assistant", content: "" },
+    ]);
   
     try {
       setIsAiGenerating(true);
-
+  
       const promptWithContext = `
-      You are a helpful assistant that updates the README.md file for a project.
-      
-      The project is ${doc_name}.
-      The user's message is: ${inputValue}.
-      The previous messages are: ${message.map((msg) => `${msg.role}: ${msg.content}`).join("\n")}.`;
-      
-      // Fetch the streamed response and update the assistant's message dynamically
-
-      await fetchStreamedResponse(user?.id || "", promptWithContext, (chunk) => {
-        setMessage((prev) => {
-
-
-          const updatedMessages = [...prev];
-          const lastMessageIndex = updatedMessages.length - 1;
+        The project is ${doc_name}.
+        The user's message is: ${inputValue}.
+        The previous messages are: ${message
+          .map((msg) => `${msg.role}: ${msg.content}`)
+          .join("\n")}.
+      `;
   
-          // Ensure we only update the last assistant message
-          if (updatedMessages[lastMessageIndex]?.role === "assistant") {
-            updatedMessages[lastMessageIndex].content += chunk;
-          }
+      // Fetch the streamed response
+      await fetchStreamedResponse(user?.id || "", promptWithContext, doc_name, (chunk) => {
+        if (previewContent) {
+          setContent((prev: string) => {
+            const updatedContent = prev + chunk.trim();
+            return updatedContent;
+          });
+
+        } else {
+          setMessage((prev) => {
+            const updatedMessages = [...prev];
+            const lastMessageIndex = updatedMessages.length - 1;
+            if (chunk.includes(`#`)) {
+              previewContent = true;
+              setIsPreview(true);
+              const lastIdx = chunk.indexOf(`#`);
+              updatedMessages[lastMessageIndex].content += chunk.slice(0, lastIdx).trim(); 
+              setContent((prev: string) => {
+                const updatedContent = prev + chunk.slice(lastIdx, chunk.length).trim();
+                return updatedContent;
+              });// Trim trailing/leading whitespace
+
+            } else {
+              if (updatedMessages[lastMessageIndex]?.role === "assistant") {
+                updatedMessages[lastMessageIndex].content += chunk.trim(); // Trim trailing/leading whitespace
+              }
+            }
   
-          return updatedMessages;
-        });
+            return updatedMessages;
+          });
+        }
+
       });
-      setIsAiGenerating(false);
     } catch (error) {
-
       console.error("Error fetching response:", error);
       setMessage((prev) => {
-        // Replace the last assistant message with an error message
         const updatedMessages = [...prev];
-        updatedMessages[updatedMessages.length - 1] = {
-          role: "assistant",
-          content: "Something went wrong. Please try again.",
-        };
+        const lastMessageIndex = updatedMessages.length - 1;
+  
+        if (updatedMessages[lastMessageIndex]?.role === "assistant") {
+          updatedMessages[lastMessageIndex] = {
+            role: "assistant",
+            content: "Something went wrong. Please try again.",
+          };
+        }
         return updatedMessages;
       });
+    } finally {
+      setIsAiGenerating(false);
     }
   };
   
@@ -101,37 +125,9 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [message]);
-
-  useEffect(() => {
-    const handleKeyboardEvent = (e: KeyboardEvent) => {
-      // Focus textarea only if there is a keypress and no other input is active
-      if (
-        document.activeElement === document.body ||
-        (document.activeElement instanceof HTMLElement &&
-          !["TEXTAREA", "INPUT"].includes(document.activeElement.tagName)) && e.key
-      ) {
-        textareaRef.current?.focus();
-      }
-    };
-
-    // Add event listener to listen for keypress
-    window.addEventListener("keydown", handleKeyboardEvent);
-
-    // Cleanup event listener on component unmount
-    return () => {
-      window.removeEventListener("keydown", handleKeyboardEvent);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isPreview && message.length === 0) {
-      textareaRef.current?.focus();
-    }
-  }, [isPreview]);
 
   const handleFocus = () => {
     textareaRef.current?.focus();
@@ -139,7 +135,7 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
 
   return (
     <div
-      className={`w-1/2 -mt-5  rounded-lg relative transition-all duration-300 flex-1 mx-auto ${
+      className={`w-1/2 -mt-5 rounded-lg relative transition-all duration-300 flex-1 mx-auto ${
         isPreview ? "" : "w-full"
       }`}
       onClick={handleFocus}
@@ -153,23 +149,25 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
         </h1>
         <div className="flex items-center gap-2">
           {message.length > 0 && (
-            <>
-            <button className="text-sm group flex items-center gap-2 cursor-pointer border text-[#F2BD57] border-[#F2BD57] rounded-lg py-1 px-3" onClick={handleReset}>
+            <button
+              className="text-sm group flex items-center gap-2 cursor-pointer border text-[#F2BD57] border-[#F2BD57] rounded-lg py-1 px-3"
+              onClick={handleReset}
+            >
               <HiArrowPath
                 className="group-focus:animate-spin transition-all duration-300"
-                
                 size={16}
-                />
+              />
               <span>Reset</span>
             </button>
-            </>
           )}
         </div>
       </div>
 
       <div
         ref={chatContainerRef}
-        className={`chat-container flex flex-col gap-2 py-4 overflow-y-scroll h-[calc(100vh-13.5rem)] ${isPreview ? "px-3" : "px-10"}`}
+        className={`chat-container flex flex-col gap-2 pt-4 pb-16 overflow-y-scroll h-[calc(100vh-9.5rem)] ${
+          isPreview ? "px-3" : "px-10"
+        }`}
       >
         {message.map((msg, index) => (
           <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} />
@@ -181,7 +179,11 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
           isPreview ? "" : " px-56"
         }`}
       >
-        <div className={`flex items-end h-full border py-3 rounded-lg -mb-5 bg-[#141415] border-[#383737] transition-all duration-300 ${isFocused ? "w-4/5 mx-auto" : "w-1/2 mx-auto"}`}>
+        <div
+          className={`flex items-end h-full border py-3 -mb-5 bg-[#141415] border-[#383737] transition-all duration-300 ${
+            isFocused ? "w-[81%] mx-auto rounded-2xl" : "w-1/2 mx-auto rounded-full"
+          }`}
+        >
           <LuPaperclip className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5" />
           <textarea
             placeholder="Ask a follow-up question"
@@ -190,13 +192,12 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
             onKeyDown={handleKeyDown}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className="bg-transparent flex-1 h-6 text-white outline-none resize-none"
+            className="bg-transparent flex-1 h-6 text-[#ece7e7] outline-none resize-none"
             rows={1}
             disabled={isAiGenerating}
           />
           <LuSend
-            className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5"
-
+            className="text-[#B4B4B4] hover:text-white transform transition-all duration-200 hover:rotate-45 cursor-pointer w-14 h-5"
             onClick={handleSend}
           />
         </div>

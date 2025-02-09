@@ -1,6 +1,9 @@
 import connectMongo from "@/app/api/lib/db/connectMongo";
 import Repository from "@/app/api/lib/models/Repository";
 import User from "@/app/api/lib/models/User";
+import { fetchRepositoryReadme } from "./fetchRepositories";
+import { updateReadmeDb } from "./updateReadmeDb";
+import Readme from "../../lib/models/Readme";
 
 interface Repository {
     name: string;
@@ -37,7 +40,7 @@ export const parseRepositories = async (repositories: any) => {
     return parsedRepositories;
 };
 
-export const updateRepositoryDb = async (repositories: Repository[], userId: string) => {
+export const updateRepositoryDb = async (repositories: Repository[], userId: string, installationId: number, githubUsername: string) => {
     await connectMongo();
 
     try {        
@@ -57,9 +60,13 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                         { clerkUid: userId }, 
                         { $addToSet: { repositories: repo.repositoryId } }
                     );
+
+                    const readmeData = await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
+                    await updateReadmeDb(repo.repositoryId, readmeData);
                 }
 
             } catch (error) {
+
                 if (isMongoError(error) && error.code === 11000) {
                     console.error(`Repository with ID ${repo.repositoryId} already exists.`);
                 } else {
@@ -69,16 +76,16 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
         }
 
         // Delete repositories in the database that are no longer in the passed list
-        const deletedRepoIds = await Repository.deleteMany({ repositoryId: { $nin: repositories.map(repo => repo.repositoryId) } });
+        const retainedRepositoryIds = repositories.map(repo => repo.repositoryId)
+        await Repository.deleteMany({ repositoryId: { $nin: retainedRepositoryIds } });
+        await Readme.deleteMany({ repositoryId: { $nin: retainedRepositoryIds } });
 
-        // If some repositories were deleted, also remove them from the user's repositories array
-        if (deletedRepoIds.deletedCount > 0) {
-            const deletedRepositoryIds = await Repository.find({ repositoryId: { $nin: repositories.map(repo => repo.repositoryId) } }).select('repositoryId');
-            const deletedRepoIdsList = deletedRepositoryIds.map(repo => repo.repositoryId);
+        // If some repositories were retained, also remove them from the user's repositories array
+        if (retainedRepositoryIds.length > 0) {
 
             await User.updateMany(
                 { clerkUid: userId }, 
-                { $pull: { repositories: { $in: deletedRepoIdsList } } }
+                { $pull: { repositories: { $nin: retainedRepositoryIds } } }
             );
         }
 

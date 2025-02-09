@@ -21,6 +21,9 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
   const { isSignedIn } = useAuth();
 
   const [isPreview, setIsPreview] = useState(false);
+  const [content, setContent] = useState<string>("");
+
+
 
   const { setNavbarTitle, setIsSidebarUsed } = useContext(AppContext) as AppContextType;
 
@@ -40,11 +43,12 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
     <>
       <NavBar />
       <div className="p-6 gap-6 flex h-[calc(100vh-64px)] overflow-hidden">
-        <ChatSection doc_name={doc_name as string} isPreview={isPreview} />
-
-        <PreviewSection isPreview={isPreview} setIsPreview={setIsPreview} />
+        <ChatSection doc_name={doc_name as string} isPreview={isPreview} setIsPreview={setIsPreview} setContent={setContent} />
+        <PreviewSection isPreview={isPreview} setIsPreview={setIsPreview} content={content} setContent={setContent} />
       </div>
     </>
+
+
   );
 };
 

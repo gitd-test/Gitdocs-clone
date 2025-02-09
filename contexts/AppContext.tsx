@@ -12,7 +12,10 @@ interface AppContextType {
   setIsSidebarUsed: Dispatch<SetStateAction<boolean>>;
   gridView: boolean;
   setGridView: Dispatch<SetStateAction<boolean>>;
+  repositoriesUpdated: boolean;
+  setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
 }
+
 
 
 
@@ -24,6 +27,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [navbarTitle, setNavbarTitle] = useState<string>("");
   const [isSidebarUsed, setIsSidebarUsed] = useState<boolean>(false);
   const [gridView, setGridView] = useState<boolean>(true);
+  const [repositoriesUpdated, setRepositoriesUpdated] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
@@ -35,7 +39,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   return (
-    <AppContext.Provider value={{ collapsed, setCollapsed, navbarTitle, setNavbarTitle, isSidebarUsed, setIsSidebarUsed, gridView, setGridView }}>
+    <AppContext.Provider value={{ collapsed, setCollapsed, navbarTitle, setNavbarTitle, isSidebarUsed, setIsSidebarUsed, gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated }}>
       {children}
     </AppContext.Provider>
   );

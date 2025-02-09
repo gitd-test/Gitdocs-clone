@@ -25,11 +25,12 @@ export const getRepositoryById = async (repositoryId: string) => {
     return repository;
 };
 
-export const getRepositoryByRepositoryId = async (repositoryId: string) => {
+export const getRepositoryByNamePopulated = async (name: string) => {
     await connectMongo();
-    const repository = await Repository.findOne({ repositoryId: repositoryId });
+    const repository = await Repository.findOne({ name: name });
     return repository;
 };
+
 
 export const getRepositoryByOwner = async (owner: string) => {
     await connectMongo();

@@ -4,15 +4,14 @@ import { useUser } from "@clerk/nextjs";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { LuPlus, LuLayoutGrid, LuList } from "react-icons/lu";
-import { Star } from "lucide-react";
-import { CheckCircle2 } from "lucide-react";
-import { AlertCircle } from "lucide-react";
-import { GitBranch } from "lucide-react";
 import RepoCards from "../common/RepoCards";
 import LoadingAnimation from "../common/LoadingAnimation";
 import { SignInButton } from "@clerk/nextjs";
 import axios from "axios";
 import RepoList from "../common/RepoList";
+import { PiWarning } from "react-icons/pi";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 interface Repository {
   name: string;
@@ -30,33 +29,52 @@ interface AppContextType {
   collapsed: boolean;
   gridView: boolean;
   setGridView: Dispatch<SetStateAction<boolean>>;
+  repositoriesUpdated: boolean;
+  setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
 }
 
+
 const HeroSection = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useUser();
-  const { collapsed, gridView, setGridView } = useContext(AppContext) as AppContextType;
+  const { collapsed, gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
   const [repositoriesLoading, setRepositoriesLoading] = useState(false);
   const [repositories, setRepositories] = useState<Repository[]>([]);
 
   useEffect(() => {
     if (user) {
       setRepositoriesLoading(true);
-      axios
-        .get(`/api/fetch/repositorydata/`, {
-          headers: {
-            Authorization: `Bearer ${user.id}`,
-          },
-        })
+      const storedRepositories = localStorage.getItem("repositories");
+      if (storedRepositories && !searchParams.get("refresh")) {
+        setRepositories(JSON.parse(storedRepositories));
+        setRepositoriesLoading(false);
+
+      } else {
+        axios
+          .get(`/api/fetch/repositorydata`, {
+            headers: {
+              Authorization: `Bearer ${user.id}`,
+            },
+          })
+
         .then((response) => {
           setRepositories(response.data);
+          localStorage.setItem("repositories", JSON.stringify(response.data));
           setRepositoriesLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching repositories:", error);
           setRepositoriesLoading(false);
         });
+      }
     }
-  }, [user]);
+  }, [user, searchParams, repositoriesUpdated]);
+
+  const handleAddRepository = () => {
+    setRepositoriesUpdated(true);
+  };
+
 
   const handleGridView = (view: string) => {
     setGridView(view === "grid");
@@ -64,12 +82,19 @@ const HeroSection = () => {
     localStorage.setItem("gridView", `${view === "grid"}`);
   };
 
+
   const handleStarClick = (repoName: string) => {
     console.log(`Star clicked for ${repoName}`);
     const updatedRepositories = repositories.map((repo) =>
       repo.name === repoName ? { ...repo, starred: !repo.starred } : repo
     );
     setRepositories(updatedRepositories);
+  };
+
+  const handleRefresh = () => {
+    setRepositoriesUpdated(false);
+    router.push("/?refresh=true");
+    router.refresh();
   };
 
   return (
@@ -111,6 +136,7 @@ const HeroSection = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm bg-[#0791F9] hover:bg-[#3196e3] rounded-md px-4 py-2 flex items-center gap-2"
+                  onClick={() => handleAddRepository()}
                 >
                   {repositoriesLoading ? <LoadingAnimation /> : <LuPlus size={16} />}
                   Add New Repository
@@ -122,10 +148,24 @@ const HeroSection = () => {
       </div>
       {user ? (
         <>
+          {repositoriesUpdated && (
+            <div className="flex items-center justify-between border py-2 px-3 rounded-lg border-[#DF7189] gap-4 h-full w-full">
+              <div className="flex items-center gap-2 text-[#DF7189]">
+                <PiWarning size={18} />
+                <h3 className="text-sm text-[#DF7189]">Repositories updated, click to refresh</h3>
+              </div>
+              <button className="text-sm rounded-md p-1 flex items-center gap-2 text-[#0D8EF3] hover:underline" onClick={() => handleRefresh()}>
+                Refresh
+              </button>
+            </div>
+
+          )}
+
           <div
             className={`w-full mt-5 ${
               collapsed ? "grid-cols-3" : "grid-cols-2"
             } ${gridView ? "grid gap-4" : "flex flex-col gap-4"}`}
+
           >
             {repositories.length > 0 ? (
               gridView ? (

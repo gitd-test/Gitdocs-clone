@@ -54,7 +54,7 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
             : 'on ' + new Date(repo.lastUpdated).toLocaleDateString()}  
              </p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 ms-1">
             {repo.status === 'Needs Attention' ? (
                 <p className="text-sm bg-[#FEE2E2] px-2 py-0.5 rounded-full text-[#991B1B]">
                     {repo.status}

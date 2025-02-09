@@ -14,7 +14,9 @@ interface AppContextType {
     setCollapsed: (collapsed: boolean) => void;
     navbarTitle: string;
     isSidebarUsed: boolean;
+    setRepositoriesUpdated: (repositoriesUpdated: boolean) => void;
 }
+
 
 const NavBar = () => {
 
@@ -22,7 +24,7 @@ const NavBar = () => {
 
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
-    const { collapsed, setCollapsed, navbarTitle, isSidebarUsed } = useContext(AppContext) as AppContextType;
+    const { collapsed, setCollapsed, navbarTitle, isSidebarUsed, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
 
     return (
         <div>
@@ -54,6 +56,7 @@ const NavBar = () => {
                                         href={`https://github.com/apps/gitdocs-ai/installations/new`}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        onClick={() => setRepositoriesUpdated(true)}
                                         className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                             <LuPlus size={18} />
                                             <p
