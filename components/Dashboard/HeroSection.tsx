@@ -58,29 +58,6 @@ const HeroSection = () => {
     }
   }, [user]);
 
-  const statsOverview = [
-    {
-      title: "Total Repositories",
-      icon: <GitBranch className="w-5 h-5 text-[#0396FD]" />,
-      value: repositories.length,
-    },
-    {
-      title: "Needs Attention",
-      icon: <AlertCircle className="w-5 h-5 text-red-500" />,
-      value: repositories.filter((r) => r.status === "Needs Attention").length,
-    },
-    {
-      title: "Updated",
-      icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
-      value: repositories.filter((r) => r.status === "Updated").length,
-    },
-    {
-      title: "Starred Repositories",
-      icon: <Star className="w-5 h-5 text-yellow-500" />,
-      value: repositories.filter((repo) => repo.starred).length,
-    },
-  ];
-
   const handleGridView = (view: string) => {
     setGridView(view === "grid");
     console.log(view);
@@ -107,9 +84,9 @@ const HeroSection = () => {
           ) : null}
         </h1>
         <div className="flex items-center mt-5 justify-between">
-          <h2 className="text-3xl font-bold text-white">Overview</h2>
           {user && (
             <>
+              <h2 className="text-3xl font-bold text-white">Overview</h2>
               <div className="flex items-center gap-4">
                 <div className="flex items-center border border-[#383737] rounded-md">
                   <button
@@ -145,19 +122,8 @@ const HeroSection = () => {
       </div>
       {user ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {statsOverview.map((stat, index) => (
-              <div key={index} className="bg-[#171717] p-4 rounded-lg shadow-sm">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-500">{stat.title}</h3>
-                  {stat.icon}
-                </div>
-                <p className="mt-2 text-2xl font-semibold">{stat.value}</p>
-              </div>
-            ))}
-          </div>
           <div
-            className={`w-full ${
+            className={`w-full mt-5 ${
               collapsed ? "grid-cols-3" : "grid-cols-2"
             } ${gridView ? "grid gap-4" : "flex flex-col gap-4"}`}
           >
@@ -171,7 +137,6 @@ const HeroSection = () => {
                       suggestions: repo.suggestions || 0,
                       visibility: repo.visibility || "public",
                       score: repo.score || 0,
-
                     }}
                     handleStarClick={handleStarClick}
                   />
@@ -185,7 +150,6 @@ const HeroSection = () => {
                       suggestions: repo.suggestions || 0,
                       visibility: repo.visibility || "public",
                       score: repo.score || 0,
-
                     }}
                     handleStarClick={handleStarClick}
                   />
@@ -199,12 +163,13 @@ const HeroSection = () => {
           </div>
         </>
       ) : (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 h-full w-full">
           <h3 className="font-bold">
             Please <span className="text-[#F8C75D]"><SignInButton /></span> to view your projects.
           </h3>
         </div>
       )}
+
     </div>
   );
 };

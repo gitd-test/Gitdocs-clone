@@ -5,6 +5,7 @@ import './globals.css'
 import { Theme } from "@radix-ui/themes";
 import { AppProvider } from "@/contexts/AppContext";
 import SessionWrapper from "@/lib/SessionWrapper";
+import { Analytics } from "@vercel/analytics/react"
 
 export default function RootLayout({
   children,
@@ -29,6 +30,7 @@ export default function RootLayout({
             <Theme>
             <AppProvider>
               {children}
+              <Analytics />
             </AppProvider>
           </Theme>
         </body>

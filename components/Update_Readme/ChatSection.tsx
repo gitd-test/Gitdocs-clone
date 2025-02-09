@@ -1,6 +1,6 @@
 "use client";
 
-import { LuChevronDown, LuPaperclip, LuSend } from "react-icons/lu";
+import { LuPaperclip, LuSend } from "react-icons/lu";
 import { HiArrowPath } from "react-icons/hi2";
 import { useState, useRef, useEffect } from "react";
 import Chat from "./Chat";
@@ -18,6 +18,7 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleReset = () => {
     setMessage([]);
@@ -81,8 +82,6 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
     }
   };
   
-  
-  
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -129,7 +128,7 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
   }, []);
 
   useEffect(() => {
-    if (!isPreview) {
+    if (!isPreview && message.length === 0) {
       textareaRef.current?.focus();
     }
   }, [isPreview]);
@@ -140,12 +139,12 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
 
   return (
     <div
-      className={`w-1/2 bg-[#212121] rounded-lg relative transition-all duration-300 flex-1 mx-auto ${
+      className={`w-1/2 -mt-5  rounded-lg relative transition-all duration-300 flex-1 mx-auto ${
         isPreview ? "" : "w-full"
       }`}
       onClick={handleFocus}
     >
-      <div className="flex justify-between px-5 items-center">
+      <div className="flex justify-between px-5 py-2 items-center">
         <h1 className="text-white rounded-t-lg flex gap-2 items-center justify-between h-12">
           Update README:
           <div className="flex items-center text-sm border border-[#383737] hover:bg-[#1f1f1f] cursor-pointer rounded-full py-1.5 px-4">
@@ -155,10 +154,6 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
         <div className="flex items-center gap-2">
           {message.length > 0 && (
             <>
-            <button className="text-black text-sm flex items-center gap-2 cursor-pointer bg-[#F2BD57] rounded-lg py-1 px-3">
-                <LuChevronDown size={16} />
-                <span>Update Method</span>
-            </button>
             <button className="text-sm group flex items-center gap-2 cursor-pointer border text-[#F2BD57] border-[#F2BD57] rounded-lg py-1 px-3" onClick={handleReset}>
               <HiArrowPath
                 className="group-focus:animate-spin transition-all duration-300"
@@ -172,32 +167,29 @@ const ChatSection = ({ doc_name, isPreview }: ChatSectionProps) => {
         </div>
       </div>
 
-
-      <hr className="border-[#383737]" />
-
       <div
         ref={chatContainerRef}
         className={`chat-container flex flex-col gap-2 py-4 overflow-y-scroll h-[calc(100vh-13.5rem)] ${isPreview ? "px-3" : "px-10"}`}
       >
-
-
         {message.map((msg, index) => (
           <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} />
         ))}
       </div>
 
       <div
-        className={`absolute bottom-0 py-4 left-1/2 -translate-x-1/2 min-h-14 bg-[#303030] rounded-b-lg transition-all duration-300 w-full ${
+        className={`absolute bottom-0 left-1/2 -translate-x-1/2 min-h-14 rounded-b-lg transition-all duration-300 w-full ${
           isPreview ? "" : " px-56"
         }`}
       >
-        <div className="flex items-end h-full">
+        <div className={`flex items-end h-full border py-3 rounded-lg -mb-5 bg-[#141415] border-[#383737] transition-all duration-300 ${isFocused ? "w-4/5 mx-auto" : "w-1/2 mx-auto"}`}>
           <LuPaperclip className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5" />
           <textarea
             placeholder="Ask a follow-up question"
             ref={textareaRef}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             className="bg-transparent flex-1 h-6 text-white outline-none resize-none"
             rows={1}
             disabled={isAiGenerating}

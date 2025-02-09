@@ -18,17 +18,15 @@ interface Repo {
 }
 
 const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (repoName: string) => void }) => {
-
     return (
-        <div className="border border-[#232323] hover:border-[#3196e3] transition-all duration-150 overflow-hidden p-4 rounded-lg shadow-sm">
+        <div className="border border-[#232323] hover:border-[#3196e3] transition-all duration-150 overflow-hidden px-4 py-3.5 rounded-lg shadow-sm">
             <h3 className="text-xl mb-3 flex items-center justify-between font-medium text-[#EDEDED]">
 
                 <div className="flex items-center gap-2">
                 <LuFolder size={20} />
-                <p className="truncate">{repo.name}</p>
+                <p className="truncate max-w-[170px]">{repo.name}</p>
                 <p className="text-xs rounded-full bg-[#171717] px-2 py-1 text-gray-500">{repo.visibility}</p>
                 </div>
-
 
                 {repo.starred ? (
                     <Star size={20} className="text-[#F8C75D] cursor-pointer" onClick={() => handleStarClick(repo.name)} />

@@ -24,7 +24,7 @@ const DashboardPage = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className={`flex-1 ${collapsed ? "ms-20" : "ms-64"} transition-all duration-300`}>
+      <div className={`flex-1 ${collapsed ? "ms-16" : "ms-56"} transition-all duration-300`}>
         <NavBar />
         <HeroSection />
       </div>

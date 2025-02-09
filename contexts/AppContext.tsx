@@ -20,7 +20,7 @@ interface AppContextType {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState<boolean>(true);
   const [navbarTitle, setNavbarTitle] = useState<string>("");
   const [isSidebarUsed, setIsSidebarUsed] = useState<boolean>(false);
   const [gridView, setGridView] = useState<boolean>(true);

@@ -37,7 +37,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
             ) : (
                 <Image src="/gitdoc_ai.png" alt="logo" width={40} height={40} />
             )}
-            <div className={`${role === "user" ? "bg-[#303030]" : "bg-[#1d1c1c]"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : "max-w-[60%]"}`}>
+            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "bg-[#131315]"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : "max-w-[60%]"}`}>
                 <div className="flex items-start justify-between">
                     <h1 className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</h1>
                     <TooltipProvider delayDuration={0}>
@@ -63,7 +63,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                 ?
                 <div className="flex items-center gap-2">
                     <LoadingAnimation />
-                    <p className="text-gray-500">Generating README.md file...</p> 
+                    <p className="text-gray-500">Generating Response...</p> 
                 </div>
                 : 
                 <p className="text-gray-500">{content}</p>}

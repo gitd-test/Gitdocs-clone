@@ -47,11 +47,11 @@ body {
 }
 
 .chat-container::-webkit-scrollbar {
-  background: #212121;
+  background: #0D0D0D;
 }
 
 .chat-container::-webkit-scrollbar-track {
-  background: #212121;
+  background: #0D0D0D;
 }
 
 

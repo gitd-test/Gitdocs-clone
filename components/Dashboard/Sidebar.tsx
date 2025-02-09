@@ -46,12 +46,13 @@ export default function Sidebar() {
     <div className="min-h-screen md:flex fixed top-0 left-0 hidden">
       <div
         className={cn(
-          "h-screen bg-[#18181B] border-r  border-[#3D444D] relative flex flex-col transition-all duration-300",
-          collapsed ? "w-20" : "w-64"
+          "h-screen bg-[#131314] border-r  border-[#3D444D] relative flex flex-col transition-all duration-300",
+          collapsed ? "w-16" : "w-56"
         )}
       >
+
         {/* Logo Section */}
-        <div className="px-6 py-4 h-16 border-b border-[#3D444D] flex items-center justify-between">
+        <div className="px-4 h-16 border-b border-[#3D444D] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative mx-auto">
               <Image
@@ -80,23 +81,21 @@ export default function Sidebar() {
                 {collapsed ? (
                   <a
                     href={item.href}
-                    className="flex flex-col w-full items-center gap-1 py-1.5 mb-1 px-0.5 text-[#cfcfd1] rounded-xl group origin-top hover:bg-[#232A34]"
+                    className="flex flex-col w-full items-center gap-1 py-1.5 mb-1 px-0.5 text-[#cfcfd1] rounded-md group origin-top hover:bg-[#232A34]"
                   >
                       <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
-                    <span className="text-xs font-medium group-hover:text-blue-600 text-center w-full truncate">
+                    <span className="text-[10px] font-medium group-hover:text-blue-600 text-center w-full truncate">
                       {item.label}
                     </span>
                   </a>
                 ) : (
                   <a
                     href={item.href}
-                    className={`flex items-center my-1 text-[#cfcfd1] rounded-xl transition-colors group hover:bg-[#232A34] ${
-                      item.label === "Gitdocs AI" ? "gap-2 py-1 px-2.5" : "gap-3 py-3 px-4"
-                    }`}
+                    className={`flex items-center my-1 text-[#cfcfd1] gap-3 py-3 px-4 rounded-md transition-colors group hover:bg-[#232A34]`}
                   >
                       <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
 
-                    <span className="text-normal font-medium group-hover:text-blue-600 overflow-hidden whitespace-nowrap">
+                    <span className="text-sm font-medium group-hover:text-blue-600 overflow-hidden whitespace-nowrap">
                       {item.label}
                     </span>
                   </a>
@@ -107,13 +106,15 @@ export default function Sidebar() {
         </nav>
 
         {/* User Profile Section */}
-        <div className="p-4 border-t border-[#3D444D] bg-[#171717]">
+        <div className="py-4 px-2 border-t border-[#3D444D] bg-[#171717]">
           {collapsed ? (
             <div className="flex items-center scale-150 justify-center">
               <SignedOut>
+                <SignInButton>
                 <div className="h-8 w-8 rounded-full bg-[#3D444D] cursor-pointer flex items-center justify-center">
                   <LuUser size={18} />
                 </div>
+                </SignInButton>
               </SignedOut>
 
               <SignedIn>

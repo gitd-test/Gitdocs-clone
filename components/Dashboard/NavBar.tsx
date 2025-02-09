@@ -2,12 +2,12 @@
 
 import { BsLayoutSidebar } from "react-icons/bs";
 import { LuArrowLeft, LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
-import SearchBar from "../common/SearchBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useState } from "react";
 import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
 import Link from "next/link";
 import LoadingAnimation from "../common/LoadingAnimation";
+import { useUser } from "@clerk/nextjs";
 
 interface AppContextType {
     collapsed: boolean;
@@ -17,6 +17,8 @@ interface AppContextType {
 }
 
 const NavBar = () => {
+
+    const { user } = useUser();
 
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
@@ -43,38 +45,39 @@ const NavBar = () => {
                     <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-800">
                         <p className="text-xs">Feedback</p>
                     </div>
-                    <SearchBar />
                     <div className="border-l flex items-center gap-2 border-[#3D444D] pl-4">
                         <TooltipProvider delayDuration={0}>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <a 
-                                    href={`https://github.com/apps/gitdocs-ai/installations/new`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
-                                        <LuPlus size={18} />
-                                        <p
-                                        className="text-xs">New</p>
-                                    </a>
-                                </TooltipTrigger>
-                                <TooltipContent className="bg-gray-800 text-white">
+                            {user && (
+                                <Tooltip>
+                                    <TooltipTrigger>
+                                        <a 
+                                        href={`https://github.com/apps/gitdocs-ai/installations/new`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
+                                            <LuPlus size={18} />
+                                            <p
+                                            className="text-xs">New</p>
+                                        </a>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="bg-gray-800 text-white">
 
-                                    <p className="text-xs">Add New Repository</p>
-                                </TooltipContent>
-                            </Tooltip>
+                                        <p className="text-xs">Add New Repository</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            )}
 
                             <Tooltip>
                                 <TooltipTrigger>
                                     <div className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                         <LuCreditCard size={18} />
-                                        <p className="text-xs">Credits</p>
+                                        <p className="text-xs">Tokens</p>
                                     </div>
 
                                 </TooltipTrigger>
 
                             <TooltipContent className="bg-gray-800 text-white">
-                                <p className="text-xs">Remaining Credits</p>
+                                <p className="text-xs">Remaining Tokens</p>
                             </TooltipContent>
                             
                             </Tooltip>
