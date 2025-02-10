@@ -12,6 +12,7 @@ import RepoList from "../common/RepoList";
 import { PiWarning } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import GettingStarted from "../common/GettingStarted";
 
 interface Repository {
   name: string;
@@ -203,10 +204,8 @@ const HeroSection = () => {
           </div>
         </>
       ) : (
-        <div className="flex items-center gap-4 h-full w-full">
-          <h3 className="font-bold">
-            Please <span className="text-[#F8C75D]"><SignInButton /></span> to view your projects.
-          </h3>
+        <div className="flex items-center h-full w-full">
+          <GettingStarted />
         </div>
       )}
 
