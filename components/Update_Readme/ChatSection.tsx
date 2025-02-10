@@ -11,10 +11,11 @@ interface ChatSectionProps {
   doc_name: string;
   isPreview: boolean;
   setIsPreview: (isPreview: boolean) => void;
+  content: string;
   setContent: (content: string | ((prev: string) => string)) => void;
 }
 
-const ChatSection = ({ doc_name, isPreview, setContent, setIsPreview }: ChatSectionProps) => {
+const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }: ChatSectionProps) => {
   const { user } = useUser();
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -45,17 +46,18 @@ const ChatSection = ({ doc_name, isPreview, setContent, setIsPreview }: ChatSect
   
     try {
       setIsAiGenerating(true);
-  
       const promptWithContext = `
         The project is ${doc_name}.
         The user's message is: ${inputValue}.
         The previous messages are: ${message
           .map((msg) => `${msg.role}: ${msg.content}`)
           .join("\n")}.
+        The previous readme file is: ${content}.
       `;
-  
+
       // Fetch the streamed response
       await fetchStreamedResponse(user?.id || "", promptWithContext, doc_name, (chunk) => {
+        setContent("");
         if (previewContent) {
           setContent((prev: string) => {
             const updatedContent = prev + chunk.trim();
@@ -81,11 +83,9 @@ const ChatSection = ({ doc_name, isPreview, setContent, setIsPreview }: ChatSect
                 updatedMessages[lastMessageIndex].content += chunk.trim(); // Trim trailing/leading whitespace
               }
             }
-  
             return updatedMessages;
           });
-        }
-
+        }        
       });
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -104,6 +104,7 @@ const ChatSection = ({ doc_name, isPreview, setContent, setIsPreview }: ChatSect
     } finally {
       setIsAiGenerating(false);
     }
+
   };
   
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

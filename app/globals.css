@@ -54,4 +54,122 @@ body {
   background: #0D0D0D;
 }
 
+/* Add to your global CSS or Tailwind configuration */
+.markdown {
+  color: #e0e3e7;
+  line-height: 1.6;
+  font-family: 'Inter', sans-serif;
+}
+
+.markdown h1 {
+  font-size: 2rem; /* Large heading */
+  font-weight: bold;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #4b5563; /* Grayish separator */
+  padding-bottom: 0.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.5rem; /* Medium heading */
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #60a5fa; /* Blue for h2 */
+}
+
+.markdown h3 {
+  font-size: 1.25rem;
+  font-weight: semi-bold;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #d1d5db; /* Lighter gray for text */
+}
+
+.markdown a {
+  color: #3b82f6; /* Blue links */
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.markdown a:hover {
+  color: #2563eb; /* Darker blue on hover */
+}
+
+.markdown ul, .markdown ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown ul li::marker {
+  color: #60a5fa; /* Blue for list bullets */
+}
+
+.markdown ol {
+  list-style-type: decimal;
+}
+
+.markdown code {
+  background-color: #1f2937; /* Dark background for inline code */
+  color: #10b981; /* Green text */
+  font-family: 'Fira Code', monospace;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.markdown pre {
+  background-color: #1f2937; /* Dark background for code blocks */
+  color: #e5e7eb; /* Light text */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto; /* Scroll for long code lines */
+  font-family: 'Fira Code', monospace;
+}
+
+.markdown blockquote {
+  border-left: 4px solid #60a5fa; /* Blue border */
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  color: #9ca3af; /* Gray text */
+  font-style: italic;
+  background-color: #1f2937; /* Subtle background */
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+.markdown img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.markdown th,
+.markdown td {
+  padding: 0.5rem 1rem;
+  border: 1px solid #374151; /* Gray border */
+}
+
+.markdown th {
+  background-color: #374151; /* Darker header background */
+  font-weight: bold;
+}
+
+.markdown td {
+  background-color: #1f2937; /* Darker cell background */
+}
+
+
+
+
 

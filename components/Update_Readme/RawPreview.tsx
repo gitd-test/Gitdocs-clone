@@ -7,7 +7,7 @@ const RawPreview = ({
 }) => {
     return (
         <textarea
-            className="h-[calc(100vh-10rem)] bg-transparent focus:outline-none w-full p-4 rounded-b-lg overflow-y-auto whitespace-pre-wrap"
+            className="h-[calc(100vh-10rem)] bg-transparent text-[#e0e3e7] focus:outline-none w-full p-4 resize-none rounded-b-lg overflow-y-auto whitespace-pre-wrap"
             value={content.replace(/\\n/g, "\n")}
             onChange={(e) => {
                 setContent(e.target.value.replace(/\n/g, "\\n"));

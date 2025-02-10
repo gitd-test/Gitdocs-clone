@@ -48,7 +48,7 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
         <div className={`flex ${gridView ? 'mt-3 justify-between items-center' : 'flex-col-reverse w-full'}`}>
             <div className="flex items-center">
 
-            <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] ${gridView ? 'border-x px-3 py-[9px]' : 'border px-2 py-[7px] mt-2'}`} onClick={() => {
+            <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] ${gridView ? 'px-3 py-2.5 -ms-1' : 'border px-2 py-[7px] mt-2'}`} onClick={() => {
                 handleUpdateReadme()
             }}>
                 
@@ -56,13 +56,14 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
             ? 
             <>
             <LoadingAnimation /> 
-            <span className="text-sm">Updating...</span>
+            <span className="text-xs">Updating...</span>
             </>
             : 
             <>
             <TfiWrite size={16} />
-            <span className="text-sm">Update Readme</span>
+            <span className="text-xs">Update Readme</span>
             </>
+
             }
 
             </button>

@@ -43,7 +43,7 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
     <>
       <NavBar />
       <div className="p-6 gap-6 flex h-[calc(100vh-64px)] overflow-hidden">
-        <ChatSection doc_name={doc_name as string} isPreview={isPreview} setIsPreview={setIsPreview} setContent={setContent} />
+        <ChatSection doc_name={doc_name as string} isPreview={isPreview} setIsPreview={setIsPreview} content={content} setContent={setContent} />
         <PreviewSection isPreview={isPreview} setIsPreview={setIsPreview} content={content} setContent={setContent} />
       </div>
     </>

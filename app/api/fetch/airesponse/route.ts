@@ -91,7 +91,6 @@ export async function POST(request: NextRequest) {
               const startIndex = newBuffer.indexOf(newStartTag) + newStartTag.length;
               newBuffer = newBuffer.substring(startIndex);
               newStartTagFound = true;
-
             }
 
             if (newBuffer.includes(newEndTag) && newStartTagFound) {
