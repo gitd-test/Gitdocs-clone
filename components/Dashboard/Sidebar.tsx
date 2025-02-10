@@ -93,7 +93,7 @@ export default function Sidebar() {
                     href={item.href}
                     className={`flex items-center my-1 text-[#cfcfd1] gap-3 py-3 px-4 rounded-md transition-colors group hover:bg-[#232A34]`}
                   >
-                      <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
+                      <item.icon className="h-5 w-5 text-[#E8E8E9] group-hover:text-blue-600" />
 
                     <span className="text-sm font-medium group-hover:text-blue-600 overflow-hidden whitespace-nowrap">
                       {item.label}

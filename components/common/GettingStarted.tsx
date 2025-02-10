@@ -11,7 +11,7 @@ const GettingStarted = () => {
 
         <div className=" mt-2 py-4 w-4/5">
           <ul>
-            <li className="mb-4 bg-[#151414] py-6 px-8 rounded-lg">
+            <li className="mb-4 bg-[#131314] py-6 px-8 rounded-lg">
               <p className="font-semibold text-2xl">
                 <span className="text-[#F8C75D] text-lg me-1">#1</span> Create an account
               </p>
@@ -28,7 +28,7 @@ const GettingStarted = () => {
             </li>
 
 
-            <li className="mb-4 bg-[#151414] py-6 px-8 rounded-lg">
+            <li className="mb-4 bg-[#131314] py-6 px-8 rounded-lg">
               <p className="font-semibold text-xl">
                 <span className="text-[#F8C75D] text-lg me-1">#2</span> Connect your Repository
               </p>
@@ -37,7 +37,7 @@ const GettingStarted = () => {
               </p>
             </li>
 
-            <li className="mb-4 bg-[#151414] py-6 px-8 rounded-lg">
+            <li className="mb-4 bg-[#131314] py-6 px-8 rounded-lg">
               <p className="font-semibold text-xl">
                 <span className="text-[#F8C75D] text-lg me-1">#3</span> Generate your README
               </p>

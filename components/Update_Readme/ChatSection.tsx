@@ -56,8 +56,8 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
       `;
 
       // Fetch the streamed response
+      setContent("");
       await fetchStreamedResponse(user?.id || "", promptWithContext, doc_name, (chunk) => {
-        setContent("");
         if (previewContent) {
           setContent((prev: string) => {
             const updatedContent = prev + chunk.trim();
