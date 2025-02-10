@@ -20,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta name="robots" content="index, follow" />
             <link rel="canonical" href="https://yourwebsite.com" />
             <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+            <meta name="google-site-verification" content="jE8xZwoJxnDc2ICzxeLXfUNjB1xxBdMBxkwOVsxsnEY" />
             {/* Open Graph Meta Tags */}
             <meta property="og:title" content="Gitdocs AI - AI-powered Code Analysis" />
             <meta property="og:description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
