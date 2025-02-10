@@ -45,7 +45,7 @@ const NavBar = () => {
 
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-800">
-                        <p className="text-xs">Feedback</p>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfhb7jq5653iPXupiCsMp7FuhO2OmkeSNTpQq-fZa9ULMwgDw/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="text-xs">Feedback</a>
                     </div>
                     <div className="border-l flex items-center gap-2 border-[#3D444D] pl-4">
                         <TooltipProvider delayDuration={0}>
