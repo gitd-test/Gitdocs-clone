@@ -136,6 +136,9 @@ export default function Sidebar() {
             </div>
           ) : (
             <div className="flex items-center gap-3 h-full">
+
+              {!user && cleanLocalStorage()}
+
               <SignedOut>
                 <div className="h-12 w-12 rounded-full bg-[#3D444D] cursor-pointer shrink-0 flex items-center justify-center">
                   <LuUser size={22} />
@@ -146,7 +149,6 @@ export default function Sidebar() {
               </SignedOut>
 
               <SignedIn>
-                {cleanLocalStorage()}
                 <div className="scale-125 flex items-center gap-3 px-5 overflow-hidden h-full">
                   <div className="flex items-center relative">
                     <div className="absolute text-[6px] left-1/2 -translate-x-1/2 px-1 z-10 -bottom-1 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
