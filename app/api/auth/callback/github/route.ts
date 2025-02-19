@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
     })();
 
     // Step 4: Redirect the user
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/close`);
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "https://gitdocs-ai.vercel.app"}/close`);
   } catch (error) {
     console.error("GitHub OAuth Error:", error);
     return NextResponse.json({ error: "Error during OAuth process" }, { status: 500 });
