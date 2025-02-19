@@ -47,6 +47,16 @@ const HeroSection = () => {
     if (user) {
       setRepositoriesLoading(true);
       const storedRepositories = localStorage.getItem("repositories");
+      const staleTime = localStorage.getItem("staleTime");
+
+      if (staleTime) {
+        const timeDiff = new Date().getTime() - new Date(staleTime).getTime();
+        if (timeDiff > 1000 * 60 * 5) {
+          localStorage.removeItem("repositories");
+          localStorage.removeItem("staleTime");
+        }
+      }
+
       if (storedRepositories && !searchParams.get("refresh")) {
         setRepositories(JSON.parse(storedRepositories));
         setRepositoriesLoading(false);
@@ -62,6 +72,7 @@ const HeroSection = () => {
         .then((response) => {
           setRepositories(response.data);
           localStorage.setItem("repositories", JSON.stringify(response.data));
+          localStorage.setItem("staleTime", new Date().toISOString());
           setRepositoriesLoading(false);
         })
         .catch((error) => {
