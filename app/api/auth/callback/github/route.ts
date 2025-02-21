@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "No installations found for the user" }, { status: 404 });
       }
 
-      installationId = installations.installations[0].id.toString();
+      installationId = await installations.installations[0].id.toString();
     }
 
     // Step 4: Fetch and update repositories

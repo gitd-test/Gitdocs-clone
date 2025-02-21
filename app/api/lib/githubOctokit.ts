@@ -13,6 +13,7 @@ export const getAuthenticatedOctokit = (installationId: number) => {
         installationId,
       },
     });
+    console.log(process.env.GITHUB_PRIVATE_KEY?.replace(/\\n/g, '\n'));
     console.log("Octokit instance created successfully");
     return octokit;
   } catch (error) {
