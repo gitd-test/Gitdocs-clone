@@ -26,6 +26,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
   let previewContent = false;
   const handleReset = () => {
     setMessage([]);
+    setContent("");
   };
 
   const handleSend = async () => {
@@ -187,13 +188,13 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
         >
           <LuPaperclip className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5" />
           <textarea
-            placeholder="Ask a follow-up question"
+            placeholder={isAiGenerating ? "Generating..." : !(content.length > 0) ? "Share project highlights..." : "Tell us what you'd like to include or improve in your README..."}
             ref={textareaRef}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className="bg-transparent flex-1 h-6 text-[#ece7e7] outline-none resize-none"
+            className="bg-transparent flex-1 h-6 text-[#ece7e7] outline-none resize-none placeholder:truncate"
             rows={1}
             disabled={isAiGenerating}
           />
