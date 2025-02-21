@@ -89,7 +89,9 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
 
             } else {
               if (updatedMessages[lastMessageIndex]?.role === "assistant") {
-                updatedMessages[lastMessageIndex].content += chunk.trim(); // Trim trailing/leading whitespace
+                if (!(updatedMessages[lastMessageIndex]?.content.includes(chunk.trim()))) {
+                  updatedMessages[lastMessageIndex].content += chunk.trim(); // Trim trailing/leading whitespace
+                }
               }
             }
             return updatedMessages;
