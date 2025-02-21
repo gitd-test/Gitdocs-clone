@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { prompt, doc_name } = body;
+  const prompt = body.prompt;
+  const doc_name = body.doc_name;
 
   if (!prompt || !doc_name) {
     return NextResponse.json({ error: "Prompt and doc_name are required" }, { status: 400 });
@@ -42,52 +43,73 @@ export async function POST(request: NextRequest) {
   const streamText = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
-      let buffer = ""; // For temporary chunk storage
-      let responseStarted = false;
+      let buffer = ""; // Accumulated text buffer
+      let startTagFound = false;
+      let newBuffer = "";
+      let newStartTagFound = false;
       let responseCompleted = false;
-      let readmeStarted = false;
 
       try {
         for await (const chunk of result.stream) {
-          const chunkText = chunk.text();
+          // Append the current chunk to the buffer
+          buffer += chunk.text();
 
-          buffer += chunkText;
+          const startTag = "<response>";
+          const endTag = "</response>";
 
-          // Process <response> block
-          if (!responseCompleted && buffer.includes("<response>")) {
-            const startIndex = buffer.indexOf("<response>") + "<response>".length;
-            buffer = buffer.substring(startIndex);
-            responseStarted = true;
+          // Process the buffer when the start tag is found
+          if (buffer.includes(startTag) && !startTagFound) {
+            const startIndex = buffer.indexOf(startTag) + startTag.length;
+            buffer = buffer.substring(startIndex); // Trim the buffer to exclude the start tag
+            startTagFound = true;
           }
 
-          if (responseStarted && buffer.includes("</response>")) {
-            const endIndex = buffer.indexOf("</response>");
-            const responseContent = buffer.substring(0, endIndex).trim().replace(/```/g, "");
-            controller.enqueue(encoder.encode(responseContent + "\n"));
+          // Check if the end tag exists in the buffer
+          if (startTagFound && buffer.includes(endTag)) {
+            const endIndex = buffer.indexOf(endTag);
+
+            // Extract and sanitize content up to the end tag
+            const extractedText = buffer.substring(0, endIndex).trim();
+            const sanitizedText = extractedText.replace(/```/g, "");
+
+            // Enqueue the sanitized text and stop streaming
+            controller.enqueue(encoder.encode(sanitizedText));
             responseCompleted = true;
-            responseStarted = false;
-            buffer = buffer.substring(endIndex + "</response>".length);
+            break;
+          } else if (startTagFound) {
+            // If only part of the content is available, enqueue it and keep waiting for the rest
+            const sanitizedText = buffer.replace(/```/g, "");
+            controller.enqueue(encoder.encode(sanitizedText));
+            buffer = ""; // Reset the buffer for the next chunk
           }
 
-          // Process <readme> block
-          if (responseCompleted && buffer.includes("<readme>")) {
-            const startIndex = buffer.indexOf("<readme>") + "<readme>".length;
-            buffer = buffer.substring(startIndex);
-            readmeStarted = true;
-          }
+          const newStartTag = "<readme>";
+          const newEndTag = "</readme>";
 
-          if (readmeStarted && buffer.includes("</readme>")) {
-            const endIndex = buffer.indexOf("</readme>");
-            const readmeContent = buffer.substring(0, endIndex).trim().replace(/```/g, "");
-            controller.enqueue(encoder.encode(readmeContent + "\n"));
-            readmeStarted = false;
-            break; // End streaming after <readme>
+          if (responseCompleted) {
+            newBuffer += chunk.text();
+            if (newBuffer.includes(newStartTag) && !newStartTagFound) {
+              const startIndex = newBuffer.indexOf(newStartTag) + newStartTag.length;
+              newBuffer = newBuffer.substring(startIndex);
+              newStartTagFound = true;
+            }
+
+            if (newBuffer.includes(newEndTag) && newStartTagFound) {
+              const endIndex = newBuffer.indexOf(newEndTag);
+              newBuffer = newBuffer.substring(0, endIndex).trim();
+              const sanitizedText = newBuffer.replace(/```/g, "");
+              controller.enqueue(encoder.encode(sanitizedText));
+              break;
+            } else if (newStartTagFound) {
+              const sanitizedText = newBuffer.replace(/```/g, "");
+              controller.enqueue(encoder.encode(sanitizedText));
+              newBuffer = "";
+            }
           }
         }
 
         controller.close();
       } catch (error) {
-        console.error("Error in stream:", error);
         controller.error(error);
       }
     },
@@ -95,8 +117,7 @@ export async function POST(request: NextRequest) {
 
   return new Response(streamText, {
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Transfer-Encoding": "chunked",
+      "Content-Type": "text/plain",
     },
   });
 }

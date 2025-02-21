@@ -47,69 +47,64 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
   
     try {
       setIsAiGenerating(true);
-    
       const promptWithContext = `
         The project is ${doc_name}.
         The user's message is: ${inputValue}.
         The previous messages are: ${message
           .map((msg) => `${msg.role}: ${msg.content}`)
-          .join("\n")} .
-        The previous README file is: ${content}.
+          .join("\n")}.
+        The previous readme file is: ${content}.
       `;
-    
-      // Reset content before fetching
+
+      // Fetch the streamed response
       setContent("");
-      let isPreviewActive = false;
-    
       await fetchStreamedResponse(user?.id || "", promptWithContext, doc_name, (chunk) => {
-        if (isPreviewActive) {
-          // Handle preview content
-          setContent((prev) => prev + chunk.trim());
+        if (previewContent) {
+          setContent((prev: string) => {
+            const updatedContent = prev + chunk.trim();
+            return updatedContent;
+          });
+
         } else {
-          // Handle chat messages
           setMessage((prev) => {
             const updatedMessages = [...prev];
             const lastMessageIndex = updatedMessages.length - 1;
-    
-            // Check if the chunk marks the start of preview content
             if (chunk.includes(`#`)) {
-              const splitIndex = chunk.indexOf(`#`);
-              isPreviewActive = true;
+              previewContent = true;
               setIsPreview(true);
-    
-              // Append the first part to the assistant's message
-              updatedMessages[lastMessageIndex].content += chunk.slice(0, splitIndex).trim();
-    
-              // Set the rest as preview content
-              setContent((prev) => prev + chunk.slice(splitIndex).trim());
+              const lastIdx = chunk.indexOf(`#`);
+              updatedMessages[lastMessageIndex].content += chunk.slice(0, lastIdx).trim(); 
+              setContent((prev: string) => {
+                const updatedContent = prev + chunk.slice(lastIdx, chunk.length).trim();
+                return updatedContent;
+              });// Trim trailing/leading whitespace
+
             } else {
-              // Append the chunk to the assistant's message
               if (updatedMessages[lastMessageIndex]?.role === "assistant") {
-                updatedMessages[lastMessageIndex].content += chunk.trim();
+                updatedMessages[lastMessageIndex].content += chunk.trim(); // Trim trailing/leading whitespace
               }
             }
-    
             return updatedMessages;
           });
-        }
+        }        
       });
     } catch (error) {
       console.error("Error fetching response:", error);
-    
-      // Update assistant message on error
       setMessage((prev) => {
         const updatedMessages = [...prev];
         const lastMessageIndex = updatedMessages.length - 1;
-    
+  
         if (updatedMessages[lastMessageIndex]?.role === "assistant") {
-          updatedMessages[lastMessageIndex].content = "Something went wrong. Please try again.";
+          updatedMessages[lastMessageIndex] = {
+            role: "assistant",
+            content: "Something went wrong. Please try again.",
+          };
         }
         return updatedMessages;
       });
     } finally {
       setIsAiGenerating(false);
     }
-    
 
   };
   
