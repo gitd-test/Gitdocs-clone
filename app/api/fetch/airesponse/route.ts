@@ -75,7 +75,6 @@ export async function POST(request: NextRequest) {
             // Enqueue the sanitized text and stop streaming
             controller.enqueue(encoder.encode(sanitizedText));
             responseCompleted = true;
-            break;
           } else if (startTagFound) {
             // If only part of the content is available, enqueue it and keep waiting for the rest
             const sanitizedText = buffer.replace(/```/g, "");
