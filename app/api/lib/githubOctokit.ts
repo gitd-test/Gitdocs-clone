@@ -13,7 +13,7 @@ export const getAuthenticatedOctokit = (installationId: number) => {
         installationId,
       },
     });
-
+    console.log("Octokit instance created successfully");
     return octokit;
   } catch (error) {
     console.error("Error creating Octokit instance:", error);

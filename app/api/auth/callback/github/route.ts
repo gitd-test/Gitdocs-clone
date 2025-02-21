@@ -66,6 +66,8 @@ export async function GET(req: NextRequest) {
       installationId = installations.installations[0].id.toString();
     }
 
+    console.log("Installation ID:", installationId);
+
     // Step 4: Fetch and update repositories
     try {
       const repositories = await fetchRepositoriesForInstallation(Number(installationId));
