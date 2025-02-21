@@ -29,6 +29,7 @@ IMPORTANT: Try to focus on the readme block and dont make any mistakes in the re
 IMPRTANT: If the user wants to update the readme file with a new template, then use the following template:
 ${generalReadme}
 
+NOTE: Make the response block very descriptive and Always add this statement at the end of the response block:You can view the changes in the preview section
 NOTE: In the response block, at every line break, add a new line (\\n) in the response block.
 NOTE: In the readme block, at every line break, add a new line (\\n) in the readme block.
 NOTE: Don't say in the response that in the readme file below, say that in the preview section.
