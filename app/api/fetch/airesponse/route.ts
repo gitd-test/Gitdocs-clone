@@ -42,71 +42,52 @@ export async function POST(request: NextRequest) {
   const streamText = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
-      let buffer = ""; // For processing `<response>` content
-      let readmeBuffer = ""; // For processing `<readme>` content
-      let isResponseComplete = false;
+      let buffer = ""; // For temporary chunk storage
       let responseStarted = false;
+      let responseCompleted = false;
       let readmeStarted = false;
 
       try {
         for await (const chunk of result.stream) {
           const chunkText = chunk.text();
 
-          console.log("Received chunk:", chunkText);
+          buffer += chunkText;
 
           // Process <response> block
-          if (!isResponseComplete) {
-            buffer += chunkText;
-
-            const startTag = "<response>";
-            const endTag = "</response>";
-
-            if (buffer.includes(startTag) && !responseStarted) {
-              const startIndex = buffer.indexOf(startTag) + startTag.length;
-              buffer = buffer.substring(startIndex);
-              responseStarted = true;
-            }
-
-            if (buffer.includes(endTag)) {
-              const endIndex = buffer.indexOf(endTag);
-              const responseContent = buffer.substring(0, endIndex).trim().replace(/```/g, "");
-              controller.enqueue(encoder.encode(responseContent));
-              isResponseComplete = true;
-
-              console.log("Processed <response>:", responseContent);
-
-              buffer = buffer.substring(endIndex + endTag.length);
-            }
+          if (!responseCompleted && buffer.includes("<response>")) {
+            const startIndex = buffer.indexOf("<response>") + "<response>".length;
+            buffer = buffer.substring(startIndex);
+            responseStarted = true;
           }
 
-          // Process <readme> block after <response> is complete
-          if (isResponseComplete) {
-            readmeBuffer += chunkText;
+          if (responseStarted && buffer.includes("</response>")) {
+            const endIndex = buffer.indexOf("</response>");
+            const responseContent = buffer.substring(0, endIndex).trim().replace(/```/g, "");
+            controller.enqueue(encoder.encode(responseContent + "\n"));
+            responseCompleted = true;
+            responseStarted = false;
+            buffer = buffer.substring(endIndex + "</response>".length);
+          }
 
-            const startTag = "<readme>";
-            const endTag = "</readme>";
+          // Process <readme> block
+          if (responseCompleted && buffer.includes("<readme>")) {
+            const startIndex = buffer.indexOf("<readme>") + "<readme>".length;
+            buffer = buffer.substring(startIndex);
+            readmeStarted = true;
+          }
 
-            if (readmeBuffer.includes(startTag) && !readmeStarted) {
-              const startIndex = readmeBuffer.indexOf(startTag) + startTag.length;
-              readmeBuffer = readmeBuffer.substring(startIndex);
-              readmeStarted = true;
-            }
-
-            if (readmeBuffer.includes(endTag)) {
-              const endIndex = readmeBuffer.indexOf(endTag);
-              const readmeContent = readmeBuffer.substring(0, endIndex).trim().replace(/```/g, "");
-              controller.enqueue(encoder.encode(readmeContent));
-
-              console.log("Processed <readme>:", readmeContent);
-
-              break; // End the stream after processing <readme>
-            }
+          if (readmeStarted && buffer.includes("</readme>")) {
+            const endIndex = buffer.indexOf("</readme>");
+            const readmeContent = buffer.substring(0, endIndex).trim().replace(/```/g, "");
+            controller.enqueue(encoder.encode(readmeContent + "\n"));
+            readmeStarted = false;
+            break; // End streaming after <readme>
           }
         }
 
         controller.close();
       } catch (error) {
-        console.error("Error in ReadableStream:", error);
+        console.error("Error in stream:", error);
         controller.error(error);
       }
     },
@@ -115,6 +96,7 @@ export async function POST(request: NextRequest) {
   return new Response(streamText, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
+      "Transfer-Encoding": "chunked",
     },
   });
 }
