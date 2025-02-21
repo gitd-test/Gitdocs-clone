@@ -188,7 +188,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
         >
           <LuPaperclip className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5" />
           <textarea
-            placeholder={isAiGenerating ? "Generating..." : !(content.length > 0) ? "Share project highlights..." : "Tell us what you'd like to include or improve in your README..."}
+            placeholder={isAiGenerating ? "Generating..." : !(content.length > 0) ? "Share project highlights..." : "what you'd like to improve in your README..."}
             ref={textareaRef}
             onInput={handleInput}
             onKeyDown={handleKeyDown}

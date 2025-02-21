@@ -43,77 +43,71 @@ export async function POST(request: NextRequest) {
   const streamText = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
-      let buffer = ""; // Accumulated text buffer
-      let startTagFound = false;
-      let newBuffer = "";
-      let newStartTagFound = false;
+      let responseBuffer = ""; // Buffer for <response>
+      let readmeBuffer = ""; // Buffer for <readme>
       let responseCompleted = false;
-
+      let responseStartTagFound = false;
+      let readmeStartTagFound = false;
+  
       try {
         for await (const chunk of result.stream) {
-          // Append the current chunk to the buffer
-          buffer += chunk.text();
-
-          const startTag = "<response>";
-          const endTag = "</response>";
-
-          // Process the buffer when the start tag is found
-          if (buffer.includes(startTag) && !startTagFound) {
-            const startIndex = buffer.indexOf(startTag) + startTag.length;
-            buffer = buffer.substring(startIndex); // Trim the buffer to exclude the start tag
-            startTagFound = true;
-          }
-
-          // Check if the end tag exists in the buffer
-          if (startTagFound && buffer.includes(endTag)) {
-            const endIndex = buffer.indexOf(endTag);
-
-            // Extract and sanitize content up to the end tag
-            const extractedText = buffer.substring(0, endIndex).trim();
-            const sanitizedText = extractedText.replace(/```/g, "");
-
-            // Enqueue the sanitized text and stop streaming
-            controller.enqueue(encoder.encode(sanitizedText));
-            responseCompleted = true;
-          } else if (startTagFound) {
-            // If only part of the content is available, enqueue it and keep waiting for the rest
-            const sanitizedText = buffer.replace(/```/g, "");
-            controller.enqueue(encoder.encode(sanitizedText));
-            buffer = ""; // Reset the buffer for the next chunk
-          }
-
-          const newStartTag = "<readme>";
-          const newEndTag = "</readme>";
-
-          if (responseCompleted) {
-            newBuffer += chunk.text();
-            if (newBuffer.includes(newStartTag) && !newStartTagFound) {
-              const startIndex = newBuffer.indexOf(newStartTag) + newStartTag.length;
-              newBuffer = newBuffer.substring(startIndex);
-              newStartTagFound = true;
+          const chunkText = chunk.text();
+  
+          // Handle <response> block
+          if (!responseCompleted) {
+            responseBuffer += chunkText;
+  
+            const startTag = "<response>";
+            const endTag = "</response>";
+  
+            if (responseBuffer.includes(startTag) && !responseStartTagFound) {
+              const startIndex = responseBuffer.indexOf(startTag) + startTag.length;
+              responseBuffer = responseBuffer.substring(startIndex);
+              responseStartTagFound = true;
             }
-
-            if (newBuffer.includes(newEndTag) && newStartTagFound) {
-              const endIndex = newBuffer.indexOf(newEndTag);
-              newBuffer = newBuffer.substring(0, endIndex).trim();
-              const sanitizedText = newBuffer.replace(/```/g, "");
+  
+            if (responseStartTagFound && responseBuffer.includes(endTag)) {
+              const endIndex = responseBuffer.indexOf(endTag);
+              const extractedText = responseBuffer.substring(0, endIndex).trim();
+              const sanitizedText = extractedText.replace(/```/g, "");
               controller.enqueue(encoder.encode(sanitizedText));
-              break;
-            } else if (newStartTagFound) {
-              const sanitizedText = newBuffer.replace(/```/g, "");
+              responseCompleted = true;
+  
+              // Remove processed text
+              responseBuffer = responseBuffer.substring(endIndex + endTag.length);
+            }
+          }
+  
+          // Handle <readme> block
+          if (responseCompleted) {
+            readmeBuffer += chunkText;
+  
+            const startTag = "<readme>";
+            const endTag = "</readme>";
+  
+            if (readmeBuffer.includes(startTag) && !readmeStartTagFound) {
+              const startIndex = readmeBuffer.indexOf(startTag) + startTag.length;
+              readmeBuffer = readmeBuffer.substring(startIndex);
+              readmeStartTagFound = true;
+            }
+  
+            if (readmeStartTagFound && readmeBuffer.includes(endTag)) {
+              const endIndex = readmeBuffer.indexOf(endTag);
+              const extractedText = readmeBuffer.substring(0, endIndex).trim();
+              const sanitizedText = extractedText.replace(/```/g, "");
               controller.enqueue(encoder.encode(sanitizedText));
-              newBuffer = "";
+              break; // Stop processing after <readme> block
             }
           }
         }
-
+  
         controller.close();
       } catch (error) {
         controller.error(error);
       }
     },
   });
-
+  
   return new Response(streamText, {
     headers: {
       "Content-Type": "text/plain",
