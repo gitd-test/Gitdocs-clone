@@ -61,10 +61,10 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
       await fetchStreamedResponse(user?.id || "", promptWithContext, doc_name, (chunk) => {
         if (previewContent) {
           setContent((prev: string) => {
-            if (prev.includes(chunk.trim())) {
+            if (prev.includes(chunk.trim().replace(/\\n/g, "\n"))) {
               return prev;
             }
-            const updatedContent = prev + chunk.trim();
+            const updatedContent = prev + chunk.trim().replace(/\\n/g, "\n");
             return updatedContent;
           });
 
@@ -80,10 +80,10 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
                 updatedMessages[lastMessageIndex].content += chunk.slice(0, lastIdx).trim();
               }
               setContent((prev: string) => {
-                if (prev.includes(chunk.slice(lastIdx, chunk.length).trim())) {
+                if (prev.includes(chunk.slice(lastIdx, chunk.length).trim().replace(/\\n/g, "\n"))) {
                   return prev;
                 }
-                const updatedContent = prev + chunk.slice(lastIdx, chunk.length).trim();
+                const updatedContent = prev + chunk.slice(lastIdx, chunk.length).trim().replace(/\\n/g, "\n");
                 return updatedContent;
               });// Trim trailing/leading whitespace
 
