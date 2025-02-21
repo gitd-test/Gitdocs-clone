@@ -36,19 +36,11 @@ export const readmeSections = [
     },
     {
       item: "Badges",
-      usage: `## Badges
-    
-    Add badges to showcase the project's status or key features. For example:
-    
-    - [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-    - [![GitHub Stars](https://img.shields.io/github/stars/username/repository.svg)](https://github.com/username/repository/stargazers)
-    - [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://example.com/build-status)
-    
-    Use [shields.io](https://shields.io/) for creating badges.`,
+      usage: `## Badges 📄\n\n- [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)\n- [![GitHub Stars](https://img.shields.io/github/stars/username/repository.svg)](https://github.com/username/repository/stargazers)\n- [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://example.com/build-status)\n`,
       description: "This section provides badges related to the project, such as licenses, build status, or GitHub stats. Add badges from resources like: [shields.io](https://shields.io/).",
-      emoji: "📄",
+      emoji: "🏅",
       useCases: ["project", "library"],
-    },
+    },    
     {
       item: "Color Reference",
       usage: "## Color Reference\n\n| Color | Hex | RGB |\n| :---- | :---- | :---- |\n| Primary | #000000 | 0, 0, 0 |\n| Secondary | #FFFFFF | 255, 255, 255 |",
