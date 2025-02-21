@@ -46,52 +46,48 @@ export async function POST(request: NextRequest) {
       let responseBuffer = ""; // Buffer for <response>
       let readmeBuffer = ""; // Buffer for <readme>
       let responseCompleted = false;
-      let responseStartTagFound = false;
-      let readmeStartTagFound = false;
-  
+
       try {
         for await (const chunk of result.stream) {
           const chunkText = chunk.text();
-  
+
           // Handle <response> block
           if (!responseCompleted) {
             responseBuffer += chunkText;
-  
+
             const startTag = "<response>";
             const endTag = "</response>";
-  
-            if (responseBuffer.includes(startTag) && !responseStartTagFound) {
+
+            if (responseBuffer.includes(startTag)) {
               const startIndex = responseBuffer.indexOf(startTag) + startTag.length;
               responseBuffer = responseBuffer.substring(startIndex);
-              responseStartTagFound = true;
             }
-  
-            if (responseStartTagFound && responseBuffer.includes(endTag)) {
+
+            if (responseBuffer.includes(endTag)) {
               const endIndex = responseBuffer.indexOf(endTag);
               const extractedText = responseBuffer.substring(0, endIndex).trim();
               const sanitizedText = extractedText.replace(/```/g, "");
               controller.enqueue(encoder.encode(sanitizedText));
               responseCompleted = true;
-  
+
               // Remove processed text
               responseBuffer = responseBuffer.substring(endIndex + endTag.length);
             }
           }
-  
+
           // Handle <readme> block
           if (responseCompleted) {
             readmeBuffer += chunkText;
-  
+
             const startTag = "<readme>";
             const endTag = "</readme>";
-  
-            if (readmeBuffer.includes(startTag) && !readmeStartTagFound) {
+
+            if (readmeBuffer.includes(startTag)) {
               const startIndex = readmeBuffer.indexOf(startTag) + startTag.length;
               readmeBuffer = readmeBuffer.substring(startIndex);
-              readmeStartTagFound = true;
             }
-  
-            if (readmeStartTagFound && readmeBuffer.includes(endTag)) {
+
+            if (readmeBuffer.includes(endTag)) {
               const endIndex = readmeBuffer.indexOf(endTag);
               const extractedText = readmeBuffer.substring(0, endIndex).trim();
               const sanitizedText = extractedText.replace(/```/g, "");
@@ -100,17 +96,18 @@ export async function POST(request: NextRequest) {
             }
           }
         }
-  
+
         controller.close();
       } catch (error) {
         controller.error(error);
       }
     },
   });
-  
+
   return new Response(streamText, {
     headers: {
       "Content-Type": "text/plain",
     },
   });
 }
+
