@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const baseUrl = "https://gitdocs-ai.vercel.app";
 
-  // Ensure the XML declaration is at the very start of the string
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -21,12 +20,11 @@ export async function GET(request: NextRequest) {
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-</urlset>`;
+</urlset>`.trim(); // Ensure no leading/trailing spaces or newlines
 
   return new NextResponse(sitemap, {
     headers: {
-      "Content-Type": "application/xml",
+      "Content-Type": "application/xml; charset=utf-8",
     },
-    status: 200,
   });
 }
