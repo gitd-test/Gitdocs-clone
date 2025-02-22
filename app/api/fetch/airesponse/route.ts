@@ -96,12 +96,10 @@ export async function POST(request: NextRequest) {
             if (newBuffer.includes(newEndTag) && newStartTagFound) {
               const endIndex = newBuffer.indexOf(newEndTag);
               newBuffer = newBuffer.substring(0, endIndex).trim();
-              const sanitizedText = newBuffer.replace(/```/g, "");
-              controller.enqueue(encoder.encode(sanitizedText));
+              controller.enqueue(encoder.encode(newBuffer));
               break;
             } else if (newStartTagFound) {
-              const sanitizedText = newBuffer.replace(/```/g, "");
-              controller.enqueue(encoder.encode(sanitizedText));
+              controller.enqueue(encoder.encode(newBuffer));
               newBuffer = "";
             }
           }
