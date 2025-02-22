@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GitDocs AI | Generate README, Code Documentation, and More with AI",
+  description: "Improve your GitHub repositories with AI-driven insights and code quality analysis.",
+};
 
 export async function GET(request: NextRequest) {
   const baseUrl = "https://gitdocs-ai.vercel.app";
