@@ -29,6 +29,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
   background: #0D0D0D;
   border-radius: 4px;
 }
@@ -59,22 +60,23 @@ body {
   color: #e0e3e7;
   line-height: 1.6;
   font-family: 'Inter', sans-serif;
+  font-size: 0.95rem; /* Slightly smaller text size */
 }
 
 .markdown h1 {
-  font-size: 2rem; /* Large heading */
+  font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #4b5563; /* Grayish separator */
+  border-bottom: 2px solid #4b5563;
   padding-bottom: 0.5rem;
 }
 
 .markdown h2 {
-  font-size: 1.5rem; /* Medium heading */
+  font-size: 1.5rem;
   font-weight: bold;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
-  color: #60a5fa; /* Blue for h2 */
+  color: #60a5fa;
 }
 
 .markdown h3 {
@@ -82,31 +84,33 @@ body {
   font-weight: semi-bold;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
+  color: #93c5fd; /* Slightly lighter blue for h3 */
 }
 
 .markdown p {
   margin-bottom: 1rem;
   font-size: 1rem;
-  color: #d1d5db; /* Lighter gray for text */
+  color: #d1d5db;
 }
 
 .markdown a {
-  color: #3b82f6; /* Blue links */
+  color: #3b82f6;
   text-decoration: underline;
   transition: color 0.2s;
 }
 
 .markdown a:hover {
-  color: #2563eb; /* Darker blue on hover */
+  color: #2563eb;
 }
 
-.markdown ul, .markdown ol {
+.markdown ul,
+.markdown ol {
   margin-left: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .markdown ul li::marker {
-  color: #60a5fa; /* Blue for list bullets */
+  color: #60a5fa;
 }
 
 .markdown ol {
@@ -114,30 +118,31 @@ body {
 }
 
 .markdown code {
-  background-color: #1f2937; /* Dark background for inline code */
-  color: #10b981; /* Green text */
+  background-color: #1f2937;
+  color: #10b981;
   font-family: 'Fira Code', monospace;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
 }
 
 .markdown pre {
-  background-color: #1f2937; /* Dark background for code blocks */
-  color: #e5e7eb; /* Light text */
+  background-color: #1f2937;
+  color: #e5e7eb;
   padding: 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
-  overflow-x: auto; /* Scroll for long code lines */
+  overflow-x: auto;
   font-family: 'Fira Code', monospace;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .markdown blockquote {
-  border-left: 4px solid #60a5fa; /* Blue border */
+  border-left: 4px solid #60a5fa;
   padding-left: 1rem;
   margin-bottom: 1rem;
-  color: #9ca3af; /* Gray text */
+  color: #9ca3af;
   font-style: italic;
-  background-color: #1f2937; /* Subtle background */
+  background-color: #1f2937;
   border-radius: 0.25rem;
   padding: 1rem;
 }
@@ -146,6 +151,7 @@ body {
   max-width: 100%;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .markdown table {
@@ -156,20 +162,168 @@ body {
 
 .markdown th,
 .markdown td {
-  padding: 0.5rem 1rem;
-  border: 1px solid #374151; /* Gray border */
+  padding: 0.75rem 1rem;
+  border: 1px solid #374151;
 }
 
 .markdown th {
-  background-color: #374151; /* Darker header background */
+  background-color: #374151;
   font-weight: bold;
+  color: #e5e7eb;
 }
 
 .markdown td {
-  background-color: #1f2937; /* Darker cell background */
+  background-color: #1f2937;
 }
 
+.markdown hr {
+  border: none;
+  height: 1px;
+  background-color: #374151;
+  margin: 1.5rem 0;
+}
 
+.markdown details {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+}
 
+.markdown summary {
+  font-weight: bold;
+  cursor: pointer;
+  color: #60a5fa;
+}
 
+.markdown summary:hover {
+  color: #3b82f6;
+}
 
+.markdown kbd {
+  background-color: #374151;
+  border-radius: 0.25rem;
+  border: 1px solid #4b5563;
+  color: #e0e3e7;
+  padding: 0.2rem 0.4rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.markdown del {
+  color: #ef4444; /* Strikethrough in red */
+  text-decoration: line-through;
+}
+
+.markdown ins {
+  color: #10b981; /* Highlighted insertions in green */
+  text-decoration: underline;
+}
+
+.markdown sub {
+  font-size: 0.75rem; /* Smaller text for subscript */
+  vertical-align: sub;
+}
+
+.markdown sup {
+  font-size: 0.75rem; /* Smaller text for superscript */
+  vertical-align: super;
+}
+
+.markdown strong {
+  font-weight: bold;
+  color: #f3f4f6; /* Bright white for emphasis */
+}
+
+.markdown em {
+  font-style: italic;
+  color: #d1d5db; /* Lighter gray for subtle emphasis */
+}
+
+.markdown mark {
+  background-color: #fde047; /* Yellow highlight */
+  color: #1f2937; /* Text inside highlight */
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+}
+
+.markdown caption {
+  font-size: 0.875rem; /* Smaller text for captions */
+  color: #9ca3af; /* Gray */
+  text-align: center;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.markdown small {
+  font-size: 0.85rem; /* Small text */
+  color: #9ca3af; /* Muted gray */
+}
+
+.markdown abbr {
+  border-bottom: 1px dotted #9ca3af; /* Dotted underline for abbreviations */
+  cursor: help;
+}
+
+.markdown abbr[title]:hover::after {
+  content: attr(title); /* Tooltip on hover */
+  position: absolute;
+  background: #1f2937; /* Dark background for tooltip */
+  color: #e5e7eb; /* Light text */
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+.markdown figure {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.markdown figcaption {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.markdown iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.markdown video {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown audio {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.markdown progress {
+  width: 100%;
+  height: 1rem;
+  border-radius: 0.25rem;
+  background-color: #374151; /* Gray background */
+}
+
+.markdown progress[value]::-webkit-progress-value {
+  background-color: #10b981; /* Green progress */
+}
+
+.markdown progress[value]::-webkit-progress-bar {
+  background-color: #1f2937; /* Darker background */
+}
