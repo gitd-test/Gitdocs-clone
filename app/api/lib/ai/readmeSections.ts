@@ -99,7 +99,7 @@ export const readmeSections = [
     },
     {
       item: "Installation",
-      usage: "## Installation\n\n- [Installation](https://example.com/installation)\nInsert steps to install the project like ```bash\ngit clone https://github.com/username/repository.git\ncd repository\nnpm install\nnpm run build\nnpm run start\n```",
+      usage: "## Installation\n\n- [Installation](https://example.com/installation)\nInsert steps to install the project like\n```bash\ngit clone https://github.com/username/repository.git\ncd repository\nnpm install\nnpm run build\nnpm run start\n```",
       description: "This section is the installation section of the project. It is the section that provides the installation instructions of the project.",
       emoji: "💻",
       useCases: ["project"],

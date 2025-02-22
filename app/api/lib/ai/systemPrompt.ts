@@ -24,6 +24,7 @@ You have to respond in the following format:
 <conclusion>Reason for the update</conclusion>
 
 VERY IMPORTANT: If there is content in "The previous readme file is:" in the user prompt, then use that content as the previous readme file, and update it accordingly.
+VERY IMPORTANT: Never break the the syntax of the readme file, accurately manage the spaces and line breaks.
 
 IMPORTANT: With every response in the readme block, return the updated version of the previous readme file, including what it already had, and what you added or removed.
 IMPORTANT: Try to use the sections more creatively, and unless the user wants to remove the use of badges, try to add badges to the readme file.
