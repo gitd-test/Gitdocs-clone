@@ -99,11 +99,49 @@ export const readmeSections = [
     },
     {
       item: "Installation",
-      usage: "## Installation\n\n- [Installation](https://example.com/installation)\nInsert steps to install the project like\n```bash\ngit clone https://github.com/username/repository.git\ncd repository\nnpm install\nnpm run build\nnpm run start\n```",
-      description: "This section is the installation section of the project. It is the section that provides the installation instructions of the project.",
-      emoji: "💻",
+      usage: `
+    ## Installation 💻
+    
+    1. Clone the repository:
+       \`\`\`bash
+       git clone <repository_url>
+       \`\`\`
+    
+    2. Navigate to the project directory:
+       \`\`\`bash
+       cd Semester-Management-Web
+       \`\`\`
+    
+    3. Install dependencies:
+       \`\`\`bash
+       pip install -r requirements.txt  # For Python dependencies
+       # or
+       npm install  # For Node.js dependencies
+       # or
+       yarn install # If you're using Yarn
+       \`\`\`
+    
+    4. Set up the database (if necessary):
+       Provide specific instructions here, such as:
+       \`\`\`bash
+       python manage.py migrate
+       \`\`\` 
+       or
+       \`\`\`bash
+       npm run setup-db
+       \`\`\`
+    
+    5. Start the application:
+       \`\`\`bash
+       npm run start  # For Node.js-based applications
+       # or
+       python app.py  # For Python-based applications
+       \`\`\`
+      `,
+      description: "This section provides installation instructions for setting up and running the project locally.",
+      emoji: "📦",
       useCases: ["project"],
-    },
+    },    
     {
       item: "Github Profile - About Me",
       usage: "## About Me\n\n- I'm a Fullstack Developer with a passion for building scalable and efficient web applications.",
