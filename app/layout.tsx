@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               `}
             </Script>
           </head>
-          <body className="bg-dark">
+          <body className="bg-[#0A0A0A] text-[#CCCCCC]">
             <GoogleAnalytics />
             <Theme>
               <AppProvider>

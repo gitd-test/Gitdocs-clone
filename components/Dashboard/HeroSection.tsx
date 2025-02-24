@@ -6,13 +6,13 @@ import { useContext, useEffect, useState, Dispatch, SetStateAction } from "react
 import { LuPlus, LuLayoutGrid, LuList } from "react-icons/lu";
 import RepoCards from "../common/RepoCards";
 import LoadingAnimation from "../common/LoadingAnimation";
-import { SignInButton } from "@clerk/nextjs";
 import axios from "axios";
 import RepoList from "../common/RepoList";
 import { PiWarning } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import GettingStarted from "../common/GettingStarted";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 interface Repository {
   name: string;
@@ -161,16 +161,15 @@ const HeroSection = () => {
       {user ? (
         <>
           {repositoriesUpdated && (
-            <div className="flex items-center justify-between border py-2 px-3 rounded-lg border-[#DF7189] gap-4 h-full w-full">
-              <div className="flex items-center gap-2 text-[#DF7189]">
+            <div className="flex items-center justify-between border py-1.5 px-3 rounded-lg border-[#F18B65] gap-4 h-full w-full">
+              <div className="flex items-center gap-2 text-[#F18B65]">
                 <PiWarning size={18} />
-                <h3 className="text-sm text-[#DF7189]">Repositories updated, click to refresh</h3>
+                <h3 className="text-sm text-[#F18B65]">Repositories updated, click to refresh</h3>
               </div>
-              <button className="text-sm rounded-md p-1 flex items-center gap-2 text-[#0D8EF3] hover:underline" onClick={() => handleRefresh()}>
-                Refresh
+              <button className="text-sm rounded-md p-1 flex items-center gap-2 text-[#F18B65] hover:underline" onClick={() => handleRefresh()}>
+                refresh
               </button>
             </div>
-
           )}
 
           <div
@@ -179,9 +178,16 @@ const HeroSection = () => {
             } ${gridView ? "grid gap-4" : "flex flex-col gap-4"}`}
 
           >
-            {repositories.length > 0 ? (
-              gridView ? (
-                repositories.map((repo, index) => (
+            {repositoriesLoading ? (
+              [...Array(5)].map((_, index) => (
+                <LoadingSkeleton
+                  key={index}
+                />
+              ))
+            ) : (
+              repositories.length > 0 ? (
+                gridView ? (
+                  repositories.map((repo, index) => (
                   <RepoCards
                     key={index}
                     repo={{
@@ -211,7 +217,8 @@ const HeroSection = () => {
               <div className="flex items-center col-span-full justify-center h-full">
                 <h3 className="font-bold">Added repositories will appear here</h3>
               </div>
-            )}
+            ))}
+            
           </div>
         </>
       ) : (

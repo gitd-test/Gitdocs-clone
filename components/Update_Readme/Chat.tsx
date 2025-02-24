@@ -3,7 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import { LuCheck, LuCopy } from "react-icons/lu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
-import LoadingAnimation from "../common/LoadingAnimation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ChatProps = {
     role: string;
@@ -62,7 +62,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                 {content === "" 
                 ?
                 <div className="flex items-center gap-2">
-                    <LoadingAnimation />
+                    <Skeleton className="w-4 h-4 rounded-full bg-[#848c8e]"></Skeleton>
                     <p className="text-gray-500">Gitdocs AI is thinking...</p> 
                 </div>
                 : 
