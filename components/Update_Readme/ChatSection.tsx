@@ -115,7 +115,6 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
     } finally {
       setIsAiGenerating(false);
     }
-
   };
   
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
