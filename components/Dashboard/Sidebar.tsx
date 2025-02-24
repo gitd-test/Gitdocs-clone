@@ -117,15 +117,15 @@ export default function Sidebar() {
             <div className="flex items-center scale-150 justify-center">
               <SignedOut>
                 <SignInButton>
-                <div className="h-8 w-8 rounded-full bg-[#3D444D] cursor-pointer flex items-center justify-center">
-                  <LuUser size={18} />
+                <div className="h-7 w-7 rounded-full bg-[#3D444D] cursor-pointer flex items-center justify-center">
+                  <LuUser size={15} />
                 </div>
                 </SignInButton>
               </SignedOut>
 
               <SignedIn>
                 <div className="flex items-center gap-3 px-1">
-                  <div className="flex items-center relative">
+                  <div className="flex items-center relative scale-90">
                   <div className="absolute text-[6px] left-1/2 -translate-x-1/2 px-1 z-10 -bottom-1.5 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
                     Free
                   </div>
