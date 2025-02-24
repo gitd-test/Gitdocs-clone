@@ -17,7 +17,11 @@ export async function fetchStreamedResponse(userId: string, prompt: string, doc_
     const { done, value } = await reader.read();
     if (done) break;
 
-    const chunk = decoder.decode(value, { stream: true });
+    let chunk = "";
+    for (const char of decoder.decode(value, { stream: true })) {
+      chunk += char;
+    }
+
     callback(chunk); // Pass the chunk to a callback function
   }
 }

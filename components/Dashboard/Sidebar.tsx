@@ -59,7 +59,7 @@ export default function Sidebar() {
 
         {/* Logo Section */}
         <div className="px-4 h-16 border-b border-[#3D444D] flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-5">
             <div className="relative mx-auto">
               <Image
                 src={logo || "/default-logo.png"}
@@ -72,7 +72,7 @@ export default function Sidebar() {
               )}
             </div>
             {!collapsed && (
-              <span className="font-bold text-2xl text-white-900 overflow-hidden whitespace-nowrap">
+              <span className="font-semibold text-xl text-white-900 overflow-hidden whitespace-nowrap">
                 gitdocs ai
               </span>
             )}

@@ -62,41 +62,63 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
         if (previewContent) {
           setContent((prev: string) => {
             if (prev.includes(chunk.trim())) {
-              return prev;
+              return prev; // Return the existing content if the chunk is already included
             }
-            const updatedContent = prev + chunk.trim();
-            return updatedContent;
+        
+            let updatedContent = prev;
+            for (const char of chunk.trim()) {
+              updatedContent += char;
+            }
+            return updatedContent; // Ensure a string is always returned
           });
-
-        } else {
+        }
+        else {
           setMessage((prev) => {
             const updatedMessages = [...prev];
             const lastMessageIndex = updatedMessages.length - 1;
+        
             if (chunk.includes(`#`)) {
               previewContent = true;
               setIsPreview(true);
+        
               const lastIdx = chunk.indexOf(`#`);
-              if (!(updatedMessages[lastMessageIndex]?.content.includes(chunk.slice(0, lastIdx).trim()))) {
-                updatedMessages[lastMessageIndex].content += chunk.slice(0, lastIdx).trim();
+        
+              // Update the last message content if needed
+              if (
+                updatedMessages[lastMessageIndex] &&
+                !updatedMessages[lastMessageIndex]?.content.includes(chunk.slice(0, lastIdx).trim())
+              ) {
+                for (const char of chunk.slice(0, lastIdx).trim()) {
+                  updatedMessages[lastMessageIndex].content += char;
+                }
               }
+        
+              // Safely update content
               setContent((prev: string) => {
-                if (prev.includes(chunk.slice(lastIdx, chunk.length).trim())) {
+                if (prev.includes(chunk.slice(lastIdx).trim())) {
                   return prev;
                 }
-                const updatedContent = prev + chunk.slice(lastIdx, chunk.length).trim();
+                
+                let updatedContent = prev;
+                for (const char of chunk.slice(lastIdx).trim()) {
+                  updatedContent += char;
+                }
                 return updatedContent;
-              });// Trim trailing/leading whitespace
-
+              });
             } else {
-              if (updatedMessages[lastMessageIndex]?.role === "assistant") {
-                if (!(updatedMessages[lastMessageIndex]?.content.includes(chunk.trim()))) {
-                  updatedMessages[lastMessageIndex].content += chunk.trim(); // Trim trailing/leading whitespace
+              if (
+                updatedMessages[lastMessageIndex]?.role === "assistant" &&
+                updatedMessages[lastMessageIndex] &&
+                !updatedMessages[lastMessageIndex]?.content.includes(chunk.trim())
+              ) {
+                for (const char of chunk.trim()) {
+                  updatedMessages[lastMessageIndex].content += char;
                 }
               }
             }
-            return updatedMessages;
+            return updatedMessages; // Ensure updatedMessages is always returned
           });
-        }        
+        }               
       });
     } catch (error) {
       console.error("Error fetching response:", error);

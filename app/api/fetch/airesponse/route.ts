@@ -52,20 +52,22 @@ export async function POST(request: NextRequest) {
       try {
         for await (const chunk of result.stream) {
           // Append the current chunk to the buffer
-          buffer += chunk.text();
+          for (const char of chunk.text()) {
+            buffer += char;
+          }
 
           const startTag = "<response>";
           const endTag = "</response>";
 
           // Process the buffer when the start tag is found
-          if (buffer.includes(startTag) && !startTagFound) {
+          if (buffer.includes(startTag) && !startTagFound  && !responseCompleted) {
             const startIndex = buffer.indexOf(startTag) + startTag.length;
             buffer = buffer.substring(startIndex); // Trim the buffer to exclude the start tag
             startTagFound = true;
           }
 
           // Check if the end tag exists in the buffer
-          if (startTagFound && buffer.includes(endTag)) {
+          else if (startTagFound && buffer.includes(endTag) && !responseCompleted) {
             const endIndex = buffer.indexOf(endTag);
 
             // Extract and sanitize content up to the end tag
@@ -73,12 +75,16 @@ export async function POST(request: NextRequest) {
             const sanitizedText = extractedText.replace(/```/g, "");
 
             // Enqueue the sanitized text and stop streaming
-            controller.enqueue(encoder.encode(sanitizedText));
+            for (const char of sanitizedText) {
+              controller.enqueue(encoder.encode(char));
+            }
             responseCompleted = true;
-          } else if (startTagFound) {
+          } else if (startTagFound && !buffer.includes(endTag) && !responseCompleted) {
             // If only part of the content is available, enqueue it and keep waiting for the rest
             const sanitizedText = buffer.replace(/```/g, "");
-            controller.enqueue(encoder.encode(sanitizedText));
+            for (const char of sanitizedText) {
+              controller.enqueue(encoder.encode(char));
+            }
             buffer = ""; // Reset the buffer for the next chunk
           }
 
@@ -87,19 +93,24 @@ export async function POST(request: NextRequest) {
 
           if (responseCompleted) {
             newBuffer += chunk.text();
+            
             if (newBuffer.includes(newStartTag) && !newStartTagFound) {
               const startIndex = newBuffer.indexOf(newStartTag) + newStartTag.length;
               newBuffer = newBuffer.substring(startIndex);
               newStartTagFound = true;
             }
 
-            if (newBuffer.includes(newEndTag) && newStartTagFound) {
+            else if (newBuffer.includes(newEndTag) && newStartTagFound) {
               const endIndex = newBuffer.indexOf(newEndTag);
               newBuffer = newBuffer.substring(0, endIndex).trim();
-              controller.enqueue(encoder.encode(newBuffer));
+              for (const char of newBuffer) {
+                controller.enqueue(encoder.encode(char));
+              }
               break;
-            } else if (newStartTagFound) {
-              controller.enqueue(encoder.encode(newBuffer));
+            } else if (newStartTagFound && !newBuffer.includes(newEndTag)) {
+              for (const char of newBuffer) {
+                controller.enqueue(encoder.encode(char));
+              }
               newBuffer = "";
             }
           }

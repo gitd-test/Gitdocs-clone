@@ -32,9 +32,9 @@ const NavBar = () => {
                 <div className="flex items-center gap-4">
                 {isSidebarUsed 
                 ? <BsLayoutSidebar className="cursor-pointer" onClick={() => setCollapsed(!collapsed)} /> 
-                : <Link href="/" className="text-[#8b929d] flex items-center gap-2">
+                : <Link href="/" onClick={() => setBackHomeLoading(true)} className="text-[#8b929d] flex items-center gap-2">
                     
-                    {backHomeLoading ? <LoadingAnimation /> : <LuArrowLeft size={18} onClick={() => setBackHomeLoading(true)} />}
+                    {backHomeLoading ? <LoadingAnimation /> : <LuArrowLeft size={18} />}
                     
                     <p className="text-xs">Back Home</p>
                 </Link>}
