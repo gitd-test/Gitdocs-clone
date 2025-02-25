@@ -18,12 +18,20 @@ interface Repo {
 
 const RepoList = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (repoName: string) => void }) => {
 
+    const colors = [
+        "#FFA500", "#87CEEB", "#FF007F", "#8A2BE2", 
+        "#FFD700", "#98FF98", "#FF6F61", "#40E0D0", 
+        "#00FFFF", "#32CD32", "#8BD375"
+    ];
+
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
     return (
         <div className="border border-[#232323] hover:border-[#3196e3] transition-all duration-150 overflow-hidden px-6 py-5 rounded-lg shadow-sm flex justify-between">
             <div className="flex-col font-medium text-[#dedbdb] w-[30%]">
                 <div className="flex items-center gap-3">
 
-                <div className="w-9 h-9 rounded-full bg-[#8bd375] text-black text-lg font-bold flex items-center justify-center">
+                <div className={`w-9 h-9 rounded-full user-select-none text-black text-lg font-bold flex items-center justify-center`} style={{ backgroundColor: randomColor }}>
                     {repo.name.charAt(0).toUpperCase() + repo.name.charAt(1).toUpperCase()}
                 </div>
                 <p className="truncate ">{repo.name}</p>
