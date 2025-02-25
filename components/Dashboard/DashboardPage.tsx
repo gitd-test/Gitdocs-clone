@@ -5,6 +5,7 @@ import HeroSection from "@/components/Dashboard/HeroSection";
 import NavBar from "@/components/Dashboard/NavBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 interface AppContextType {
   collapsed: boolean;
@@ -15,11 +16,17 @@ interface AppContextType {
 const DashboardPage = () => {
   const { collapsed, setNavbarTitle, setIsSidebarUsed } = useContext(AppContext) as AppContextType;
 
+  const { user } = useUser();
+
   // Update state in useEffect to avoid updating during render
   useEffect(() => {
-    setNavbarTitle("Dashboard");
+    if (user) {
+      setNavbarTitle("Dashboard");
+    } else {
+      setNavbarTitle("Getting Started");
+    }
     setIsSidebarUsed(true);
-  }, [setNavbarTitle, setIsSidebarUsed]);
+  }, [setNavbarTitle, setIsSidebarUsed, user]);
 
   return (
     <div className="flex">
