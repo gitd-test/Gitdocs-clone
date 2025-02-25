@@ -1,4 +1,3 @@
-import { LuFolder } from "react-icons/lu";
 import { FaGithub } from "react-icons/fa";
 import { Star } from "lucide-react";
 import updatedAgo from "@/lib/UpdatedDate";
@@ -22,9 +21,11 @@ const RepoList = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (rep
     return (
         <div className="border border-[#232323] hover:border-[#3196e3] transition-all duration-150 overflow-hidden px-6 py-5 rounded-lg shadow-sm flex justify-between">
             <div className="flex-col font-medium text-[#dedbdb] w-[30%]">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
 
-                <LuFolder size={20} />
+                <div className="w-9 h-9 rounded-full bg-[#8bd375] text-black text-lg font-bold flex items-center justify-center">
+                    {repo.name.charAt(0).toUpperCase() + repo.name.charAt(1).toUpperCase()}
+                </div>
                 <p className="truncate ">{repo.name}</p>
                 <p className="text-xs rounded-full bg-[#171717] px-2 py-1 text-gray-500">{repo.visibility}</p>
                 </div>
@@ -32,7 +33,7 @@ const RepoList = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (rep
                 <Link 
                 href={repo.gitLink} 
                 target="_blank" 
-                className="text-[#aea9a9] text-sm mt-3 flex items-center gap-2 rounded-full hover:underline w-fit"
+                className="text-[#aea9a9] text-sm mt-5 flex items-center gap-2 rounded-full hover:underline w-fit"
                 >
                 <FaGithub size={16} />
                 <p className="truncate text-xs">{repo.gitLink.split('github.com/')[1]}</p>  {/* Extract username/repository */}

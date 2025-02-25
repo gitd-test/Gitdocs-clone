@@ -175,9 +175,11 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
     >
       <div className="flex justify-between px-5 py-2 items-center">
         <h1 className="text-white rounded-t-lg flex gap-2 items-center justify-between h-12">
-          Update README:
-          <div className="flex items-center text-sm border border-[#383737] hover:bg-[#1f1f1f] cursor-pointer rounded-full py-1.5 px-4">
-            {doc_name}
+          <div className="flex items-center gap-3 text-sm hover:bg-[#1f1f1f] cursor-pointer rounded-full py-2 px-3">
+            <div className="w-9 h-9 rounded-full bg-[#8bd375] text-black text-lg font-bold flex items-center justify-center">
+              {doc_name.charAt(0).toUpperCase() + doc_name.charAt(1).toUpperCase()}
+            </div>
+            <p className="truncate">{doc_name}</p>
           </div>
         </h1>
         <div className="flex items-center gap-2">

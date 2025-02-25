@@ -23,7 +23,7 @@ const LoadingSkeleton = () => {
         <div className="border border-[#232323] bg-[#0A0A0A] overflow-hidden p-6 rounded-lg shadow-sm">
             <div className="mb-3 flex items-center justify-between font-medium text-[#dedbdb]">
                 <div className="flex items-center gap-2">
-                    <Skeleton className="bg-[#171717] w-9 h-9 rounded-full"></Skeleton>
+                    <Skeleton className="bg-[#171717] w-10 h-10 rounded-full"></Skeleton>
 
                     <Skeleton className="flex items-center gap-2 bg-[#171717] w-[170px] h-5 rounded-full"></Skeleton>
                 </div>

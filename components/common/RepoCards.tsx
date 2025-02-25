@@ -1,4 +1,3 @@
-import { LuFolder } from "react-icons/lu";
 import { FaGithub } from "react-icons/fa";
 import { Star } from "lucide-react";
 import updatedAgo from "@/lib/UpdatedDate";
@@ -22,8 +21,10 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
         <div className="border border-[#232323] hover:border-[#3196e3] bg-[#0A0A0A] transition-all duration-150 overflow-hidden px-6 py-5 rounded-lg shadow-sm">
             <div className="mb-3 flex items-center justify-between font-medium text-[#dedbdb]">
 
-                <div className="flex items-center gap-2">
-                <LuFolder size={20} />
+                <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#8bd375] text-black text-xl font-bold flex items-center justify-center">
+                    {repo.name.charAt(0).toUpperCase() + repo.name.charAt(1).toUpperCase()}
+                </div>
                 <p className="truncate max-w-[170px]">{repo.name}</p>
                 <p className="text-xs rounded-full bg-[#171717] px-2 py-1 text-gray-500">{repo.visibility}</p>
                 </div>
@@ -39,10 +40,10 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
             <Link 
             href={repo.gitLink} 
             target="_blank" 
-            className="mb-3 text-[#dbd5d5] flex items-center gap-2 rounded-full bg-[#1A1A1A] px-4 py-2 w-fit"
+            className="mb-3 text-[#dbd5d5] flex items-center max-w-72 gap-2 rounded-full bg-[#1A1A1A] px-4 py-2 w-fit"
             >
             <FaGithub size={16} />
-            <p className="truncate text-xs font-semibold">{repo.gitLink.split('github.com/')[1]}</p>  {/* Extract username/repository */}
+            <p className="truncate text-xs font-semibold hover:underline">{repo.gitLink.split('github.com/')[1]}</p>  {/* Extract username/repository */}
             </Link>
 
 

@@ -87,21 +87,21 @@ export default function Sidebar() {
                 {collapsed ? (
                   <a
                     href={item.href}
-                    className="flex flex-col w-full items-center gap-1 py-1.5 mb-1 px-0.5 text-[#cfcfd1] rounded-md group origin-top hover:bg-[#232A34]"
+                    className="flex flex-col w-full items-center gap-1 py-1.5 mb-1 px-0.5 text-[#cfcfd1] rounded-md group origin-top focus:bg-[#192336] hover:bg-[#232A34]"
                   >
-                      <item.icon className="h-6 w-6 text-[#E8E8E9] group-hover:text-blue-600" />
-                    <span className="text-[10px] font-medium group-hover:text-blue-600 text-center w-full truncate">
+                      <item.icon className="h-6 w-6 text-[#E8E8E9] group-focus:text-blue-600" />
+                    <span className="text-[10px] font-medium group-focus:text-blue-600 text-center w-full truncate">
                       {item.label}
                     </span>
                   </a>
                 ) : (
                   <a
                     href={item.href}
-                    className={`flex items-center my-1 text-[#cfcfd1] gap-3 py-3 px-4 rounded-md transition-colors group hover:bg-[#232A34]`}
+                    className={`flex items-center my-1 text-[#cfcfd1] gap-3 py-3 px-4 rounded-md transition-colors group focus:bg-[#192336] hover:bg-[#232A34]`}
                   >
-                      <item.icon className="h-5 w-5 text-[#E8E8E9] group-hover:text-blue-600" />
+                      <item.icon className="h-5 w-5 text-[#E8E8E9] group-focus:text-blue-600" />
 
-                    <span className="text-sm font-medium group-hover:text-blue-600 overflow-hidden whitespace-nowrap">
+                    <span className="text-sm font-medium group-focus:text-blue-600 overflow-hidden whitespace-nowrap">
                       {item.label}
                     </span>
                   </a>
@@ -156,7 +156,7 @@ export default function Sidebar() {
                     </div>
                   <UserButton />
                   </div>
-                  <div className="text-sm font-medium transition-all duration-500 text-nowrap whitespace-nowrap">
+                  <div className="text-xs font-medium transition-all duration-500 text-nowrap whitespace-nowrap">
                     {user?.fullName || user?.firstName || "User"}
                   </div>
                 </div>
