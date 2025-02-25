@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               `}
             </Script>
           </head>
-          <body className="bg-[#0A0A0A] text-[#CCCCCC]">
+          <body className="bg-[#0D0D0D] text-[#EDEDED]">
             <GoogleAnalytics />
             <Theme>
               <AppProvider>

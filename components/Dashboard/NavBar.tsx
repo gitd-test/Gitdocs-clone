@@ -1,6 +1,5 @@
 "use client"
 
-import { BsLayoutSidebar } from "react-icons/bs";
 import { LuArrowLeft, LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useState } from "react";
@@ -25,7 +24,7 @@ const NavBar = () => {
     const { navbarTitle, isSidebarUsed, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
 
     return (
-        <div>
+        <>
             <div className={`flex justify-between items-center px-6 py-4 h-16 border-b border-[#3D444D]`}>
                 <div className="flex items-center gap-4">
                 {isSidebarUsed 
@@ -96,18 +95,18 @@ const NavBar = () => {
                                     </div>
 
                                 </TooltipTrigger>
-                            <TooltipContent className="bg-gray-800 text-white">
-                                <p className="text-xs">Notifications</p>
-
-                            </TooltipContent>
+                                <TooltipContent className="bg-gray-800 text-white">
+                                    <p className="text-xs">Notifications</p>
+                                </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
                     </div>
                 </div>
             </div>
-        </div>
-
-
+            {(user && isSidebarUsed) && <div className="sticky top-0 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
+                Please add credits to your team in order to make API requests.
+            </div>}
+        </>
     )
 }
 

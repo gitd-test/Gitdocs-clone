@@ -1,4 +1,3 @@
-import { FaGithub } from "react-icons/fa";
 import { Star } from "lucide-react";
 import updatedAgo from "@/lib/UpdatedDate";
 import RepoTools from "./RepoTools";

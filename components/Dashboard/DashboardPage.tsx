@@ -28,9 +28,9 @@ const DashboardPage = () => {
   }, [setNavbarTitle, setIsSidebarUsed, user]);
 
   return (
-    <div className="flex">
+    <div className="flex relative z-30">
       <Sidebar />
-      <div className={`flex-1 ms-16 transition-all duration-300`}>
+      <div className={`flex-1 ms-16 transition-all duration-300 relative -z-10`}>
         <NavBar />
         <HeroSection />
       </div>
