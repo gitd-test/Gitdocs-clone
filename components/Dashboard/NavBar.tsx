@@ -10,8 +10,6 @@ import LoadingAnimation from "../common/LoadingAnimation";
 import { useUser } from "@clerk/nextjs";
 
 interface AppContextType {
-    collapsed: boolean;
-    setCollapsed: (collapsed: boolean) => void;
     navbarTitle: string;
     isSidebarUsed: boolean;
     setRepositoriesUpdated: (repositoriesUpdated: boolean) => void;
@@ -24,14 +22,14 @@ const NavBar = () => {
 
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
-    const { collapsed, setCollapsed, navbarTitle, isSidebarUsed, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
+    const { navbarTitle, isSidebarUsed, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
 
     return (
         <div>
             <div className={`flex justify-between items-center px-6 py-4 h-16 border-b border-[#3D444D]`}>
                 <div className="flex items-center gap-4">
                 {isSidebarUsed 
-                ? <BsLayoutSidebar className="cursor-pointer" onClick={() => setCollapsed(!collapsed)} /> 
+                ? <p className="text-xs">Home</p>
                 : <Link href="/" onClick={() => setBackHomeLoading(true)} className="text-[#8b929d] flex items-center gap-2">
                     
                     {backHomeLoading ? <LoadingAnimation /> : <LuArrowLeft size={18} />}

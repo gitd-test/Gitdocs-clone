@@ -27,7 +27,6 @@ interface Repository {
 }
 
 interface AppContextType {
-  collapsed: boolean;
   gridView: boolean;
   setGridView: Dispatch<SetStateAction<boolean>>;
   repositoriesUpdated: boolean;
@@ -39,7 +38,7 @@ const HeroSection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useUser();
-  const { collapsed, gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
+  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
   const [repositoriesLoading, setRepositoriesLoading] = useState(false);
   const [repositories, setRepositories] = useState<Repository[]>([]);
 
@@ -173,11 +172,7 @@ const HeroSection = () => {
           )}
 
           <div
-            className={`w-full mt-5 ${
-              collapsed ? "grid-cols-3" : "grid-cols-2"
-            } ${gridView ? "grid gap-4" : "flex flex-col gap-4"}`}
-
-          >
+            className={`w-full mt-5 grid-cols-3 ${gridView ? "grid gap-4" : "flex flex-col gap-4"}`}>
             {repositoriesLoading ? (
               [...Array(5)].map((_, index) => (
                 <LoadingSkeleton

@@ -8,13 +8,12 @@ import { useContext, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 
 interface AppContextType {
-  collapsed: boolean;
   setNavbarTitle: (navbarTitle: string) => void;
   setIsSidebarUsed: (isSidebarUsed: boolean) => void;
 }
 
 const DashboardPage = () => {
-  const { collapsed, setNavbarTitle, setIsSidebarUsed } = useContext(AppContext) as AppContextType;
+  const { setNavbarTitle, setIsSidebarUsed } = useContext(AppContext) as AppContextType;
 
   const { user } = useUser();
 
@@ -31,7 +30,7 @@ const DashboardPage = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className={`flex-1 ${collapsed ? "ms-16" : "ms-56"} transition-all duration-300`}>
+      <div className={`flex-1 ms-16 transition-all duration-300`}>
         <NavBar />
         <HeroSection />
       </div>
