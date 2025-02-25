@@ -34,11 +34,11 @@ body {
 }
 
 .chat-container::-webkit-scrollbar {
-  background: #0A0A0A;
+  background: #0D0D0D;
 }
 
 .chat-container::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #0D0D0D;
 }
 
 /* Add to your global CSS or Tailwind configuration */
