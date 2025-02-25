@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, Dispatch, SetStateAction } from "react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { LuUser } from "react-icons/lu";
-import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import logo from "@/app/favicon.ico";
 import { cn } from "@/lib/utils";
-import Button from "@/components/common/Button";
+import { AppContext } from "@/contexts/AppContext";
 import {
   LayoutDashboard,
   Settings,
@@ -15,9 +14,19 @@ import {
   BookOpen,
 } from "lucide-react";
 
+interface User {
+  subscriptionType: string;
+  stepsCompleted: number;
+}
+
+interface AppContextType {
+  storedUser: User | null;
+  setStoredUser: Dispatch<SetStateAction<User | null>>;
+}
+
 export default function Sidebar() {
-  const { user } = useUser();
   const [isClient, setIsClient] = useState(false); // Track if on client
+  const { storedUser } = useContext(AppContext) as AppContextType;
 
   useEffect(() => {
     setIsClient(true); // This will ensure the content is only rendered on the client
@@ -84,26 +93,26 @@ export default function Sidebar() {
 
         {/* User Profile Section */}
         <div className="py-4 px-2 border-t border-[#3D444D] bg-[#171717]">
-            <div className="flex items-center scale-150 justify-center">
-              <SignedOut>
-                <SignInButton>
-                <div className="h-7 w-7 rounded-full bg-[#3D444D] cursor-pointer flex items-center justify-center">
-                  <LuUser size={15} />
-                </div>
-                </SignInButton>
-              </SignedOut>
+          <div className="flex items-center scale-150 justify-center">
+            <SignedOut>
+              <SignInButton>
+              <div className="h-7 w-7 rounded-full bg-[#3D444D] cursor-pointer flex items-center justify-center">
+                <LuUser size={15} />
+              </div>
+              </SignInButton>
+            </SignedOut>
 
-              <SignedIn>
-                <div className="flex items-center gap-3 px-1">
-                  <div className="flex items-center relative scale-90">
-                  <div className="absolute text-[6px] left-1/2 -translate-x-1/2 px-1 z-10 -bottom-1.5 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
-                    Free
-                  </div>
-                  <UserButton />
-                  </div>
+            <SignedIn>
+              <div className="flex items-center gap-3 px-1">
+                <div className="flex items-center relative scale-90">
+                <div className="absolute text-[6px] left-1/2 -translate-x-1/2 px-1 z-10 -bottom-1.5 bg-[#18181B] rounded-full border-2 border-[#3D444D]">
+                  {storedUser?.subscriptionType}
                 </div>
-              </SignedIn>
-            </div>
+                <UserButton />
+                </div>
+              </div>
+            </SignedIn>
+          </div>
         </div>
       </div>
     </div>

@@ -25,8 +25,8 @@ const UserSchema = new mongoose.Schema(
     },
     subscriptionType: {
       type: String,
-      enum: ["free", "basic", "pro"], // Define possible subscription types
-      default: "free",
+      enum: ["Free", "Basic", "Pro"], // Define possible subscription types
+      default: "Free",
     },
     signupDate: {
       type: Date,
@@ -40,6 +40,10 @@ const UserSchema = new mongoose.Schema(
       type: [String],
       default: [],
       ref: "Repository",
+    },
+    stepsCompleted: {
+      type: Number,
+      default: 0,
     },
   },
   {

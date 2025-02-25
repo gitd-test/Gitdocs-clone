@@ -26,21 +26,70 @@ interface Repository {
   score?: number;
 }
 
+interface User {
+  subscriptionType: string;
+  stepsCompleted: number;
+}
+
 interface AppContextType {
   gridView: boolean;
   setGridView: Dispatch<SetStateAction<boolean>>;
   repositoriesUpdated: boolean;
   setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
+  storedUser: User | null;
+  setStoredUser: Dispatch<SetStateAction<User | null>>;
 }
 
 
 const HeroSection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user } = useUser();
-  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
+  const { user, isSignedIn } = useUser();
+  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, storedUser, setStoredUser } = useContext(AppContext) as AppContextType;
   const [repositoriesLoading, setRepositoriesLoading] = useState(false);
   const [repositories, setRepositories] = useState<Repository[]>([]);
+
+  useEffect(() => {
+    if (user && isSignedIn && !storedUser) {
+      // Fetch user data from the backend
+      axios
+        .get(`/api/fetch/userdata`, {
+          headers: {
+            Authorization: `Bearer ${user.id}`,
+          },
+        })
+        .then((response) => {
+          const fetchedUser = response.data;
+  
+          // Update state and localStorage with fetched user data
+          setStoredUser(fetchedUser);
+          localStorage.setItem("storedUser", JSON.stringify(fetchedUser));
+  
+          // If stepsCompleted is 0, update it
+          if (fetchedUser.stepsCompleted === 0) {
+            axios
+              .patch(`/api/fetch/userdata`, {
+                stepsCompleted: 1,
+              }, {
+                headers: {
+                  Authorization: `Bearer ${user.id}`,
+                },
+              })
+              .then((patchResponse) => {
+                setStoredUser(patchResponse.data); // Update state with the patched data
+                localStorage.setItem("storedUser", JSON.stringify(patchResponse.data));
+              })
+              .catch((error) => {
+                console.error("Error updating stepsCompleted:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [user, isSignedIn, storedUser]);
+  
 
   useEffect(() => {
     if (user) {
@@ -112,7 +161,7 @@ const HeroSection = () => {
     <div className={`flex flex-col gap-4 px-10 py-5`}>
       <div className="gap-4">
         <h1 className="text-sm5 font-bold font-raleway-dots w-fit">
-          {user ? (
+          {user && !((storedUser?.stepsCompleted || 0) < 3) ? (
             <>
               Welcome, {user.fullName || user.firstName || "User"}
               <hr className="border-[#3D444D] mt-2" />
@@ -120,7 +169,7 @@ const HeroSection = () => {
           ) : null}
         </h1>
         <div className="flex items-center mt-5 justify-between">
-          {user && (
+          {user && !((storedUser?.stepsCompleted || 0) < 3) && (
             <>
               <h2 className="text-3xl font-bold text-white">Overview</h2>
               <div className="flex items-center gap-4">
@@ -157,7 +206,7 @@ const HeroSection = () => {
           )}
         </div>
       </div>
-      {user ? (
+      {user && !((storedUser?.stepsCompleted || 0) < 3) ? (
         <>
           {repositoriesUpdated && (
             <div className="flex items-center justify-between border py-1.5 px-3 rounded-lg border-[#F18B65] gap-4 h-full w-full">
