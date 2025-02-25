@@ -27,25 +27,30 @@ const RepoList = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (rep
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
     return (
-        <div className="border border-[#232323] hover:border-[#3196e3] transition-all duration-150 overflow-hidden px-6 py-5 rounded-lg shadow-sm flex justify-between">
+        <div className="border border-[#232323] hover:border-[#3196e3] transition-all duration-150 overflow-hidden px-6 py-2 rounded-lg shadow-sm flex justify-between">
             <div className="flex-col font-medium text-[#dedbdb] w-[30%]">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 mt-4">
 
-                <div className={`w-9 h-9 rounded-full user-select-none text-black text-lg font-bold flex items-center justify-center`} style={{ backgroundColor: randomColor }}>
-                    {repo.name.charAt(0).toUpperCase() + repo.name.charAt(1).toUpperCase()}
-                </div>
-                <p className="truncate ">{repo.name}</p>
-                <p className="text-xs rounded-full bg-[#171717] px-2 py-1 text-gray-500">{repo.visibility}</p>
-                </div>
+                    <div className={`w-11 h-11 rounded-full user-select-none text-black text-lg font-bold flex items-center justify-center`} style={{ backgroundColor: randomColor }}>
+                        {repo.name.charAt(0).toUpperCase() + repo.name.charAt(1).toUpperCase()}
+                    </div>
 
-                <Link 
-                href={repo.gitLink} 
-                target="_blank" 
-                className="text-[#aea9a9] text-sm mt-5 flex items-center gap-2 rounded-full hover:underline w-fit"
-                >
-                <FaGithub size={16} />
-                <p className="truncate text-xs">{repo.gitLink.split('github.com/')[1]}</p>  {/* Extract username/repository */}
-                </Link>
+
+                    <div className="flex flex-col">
+                    <div className="flex items-center gap-3">
+                        <p className="truncate ">{repo.name}</p>
+                        <p className="text-xs rounded-full bg-[#171717] px-2 py-1 text-gray-500">{repo.visibility}</p>
+                    </div>
+                        <Link 
+                        href={repo.gitLink} 
+                        target="_blank" 
+                        className="text-[#aea9a9] text-sm mt-1 flex items-center gap-2 rounded-full hover:underline w-fit"
+                        >
+                            <p className="truncate text-xs">{repo.gitLink.split('github.com/')[1]}</p>  {/* Extract username/repository */}
+                        </Link>
+                    </div>
+
+                </div>
 
             </div>
 
@@ -71,7 +76,6 @@ const RepoList = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (rep
             <RepoTools doc_name={repo.name} doc_score={repo.score} />
             </div>
         </div>
-
 
     )
 }
