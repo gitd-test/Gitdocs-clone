@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
                         email: 'placeholder@example.com', // Replace this with a method to fetch the email securely
                         firstName: 'Placeholder', // Replace with user's first name
                         lastName: 'Placeholder', // Replace with user's last name
-                        subscriptionType: 'free',
+                        subscriptionType: 'Free',
                         signupDate: new Date(),
                         repositories: [],
                     });
