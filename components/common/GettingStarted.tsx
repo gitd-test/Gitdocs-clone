@@ -8,10 +8,10 @@ import {
   MessageSquareText,
 } from "lucide-react";
 import { AppContext } from "@/contexts/AppContext";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import LoadingAnimation from "./LoadingAnimation";
 
 interface User {
   subscriptionType: string;
@@ -31,7 +31,6 @@ const GettingStarted = () => {
     AppContext
   ) as AppContextType;
   const { user } = useUser();
-  const router = useRouter();
   const handleAddRepository = () => {
     try {
       if (storedUser?.stepsCompleted === 1) {
@@ -126,19 +125,19 @@ const GettingStarted = () => {
       stepValue: 1,
       label: "Start by creating a new account on Gitdocs ai",
       isactive: (storedUser?.stepsCompleted || 0) === 0 ? true : false,
-      isCompleted: (storedUser?.stepsCompleted || 0) === 1 ? true : false,
+      isCompleted: (storedUser?.stepsCompleted || 0) >= 1 ? true : false,
     },
     {
       stepValue: 2,
       label: "Configure your github repository",
       isactive: (storedUser?.stepsCompleted || 0) === 1 ? true : false,
-      isCompleted: (storedUser?.stepsCompleted || 0) === 2 ? true : false,
+      isCompleted: (storedUser?.stepsCompleted || 0) >= 2 ? true : false,
     },
     {
       stepValue: 3,
       label: "Start generating readme files",
       isactive: (storedUser?.stepsCompleted || 0) === 2 ? true : false,
-      isCompleted: (storedUser?.stepsCompleted || 0) === 3 ? true : false,
+      isCompleted: (storedUser?.stepsCompleted || 0) >= 3 ? true : false,
     },
   ];
 
@@ -171,11 +170,21 @@ const GettingStarted = () => {
           </ol>
 
           {(storedUser?.stepsCompleted || 0) === 0 && (
-            <SignInButton>
-              <button className="bg-[#0078d4] hover:bg-[#0078d4]/90 mt-8 text-white px-8 py-1.5 rounded-md">
-                Get Started
+            <>
+            <SignedOut>
+              <SignInButton>
+                <button className="bg-[#0078d4] hover:bg-[#0078d4]/90 mt-8 text-white px-8 py-1.5 rounded-md">
+                  Get Started
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <button className="bg-[#0078d4] flex items-center gap-2 hover:bg-[#0078d4]/90 mt-8 text-white px-8 py-1.5 rounded-md">
+                <LoadingAnimation />
+                Procceding...
               </button>
-            </SignInButton>
+            </SignedIn>
+            </>
           )}
 
           {(storedUser?.stepsCompleted || 0) === 1 && (
