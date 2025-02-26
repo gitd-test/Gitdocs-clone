@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
+import { auth, currentUser } from '@clerk/nextjs/server';
+import connectMongo from '@/app/api/lib/db/connectMongo';
 import User from '@/app/api/lib/models/User';
 
 export async function GET(req: NextRequest) {
@@ -13,6 +13,13 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        const user = await currentUser();
+
+        if (!user) {
+            // Return 401 Unauthorized if no user is found
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         // Immediately redirect user to /loading
         const response = NextResponse.redirect(new URL('/loading', req.url));
 
@@ -20,7 +27,7 @@ export async function GET(req: NextRequest) {
         (async () => {
             try {
                 // Connect to the MongoDB database
-                await connectMongoWithRetry();
+                await connectMongo();
 
                 // Check if the user already exists in the database
                 const existingUser = await User.findOne({ clerkUid: userId });
@@ -29,10 +36,10 @@ export async function GET(req: NextRequest) {
                     // Create a new user if not found
                     await User.create({
                         clerkUid: userId,
-                        email: 'placeholder@example.com', // Replace this with a method to fetch the email securely
-                        firstName: 'Placeholder', // Replace with user's first name
-                        lastName: 'Placeholder', // Replace with user's last name
-                        subscriptionType: 'Free',
+                        email: user.emailAddresses[0].emailAddress, // Replace this with a method to fetch the email securely
+                        firstName: user.firstName, // Replace with user's first name
+                        lastName: user.lastName, // Replace with user's last name
+                        subscriptionType: 'free',
                         signupDate: new Date(),
                         repositories: [],
                     });
