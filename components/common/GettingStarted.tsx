@@ -144,7 +144,7 @@ const GettingStarted = () => {
   return (
     <>
       <div className="bg-[#151616] h-80 rounded-xl w-full -mt-5 overflow-visible [clip-path:ellipse(100%_100%_at_center_top)]"></div>
-      <div className="absolute h-[27rem] 2xl:h-[35rem] 2xl:w-1/2 w-2/3 rounded-xl flex justify-center items-center bg-[#141414] left-1/2 border border-[#242424] 2xl:-mt-28 -mt-14 top-0 transform -translate-x-1/2 translate-y-1/2">
+      <div className="absolute h-[27rem] 2xl:h-[35rem] 2xl:w-[min(50%,900px)] w-2/3 rounded-xl flex justify-center items-center bg-[#141414] left-1/2 border border-[#242424] 2xl:-mt-28 -mt-14 top-0 transform -translate-x-1/2 translate-y-1/2">
         <div className="flex flex-col pt-16 justify-center items-center h-[92.7%] w-[96.7%] mt-0.5 bg-[#1a1b1b] rounded-xl border border-[#242424]">
           <h1 className="text-white text-3xl font-semibold tracking-wide">
             {storedUser?.stepsCompleted || 0 >= 1

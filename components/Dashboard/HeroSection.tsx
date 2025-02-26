@@ -94,14 +94,16 @@ const HeroSection = () => {
   useEffect(() => {
     if (user) {
       setRepositoriesLoading(true);
-      const storedRepositories = localStorage.getItem("repositories");
-      const staleTime = localStorage.getItem("staleTime");
+      let storedRepositories = localStorage.getItem("repositories");
+      let staleTime = localStorage.getItem("staleTime");
 
       if (staleTime) {
         const timeDiff = new Date().getTime() - new Date(staleTime).getTime();
         if (timeDiff > 1000 * 60 * 5) {
           localStorage.removeItem("repositories");
           localStorage.removeItem("staleTime");
+          storedRepositories = null;
+          staleTime = null;
         }
       }
 
@@ -129,7 +131,7 @@ const HeroSection = () => {
         });
       }
     }
-  }, [user, searchParams, repositoriesUpdated]);
+  }, [user, searchParams, repositoriesUpdated, isSignedIn, storedUser]);
 
   const handleAddRepository = () => {
     setRepositoriesUpdated(true);

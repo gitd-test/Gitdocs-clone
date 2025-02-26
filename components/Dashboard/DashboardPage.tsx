@@ -32,7 +32,9 @@ const DashboardPage = () => {
       <Sidebar />
       <div className={`flex-1 ms-16 transition-all duration-300 relative -z-10`}>
         <NavBar />
+        <div className="max-w-[1600px] mx-auto">
         <HeroSection />
+        </div>
       </div>
     </div>
   );
