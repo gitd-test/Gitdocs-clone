@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
     },
     subscriptionType: {
       type: String,
-      enum: ["Free", "Basic", "Pro"], // Define possible subscription types
+      enum: ["Free", "Pro", "Enterprise"], // Define possible subscription types
       default: "Free",
     },
     signupDate: {

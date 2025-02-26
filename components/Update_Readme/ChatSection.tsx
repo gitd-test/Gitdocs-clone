@@ -1,11 +1,12 @@
 "use client";
 
-import { LuPaperclip, LuSend } from "react-icons/lu";
+import { LuPaperclip, LuSend, LuBrain, LuChevronDown } from "react-icons/lu";
 import { HiArrowPath } from "react-icons/hi2";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import Chat from "./Chat";
 import { fetchStreamedResponse } from "@/lib/fetchStreamedAiResponse";
 import { useUser } from "@clerk/nextjs";
+import { AppContext } from "@/contexts/AppContext";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -15,14 +16,26 @@ interface ChatSectionProps {
   setContent: (content: string | ((prev: string) => string)) => void;
 }
 
+interface Model {
+  name: string;
+  value: string;
+}
+
+type AppContextType = {
+  setShowModel: (showModel: boolean) => void;
+  selectedModel: Model;
+}
+
 const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }: ChatSectionProps) => {
   const { user } = useUser();
 
+  const { setShowModel, selectedModel } = useContext(AppContext) as AppContextType;
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  
   let previewContent = false;
   const handleReset = () => {
     setMessage([]);
@@ -58,7 +71,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
 
       // Fetch the streamed response
       setContent("");
-      await fetchStreamedResponse(user?.id || "", promptWithContext, doc_name, (chunk) => {
+      await fetchStreamedResponse(user?.id || "", promptWithContext, selectedModel.value, doc_name, (chunk) => {
         if (previewContent) {
           setContent((prev: string) => {
             if (prev.includes(chunk.trim())) {
@@ -169,19 +182,25 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
   return (
     <div
       className={`w-1/2 -mt-5 rounded-lg relative transition-all duration-300 flex-1 mx-auto ${
-        isPreview ? "" : "w-full"
+        isPreview ? "" : "px-44"
       }`}
       onClick={handleFocus}
     >
       <div className="flex justify-between px-5 py-2 items-center">
-        <h1 className="text-white rounded-t-lg flex gap-2 items-center justify-between h-12">
-          <div className="flex items-center gap-3 text-sm hover:bg-[#1f1f1f] cursor-pointer rounded-full py-2 px-3">
+        <div className="text-white rounded-t-lg flex gap-5 items-center justify-between h-12">
+          <div className="flex items-center gap-3 text-sm hover:bg-[#1f1f1f] cursor-pointer rounded-full p-2 ps-2.5 pe-3.5">
             <div className="w-9 h-9 rounded-full bg-[#8bd375] text-black text-lg font-bold flex items-center justify-center">
               {doc_name.charAt(0).toUpperCase() + doc_name.charAt(1).toUpperCase()}
             </div>
             <p className="truncate">{doc_name}</p>
           </div>
-        </h1>
+
+          <button className="flex items-center gap-3 text-sm bg-[#1f1f1f] cursor-pointer rounded-full p-4" onClick={() => setShowModel(true)}>
+            <LuBrain className="text-white" size={20} />
+            <p>{selectedModel.name}</p>
+            <LuChevronDown className="text-white" size={20} />
+          </button>
+        </div>
         <div className="flex items-center gap-2">
           {message.length > 0 && (
             <button

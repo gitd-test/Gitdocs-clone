@@ -6,7 +6,6 @@ import NavBar from "@/components/Dashboard/NavBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-
 interface AppContextType {
   setNavbarTitle: (navbarTitle: string) => void;
   setIsSidebarUsed: (isSidebarUsed: boolean) => void;

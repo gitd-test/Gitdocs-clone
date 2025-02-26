@@ -27,7 +27,7 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
     return (
-        <div className="border border-[#232323] hover:border-[#3196e3] bg-[#0A0A0A] transition-all duration-150 overflow-hidden px-6 py-5 rounded-lg shadow-sm">
+        <div className="border border-[#232323] hover:border-[#3196e3] bg-[#121212] transition-all duration-150 overflow-hidden px-6 py-5 rounded-lg shadow-sm">
             <div className="mb-3 flex items-center justify-between font-medium text-[#dedbdb]">
 
                 <div className="flex items-center gap-4">

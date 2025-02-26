@@ -1,11 +1,11 @@
-export async function fetchStreamedResponse(userId: string, prompt: string, doc_name: string, callback: (chunk: string) => void) {
-  const response = await fetch('/api/fetch/airesponse', {
+export async function fetchStreamedResponse(userId: string, prompt: string, model: string, doc_name: string, callback: (chunk: string) => void) {
+  const response = await fetch('/api/fetch/airesponse/gemini', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${userId}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ prompt, doc_name }),
+    body: JSON.stringify({ prompt, doc_name, model }),
   });
 
   if (!response.body) throw new Error("No response body");

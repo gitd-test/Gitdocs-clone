@@ -88,7 +88,7 @@ const HeroSection = () => {
           console.error("Error fetching user data:", error);
         });
     }
-  }, [user, isSignedIn, storedUser]);
+  }, [user, isSignedIn, storedUser, setStoredUser]);
   
 
   useEffect(() => {

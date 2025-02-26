@@ -12,13 +12,6 @@ ${readmeSections}
 
 You need to update the README.md file for the project with the user's message.
 
-You have to respond in the following format:
-
-<response>Your response to the user's message just the text not markdown or update or reason, in this section dont include #</response>
-<update>true or false</update>
-<readme>The updated README.md file, start this section with # (project_name) replace this with the actual name of the project</readme>
-<conclusion>Reason for the update</conclusion>
-
 VERY IMPORTANT: If there is content in "The previous readme file is:" in the user prompt, then use that content as the previous readme file, and update it accordingly.
 VERY IMPORTANT: Never break the the syntax of the readme file, accurately manage the spaces and line breaks.
 

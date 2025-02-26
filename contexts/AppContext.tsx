@@ -7,6 +7,12 @@ interface User {
   stepsCompleted: number;
 }
 interface AppContextType {
+  selectedModel: Model;
+  setSelectedModel: Dispatch<SetStateAction<Model>>;
+  selectedProvider: string;
+  setSelectedProvider: Dispatch<SetStateAction<string>>;
+  showModel: boolean;
+  setShowModel: Dispatch<SetStateAction<boolean>>;
   storedUser: User | null;
   setStoredUser: Dispatch<SetStateAction<User | null>>;
   navbarTitle: string;
@@ -19,6 +25,11 @@ interface AppContextType {
   setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
 }
 
+interface Model {
+  name: string;
+  value: string;
+}
+
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -27,6 +38,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isSidebarUsed, setIsSidebarUsed] = useState<boolean>(false);
   const [gridView, setGridView] = useState<boolean>(true);
   const [repositoriesUpdated, setRepositoriesUpdated] = useState(false);
+  const [showModel, setShowModel] = useState<boolean>(false);
+  const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
+  const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
 
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
@@ -35,11 +49,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setGridView(true);
     }
 
+    if (localStorage.getItem("storedUser")) {
+      setStoredUser(JSON.parse(localStorage.getItem("storedUser") || "{}"));
+    }
   }, []);
 
 
   return (
-    <AppContext.Provider value={{ storedUser, setStoredUser, navbarTitle, setNavbarTitle, isSidebarUsed, setIsSidebarUsed, gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated }}>
+    <AppContext.Provider value={{ storedUser, setStoredUser, navbarTitle, setNavbarTitle, isSidebarUsed, setIsSidebarUsed, gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, showModel, setShowModel, selectedProvider, setSelectedProvider, selectedModel, setSelectedModel }}>
       {children}
     </AppContext.Provider>
   );

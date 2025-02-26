@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import connectMongoWithRetry from "../db/connectMongo";
 import User from "../models/User";
 
-export async function connectGemini(userId: string, prompt: string) {
+export async function connectGemini(userId: string, prompt: string, model: string) {
 
     await connectMongoWithRetry();
     const user = await User.find({clerkUid: userId});
@@ -12,9 +12,11 @@ export async function connectGemini(userId: string, prompt: string) {
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const genModel = genAI.getGenerativeModel({ model: model });
 
-    const result = await model.generateContentStream(prompt);
+    const result = await genModel.generateContentStream(prompt);
+
+    console.log(model);
 
     return result;
 }

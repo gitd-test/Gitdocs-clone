@@ -2,7 +2,7 @@ import { connectGemini } from "@/app/api/lib/ai/connectGemini";
 import { NextResponse, NextRequest } from "next/server";
 import { systemPrompt } from "@/app/api/lib/ai/systemPrompt";
 import { getRepositoryByNamePopulated } from "@/app/api/auth/repository/clientRepositoryServices";
-import { fetchReadmeDb } from "../../auth/repository/updateReadmeDb";
+import { fetchReadmeDb } from "../../../auth/repository/updateReadmeDb";
 
 export async function POST(request: NextRequest) {
   const userId = request.headers.get("Authorization")?.split(" ")[1];
@@ -14,13 +14,13 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const prompt = body.prompt;
   const doc_name = body.doc_name;
+  const model = body.model;
 
-  if (!prompt || !doc_name) {
-    return NextResponse.json({ error: "Prompt and doc_name are required" }, { status: 400 });
+  if (!prompt || !doc_name || !model) {
+    return NextResponse.json({ error: "Prompt, doc_name and model are required" }, { status: 400 });
   }
 
   const repository = await getRepositoryByNamePopulated(doc_name);
-
   if (!repository) {
     return NextResponse.json({ error: "Repository not found" }, { status: 404 });
   }
@@ -29,78 +29,74 @@ export async function POST(request: NextRequest) {
   const readme = await fetchReadmeDb(repositoryId);
 
   const updatedPrompt = {
-    systemPrompt: systemPrompt(),
+    systemPrompt: `
+    Do not respons in JSON format, just respond in this block format. In format :
+    <response>Your response to the user's message just the text not markdown or update or reason, in this section dont include #</response>
+    <update>true or false</update>
+    <readme>The updated README.md file, start this section with # (project_name) replace this with the actual name of the project</readme>
+    <conclusion>Reason for the update</conclusion>
+    VERY IMPORTANT: give the response in the block format above, dont include any other text or markdown or update or reason or conclusion, just the text.
+    ${systemPrompt()}`,
     userPrompt: prompt,
     previousReadme: readme,
   };
 
-  const result = await connectGemini(userId, JSON.stringify(updatedPrompt));
-
+  const result = await connectGemini(userId, JSON.stringify(updatedPrompt), model);
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 500 });
   }
 
+  // Create a ReadableStream that processes the async stream output.
   const streamText = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
-      let buffer = ""; // Accumulated text buffer
+      let buffer = "";
       let startTagFound = false;
       let newBuffer = "";
       let newStartTagFound = false;
       let responseCompleted = false;
 
       try {
-        for await (const chunk of result.stream) {
-          // Append the current chunk to the buffer
-          for (const char of chunk.text()) {
-            buffer += char;
-          }
+        // Cast result.stream to an async iterable.
+        const stream = result.stream as unknown as AsyncIterable<any>;
+        for await (const chunk of stream) {
+          // Get the chunk text (if chunk is not already a string)
+          const chunkText = typeof chunk === "string" ? chunk : await chunk.text();
+          buffer += chunkText;
 
           const startTag = "<response>";
           const endTag = "</response>";
 
-          // Process the buffer when the start tag is found
-          if (buffer.includes(startTag) && !startTagFound  && !responseCompleted) {
+          if (buffer.includes(startTag) && !startTagFound && !responseCompleted) {
             const startIndex = buffer.indexOf(startTag) + startTag.length;
-            buffer = buffer.substring(startIndex); // Trim the buffer to exclude the start tag
+            buffer = buffer.substring(startIndex);
             startTagFound = true;
-          }
-
-          // Check if the end tag exists in the buffer
-          else if (startTagFound && buffer.includes(endTag) && !responseCompleted) {
+          } else if (startTagFound && buffer.includes(endTag) && !responseCompleted) {
             const endIndex = buffer.indexOf(endTag);
-
-            // Extract and sanitize content up to the end tag
             const extractedText = buffer.substring(0, endIndex).trim();
             const sanitizedText = extractedText.replace(/```/g, "");
-
-            // Enqueue the sanitized text and stop streaming
             for (const char of sanitizedText) {
               controller.enqueue(encoder.encode(char));
             }
             responseCompleted = true;
           } else if (startTagFound && !buffer.includes(endTag) && !responseCompleted) {
-            // If only part of the content is available, enqueue it and keep waiting for the rest
             const sanitizedText = buffer.replace(/```/g, "");
             for (const char of sanitizedText) {
               controller.enqueue(encoder.encode(char));
             }
-            buffer = ""; // Reset the buffer for the next chunk
+            buffer = "";
           }
 
           const newStartTag = "<readme>";
           const newEndTag = "</readme>";
 
           if (responseCompleted) {
-            newBuffer += chunk.text();
-            
+            newBuffer += chunkText;
             if (newBuffer.includes(newStartTag) && !newStartTagFound) {
               const startIndex = newBuffer.indexOf(newStartTag) + newStartTag.length;
               newBuffer = newBuffer.substring(startIndex);
               newStartTagFound = true;
-            }
-
-            else if (newBuffer.includes(newEndTag) && newStartTagFound) {
+            } else if (newBuffer.includes(newEndTag) && newStartTagFound) {
               const endIndex = newBuffer.indexOf(newEndTag);
               newBuffer = newBuffer.substring(0, endIndex).trim();
               for (const char of newBuffer) {
@@ -115,7 +111,6 @@ export async function POST(request: NextRequest) {
             }
           }
         }
-
         controller.close();
       } catch (error) {
         controller.error(error);
@@ -124,8 +119,6 @@ export async function POST(request: NextRequest) {
   });
 
   return new Response(streamText, {
-    headers: {
-      "Content-Type": "text/plain",
-    },
+    headers: { "Content-Type": "text/plain" },
   });
 }
