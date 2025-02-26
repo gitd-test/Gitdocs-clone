@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
                         email: user.emailAddresses[0].emailAddress, // Replace this with a method to fetch the email securely
                         firstName: user.firstName, // Replace with user's first name
                         lastName: user.lastName, // Replace with user's last name
-                        subscriptionType: 'free',
+                        subscriptionType: 'Free',
                         signupDate: new Date(),
                         repositories: [],
                     });
