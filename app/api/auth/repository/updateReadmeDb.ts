@@ -1,8 +1,8 @@
-import connectMongo from "@/app/api/lib/db/connectMongo";
+import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 import Readme from "@/app/api/lib/models/Readme";
 
 export const updateReadmeDb = async (repositoryId: string, readmeData: any) => {
-    await connectMongo();
+    await connectMongoWithRetry();
     try {
         const readme = await Readme.findOne({ repositoryId });
 
@@ -18,7 +18,7 @@ export const updateReadmeDb = async (repositoryId: string, readmeData: any) => {
 };
 
 export const fetchReadmeDb = async (repositoryId: string) => {
-    await connectMongo();
+    await connectMongoWithRetry();
     const readme = await Readme.findOne({ repositoryId });
     return readme?.content;
 };

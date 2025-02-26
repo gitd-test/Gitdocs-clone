@@ -1,8 +1,8 @@
 import User from "@/app/api/lib/models/User";
-import connectMongo from "@/app/api/lib/db/connectMongo";
+import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 export const updateUserDb = async (user_id: string, github_user_id: string) => {
-    await connectMongo();
+    await connectMongoWithRetry();
 
     // Update only if githubUid is empty (null or undefined)
     await User.findOneAndUpdate(

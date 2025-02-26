@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import connectMongo from "../db/connectMongo";
+import connectMongoWithRetry from "../db/connectMongo";
 import User from "../models/User";
 
 export async function connectGemini(userId: string, prompt: string) {
 
-    await connectMongo();
+    await connectMongoWithRetry();
     const user = await User.find({clerkUid: userId});
 
     if (!user) {
