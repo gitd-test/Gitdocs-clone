@@ -4,7 +4,7 @@ import User from "../models/User";
 
 export async function connectGemini(userId: string, prompt: string) {
 
-    await connectMongo();
+    await connectMongoWithRetry();
     const user = await User.find({clerkUid: userId});
 
     if (!user) {

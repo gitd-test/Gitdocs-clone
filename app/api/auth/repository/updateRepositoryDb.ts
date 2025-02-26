@@ -41,7 +41,7 @@ export const parseRepositories = async (repositories: any) => {
 };
 
 export const updateRepositoryDb = async (repositories: Repository[], userId: string, installationId: number, githubUsername: string) => {
-    await connectMongo();
+    await connectMongoWithRetry();
 
     try {        
         // Iterate through the repositories and update existing ones, or insert new ones

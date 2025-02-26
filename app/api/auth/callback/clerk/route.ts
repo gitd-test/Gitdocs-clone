@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import connectMongo from '@/app/api/lib/db/connectMongo';
+import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
 import User from '@/app/api/lib/models/User';
 
 export async function GET(req: NextRequest) {
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         (async () => {
             try {
                 // Connect to the MongoDB database
-                await connectMongo();
+                await connectMongoWithRetry();
 
                 // Check if the user already exists in the database
                 const existingUser = await User.findOne({ clerkUid: userId });

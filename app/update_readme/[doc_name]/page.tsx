@@ -8,7 +8,7 @@ import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 export type paramsType = Promise<{ doc_name: string }>;
 
 const verifyUserWithDoc = async (userId: string, doc_name: string) => {
-  await connectMongo();
+  await connectMongoWithRetry();
   const user = await User.findOne({ clerkUid: userId });
   const doc = await getRepositoryByNamePopulated(doc_name);
   return user && doc && user.githubUid == doc.owner;
