@@ -46,8 +46,8 @@ export default function Sidebar() {
         {
         icon: LayoutDashboard,
         label: "Dashboard",
-        href: "/",
-        isActive: pathname === "/",
+        href: "/dashboard",
+        isActive: pathname === "/dashboard",
         },
         {
         icon: BookOpen,

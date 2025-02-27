@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema(
         githubUid: {
             type: String,
             unique: true,
+            sparse: true,  // Allows multiple null values
             required: false,
         },
         firstName: {

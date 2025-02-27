@@ -27,7 +27,7 @@ const DashboardPage = () => {
   }, [setNavbarTitle, setIsSidebarUsed, user]);
 
   return (
-    <div className="flex relative z-30">
+    <div className="flex relative z-30 bg-[#0D0D0D] text-[#EDEDED]">
       <Sidebar />
       <div className={`flex-1 ms-16 transition-all duration-300 relative -z-10`}>
         <NavBar />

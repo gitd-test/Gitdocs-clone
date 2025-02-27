@@ -1,18 +1,18 @@
-import DashboardPage from "@/components/Dashboard/DashboardPage"
+import LandingPage from '@/components/LandingPage/LandingPage'
 
-const Dashboard = () => {
+const Landingpage = () => {
   return (
-    <DashboardPage />
+    <LandingPage/>
   )
 }
 
 export const metadata = {
   title: {
-    absolute : "Dashboard | Gitdocs AI",
+    absolute : "Gitdocs AI",
     default : "Update Readme | Gitdocs AI",
     template : "%s | Gitdocs AI"
   },
   description: "Gitdocs AI",
 }
 
-export default Dashboard
+export default Landingpage;

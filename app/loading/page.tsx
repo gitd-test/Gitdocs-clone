@@ -10,7 +10,7 @@ export default function Loading() {
     useEffect(() => {
         // Simulate waiting time for processing (adjust based on your backend)
         const timeout = setTimeout(() => {
-            router.push('/'); // Redirect to the final destination
+            router.push('/dashboard'); // Redirect to the final destination
         }, 1000); // 1-second delay, matching backend operation
 
         return () => clearTimeout(timeout); // Cleanup timeout on unmount

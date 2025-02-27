@@ -1,14 +1,18 @@
-import LandingPage from "@/components/LandingPage/LandingPage"
-import { Metadata } from "next"
+import DashboardPage from "@/components/Dashboard/DashboardPage"
 
-export const metadata: Metadata = {
-  title: "GitDocs AI",
-  description: "GitDocs AI is a tool that helps you write documentation for your code.",
-}
-
-const LandingpageRoute = () => {
+const Dashboard = () => {
   return (
-    <LandingPage />
+    <DashboardPage />
   )
 }
-export default LandingpageRoute;
+
+export const metadata = {
+  title: {
+    absolute : "Dashboard | Gitdocs AI",
+    default : "Update Readme | Gitdocs AI",
+    template : "%s | Gitdocs AI"
+  },
+  description: "Gitdocs AI",
+}
+
+export default Dashboard

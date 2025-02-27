@@ -1,16 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,900;1,900&family=Raleway+Dots&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
-@font-face {
-  font-family: 'Raleway Dots';
-  src: url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,900;1,900&family=Raleway+Dots&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Roboto', sans-serif, 'Raleway Dots';
+    font-family: 'Roboto', sans-serif;
+  
 }
 
 ::-webkit-scrollbar {
@@ -314,8 +308,6 @@ body {
   background-color: #1f2937; /* Darker background */
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -372,13 +364,12 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "ss03", "cv01", "cv02";
   }
 }

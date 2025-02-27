@@ -10,7 +10,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <SessionWrapper>
-      <ClerkProvider dynamic>
+      <ClerkProvider dynamic afterSignOutUrl="/logout">
         <html lang="en" dir="ltr">
           <head>
             <meta charSet="utf-8" />
@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               `}
             </Script>
           </head>
-          <body className="bg-[#0D0D0D] text-[#EDEDED]">
+          <body >
             <GoogleAnalytics />
             <Theme>
               <AppProvider>

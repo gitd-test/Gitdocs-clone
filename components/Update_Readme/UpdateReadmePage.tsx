@@ -77,7 +77,7 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
 
   useEffect(() => {
     if (!isSignedIn) {
-      redirect("/");
+      redirect("/dashboard");
     }
 
     if (doc_name) {
@@ -88,15 +88,14 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
   }, [doc_name, isSignedIn, setNavbarTitle, setIsSidebarUsed]);
 
   return (
-    <>
+    <div className="bg-[#0D0D0D] text-[#EDEDED]">
       <NavBar />
       <div className="p-6 gap-6 flex h-[calc(100vh-64px)] overflow-hidden">
         <ChatSection doc_name={doc_name as string} isPreview={isPreview} setIsPreview={setIsPreview} content={content} setContent={setContent} />
         <PreviewSection isPreview={isPreview} setIsPreview={setIsPreview} content={content} setContent={setContent} />
       </div>
       {showModel && <ChooseModel modelProviders={modelProviders} />}
-    </>
-
+    </div>
   );
 };
 

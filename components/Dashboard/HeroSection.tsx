@@ -161,8 +161,8 @@ const HeroSection = () => {
   };
 
   return (
-    <div className={`flex flex-col gap-4 px-10 py-5`}>
-      <div className="gap-4">
+    <div className={`flex flex-col gap-4 px-10 py-5 min-h-[calc(100vh-64px)]`}>
+      <div className="gap-4 ">
         <h1 className="text-sm5 font-bold font-raleway-dots w-fit">
           {user && !((storedUser?.stepsCompleted || 0) < 3) ? (
             <>
@@ -210,7 +210,7 @@ const HeroSection = () => {
         </div>
       </div>
       {user && !((storedUser?.stepsCompleted || 0) < 3) ? (
-        <>
+        <div className="bg-[#0D0D0D] text-[#EDEDED]">
           {repositoriesUpdated && (
             <div className="flex items-center justify-between border py-1.5 px-3 rounded-lg border-[#F18B65] gap-4 h-full w-full">
               <div className="flex items-center gap-2 text-[#F18B65]">
@@ -267,9 +267,9 @@ const HeroSection = () => {
             ))}
             
           </div>
-        </>
+        </div>
       ) : (
-        <div className="flex items-center h-full w-full">
+        <div className="flex items-center h-full w-full bg-[#0D0D0D] text-[#EDEDED]">
           <GettingStarted />
         </div>
       )}
