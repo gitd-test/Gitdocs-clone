@@ -103,7 +103,7 @@ const NavBar = () => {
                     </div>
                 </div>
             </div>
-            {(user && isSidebarUsed) && <div className="sticky top-0 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
+            {(user && isSidebarUsed && "") && <div className="sticky top-0 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
                 Please add credits to your team in order to make API requests.
             </div>}
         </>
