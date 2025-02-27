@@ -2,31 +2,34 @@
 
 import { TfiWrite } from "react-icons/tfi";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction, useContext } from "react";
 import LoadingAnimation from "./LoadingAnimation";
-import { useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
 
 type AppContextType = {
     gridView: boolean;
+    stopAllActions: boolean;
+    setStopAllActions: Dispatch<SetStateAction<boolean>>;
 };
 
 const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: number }) => {
 
 
-    const { gridView } = useContext(AppContext) as AppContextType;
+    const { gridView, stopAllActions, setStopAllActions } = useContext(AppContext) as AppContextType;
 
     const [loading, setLoading] = useState(false)
 
     const router = useRouter();
 
     const handleUpdateReadme = () => {
+        setStopAllActions(true);
         if (doc_name) {
             setLoading(true)
             router.push(`/update_readme/${doc_name}`);
         } else {
             console.error("doc_name is undefined or empty");
         }
+        setStopAllActions(false);
     }
 
     const docScoreColor = () => {
@@ -50,7 +53,7 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
 
             <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] ${gridView ? 'px-3 py-2.5 -ms-1' : 'border px-2 py-[7px] mt-2'}`} onClick={() => {
                 handleUpdateReadme()
-            }}>
+            }} disabled={stopAllActions}>
                 
             {loading 
             ? 

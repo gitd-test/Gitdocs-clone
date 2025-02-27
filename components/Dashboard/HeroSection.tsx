@@ -38,6 +38,8 @@ interface AppContextType {
   setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
   storedUser: User | null;
   setStoredUser: Dispatch<SetStateAction<User | null>>;
+  stopAllActions: boolean;
+  setStopAllActions: Dispatch<SetStateAction<boolean>>;
 }
 
 
@@ -45,7 +47,7 @@ const HeroSection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isSignedIn } = useUser();
-  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, storedUser, setStoredUser } = useContext(AppContext) as AppContextType;
+  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, storedUser, setStoredUser, stopAllActions, setStopAllActions } = useContext(AppContext) as AppContextType;
   const [repositoriesLoading, setRepositoriesLoading] = useState(false);
   const [repositories, setRepositories] = useState<Repository[]>([]);
 
@@ -140,7 +142,6 @@ const HeroSection = () => {
 
   const handleGridView = (view: string) => {
     setGridView(view === "grid");
-    console.log(view);
     localStorage.setItem("gridView", `${view === "grid"}`);
   };
 
@@ -194,7 +195,7 @@ const HeroSection = () => {
                   </button>
                 </div>
                 <a
-                  href={`https://github.com/apps/gitdocs-ai/installations/new`}
+                  href={ stopAllActions ? "#" : `https://github.com/apps/gitdocs-ai/installations/new` }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm bg-[#0791F9] hover:bg-[#3196e3] text-white rounded-md px-4 py-2 flex items-center gap-2"

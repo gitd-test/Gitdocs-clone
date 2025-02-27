@@ -22,6 +22,7 @@ interface Model {
 }
 
 type AppContextType = {
+  showModel: boolean;
   setShowModel: (showModel: boolean) => void;
   selectedModel: Model;
 }
@@ -29,7 +30,7 @@ type AppContextType = {
 const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }: ChatSectionProps) => {
   const { user } = useUser();
 
-  const { setShowModel, selectedModel } = useContext(AppContext) as AppContextType;
+  const { setShowModel, selectedModel, showModel } = useContext(AppContext) as AppContextType;
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
@@ -182,23 +183,23 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
   return (
     <div
       className={`w-1/2 -mt-5 rounded-lg relative transition-all duration-300 flex-1 mx-auto ${
-        isPreview ? "" : "px-44"
+        isPreview ? "" : "px-40"
       }`}
       onClick={handleFocus}
     >
       <div className="flex justify-between px-5 py-2 items-center">
         <div className="text-white rounded-t-lg flex gap-5 items-center justify-between h-12">
-          <div className="flex items-center gap-3 text-sm hover:bg-[#1f1f1f] cursor-pointer rounded-full p-2 ps-2.5 pe-3.5">
-            <div className="w-9 h-9 rounded-full bg-[#8bd375] text-black text-lg font-bold flex items-center justify-center">
+          <div className="flex items-center gap-2 text-sm bg-[#1f1f1f] cursor-pointer rounded-full p-2 ps-2.5 pe-3.5">
+            <div className={`rounded-full bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${isPreview ? "w-8 h-8" : "w-9 h-9 text-lg"}`}>
               {doc_name.charAt(0).toUpperCase() + doc_name.charAt(1).toUpperCase()}
             </div>
-            <p className="truncate">{doc_name}</p>
+            <p className={`hover:underline ${isPreview ? "text-xs" : "text-sm"}`}>{doc_name}</p>
           </div>
 
-          <button className="flex items-center gap-3 text-sm bg-[#1f1f1f] cursor-pointer rounded-full p-4" onClick={() => setShowModel(true)}>
-            <LuBrain className="text-white" size={20} />
+          <button className={`flex items-center gap-3 bg-[#1f1f1f] cursor-pointer rounded-full p-4 transition-all duration-150 ${isPreview ? "text-xs" : "text-sm"}`} onClick={() => setShowModel(true)}>
+            <LuBrain className="text-white" size={isPreview ? 16 : 20} />
             <p>{selectedModel.name}</p>
-            <LuChevronDown className="text-white" size={20} />
+            <LuChevronDown className={`text-white transition-all duration-150 ${showModel ? "-rotate-180" : ""}`} size={isPreview ? 16 : 20} />
           </button>
         </div>
         <div className="flex items-center gap-2">

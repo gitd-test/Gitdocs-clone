@@ -7,6 +7,8 @@ interface User {
   stepsCompleted: number;
 }
 interface AppContextType {
+  stopAllActions: boolean;
+  setStopAllActions: Dispatch<SetStateAction<boolean>>;
   selectedModel: Model;
   setSelectedModel: Dispatch<SetStateAction<Model>>;
   selectedProvider: string;
@@ -41,6 +43,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [showModel, setShowModel] = useState<boolean>(false);
   const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
   const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
+  const [stopAllActions, setStopAllActions] = useState<boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
@@ -54,9 +57,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-
   return (
-    <AppContext.Provider value={{ storedUser, setStoredUser, navbarTitle, setNavbarTitle, isSidebarUsed, setIsSidebarUsed, gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, showModel, setShowModel, selectedProvider, setSelectedProvider, selectedModel, setSelectedModel }}>
+    <AppContext.Provider 
+    value={{ 
+      storedUser, setStoredUser, 
+      navbarTitle, setNavbarTitle, 
+      isSidebarUsed, setIsSidebarUsed, 
+      gridView, setGridView, 
+      repositoriesUpdated, setRepositoriesUpdated, 
+      showModel, setShowModel, 
+      selectedProvider, setSelectedProvider, 
+      selectedModel, setSelectedModel, 
+      stopAllActions, setStopAllActions 
+    }}>
       {children}
     </AppContext.Provider>
   );

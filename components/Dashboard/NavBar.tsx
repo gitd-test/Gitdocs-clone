@@ -60,7 +60,7 @@ const NavBar = () => {
                                             className="text-xs">New</p>
                                         </a>
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-gray-800 text-white">
+                                    <TooltipContent side="bottom" sideOffset={8} className="bg-[#E8E8E9] text-black">
 
                                         <p className="text-xs">Add New Repository</p>
                                     </TooltipContent>
@@ -76,7 +76,7 @@ const NavBar = () => {
 
                                 </TooltipTrigger>
 
-                            <TooltipContent className="bg-gray-800 text-white">
+                            <TooltipContent side="bottom" sideOffset={8} className="bg-[#E8E8E9] text-black">
                                 <p className="text-xs">Remaining Tokens</p>
                             </TooltipContent>
                             
@@ -95,7 +95,7 @@ const NavBar = () => {
                                     </div>
 
                                 </TooltipTrigger>
-                                <TooltipContent className="bg-gray-800 text-white">
+                                <TooltipContent side="bottom" sideOffset={8} className="bg-[#E8E8E9] text-black">
                                     <p className="text-xs">Notifications</p>
                                 </TooltipContent>
                             </Tooltip>
