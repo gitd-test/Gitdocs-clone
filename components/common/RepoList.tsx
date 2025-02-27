@@ -18,10 +18,30 @@ interface Repo {
 const RepoList = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (repoName: string) => void }) => {
 
     const colors = [
-        "#FFA500", "#87CEEB", "#FF007F", "#8A2BE2", 
-        "#FFD700", "#98FF98", "#FF6F61", "#40E0D0", 
-        "#00FFFF", "#32CD32", "#8BD375"
+        "#FFA500", // Orange
+        "#87CEEB", // Sky Blue
+        "#FF007F", // Deep Pink
+        "#9A4FEA", // Electric Purple
+        "#FFD700", // Gold
+        "#98FF98", // Pale Green
+        "#FF6F61", // Coral
+        "#40E0D0", // Turquoise
+        "#00FFFF", // Aqua
+        "#32CD32", // Lime Green
+        "#8BD375", // Soft Green
+        "#FFB6C1", // Light Pink
+        "#FFA07A", // Light Salmon
+        "#7B68EE", // Medium Slate Blue
+        "#9370DB", // Medium Purple
+        "#00FA9A", // Medium Spring Green
+        "#FF6347", // Tomato
+        "#20B2AA", // Light Sea Green
+        "#FF4500", // Orange Red
+        "#F0E68C", // Khaki
+        "#5F9EA0", // Cadet Blue
+        "#B0C4DE", // Light Steel Blue
     ];
+    
 
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 

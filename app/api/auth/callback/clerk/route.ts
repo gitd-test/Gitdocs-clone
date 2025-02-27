@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
 import User from '@/app/api/lib/models/User';
+import Subscription from '@/app/api/lib/models/Subscription';
 
 export async function GET(req: NextRequest) {
     try {
@@ -43,6 +44,18 @@ export async function GET(req: NextRequest) {
                         signupDate: new Date(),
                         repositories: [],
                     });
+
+                    await Subscription.create({
+                        userId: userId,
+                        subscriptionType: 'Free',
+                        subscriptionStatus: 'Inactive',
+                        subscriptionStartDate: new Date(),
+                        subscriptionEndDate: new Date(),
+                        subscriptionPrice: 0,
+                        leftOverTokens: 10000,
+                        bonusTokens: 0,
+                    });
+
                 }
             } catch (error) {
                 console.error('Background processing error:', error);

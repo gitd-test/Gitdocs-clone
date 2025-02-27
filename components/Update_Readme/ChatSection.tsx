@@ -190,29 +190,29 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
       <div className="flex justify-between px-5 py-2 items-center">
         <div className="text-white rounded-t-lg flex gap-5 items-center justify-between h-12">
           <div className="flex items-center gap-2 text-sm bg-[#1f1f1f] cursor-pointer rounded-full p-2 ps-2.5 pe-3.5">
-            <div className={`rounded-full bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${isPreview ? "w-8 h-8" : "w-9 h-9 text-lg"}`}>
+            <div className={`rounded-full flex-shrink-0 bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${isPreview ? "w-8 h-8" : "w-9 h-9 text-lg"}`}>
               {doc_name.charAt(0).toUpperCase() + doc_name.charAt(1).toUpperCase()}
             </div>
-            <p className={`hover:underline ${isPreview ? "text-xs" : "text-sm"}`}>{doc_name}</p>
+            <p className={`hover:underline truncate w-[82%] ${isPreview ? "text-xs max-w-[150px]" : "text-sm"}`}>{doc_name}</p>
           </div>
 
-          <button className={`flex items-center gap-3 bg-[#1f1f1f] cursor-pointer rounded-full p-4 transition-all duration-150 ${isPreview ? "text-xs" : "text-sm"}`} onClick={() => setShowModel(true)}>
-            <LuBrain className="text-white" size={isPreview ? 16 : 20} />
-            <p>{selectedModel.name}</p>
+          <button className={`flex items-center gap-3 bg-[#1f1f1f] cursor-pointer rounded-full p-4 transition-all duration-150 ${isPreview ? "text-xs max-w-[175px]" : "text-sm"}`} onClick={() => setShowModel(true)}>
+            <LuBrain className="text-white flex-shrink-0" size={isPreview ? 16 : 20} />
+            <p className="truncate w-[75%]">{selectedModel.name}</p>
             <LuChevronDown className={`text-white transition-all duration-150 ${showModel ? "-rotate-180" : ""}`} size={isPreview ? 16 : 20} />
           </button>
         </div>
         <div className="flex items-center gap-2">
           {message.length > 0 && (
             <button
-              className="text-sm group flex items-center gap-2 cursor-pointer border text-[#F2BD57] border-[#F2BD57] rounded-lg py-1 px-3"
+              className={`group flex items-center gap-2 group cursor-pointer border hover:bg-[#F2BD57] hover:text-black transition-all duration-150 text-[#F2BD57] border-[#F2BD57] rounded-full p-3.5 ${isPreview ? "text-xs" : "text-sm"}`}
               onClick={handleReset}
             >
               <HiArrowPath
-                className="group-focus:animate-spin transition-all duration-300"
+                className="group-focus:animate-spin transition-all duration-100"
                 size={16}
               />
-              <span>Reset</span>
+              <span className="group-hover:text-black transition-all duration-150">Restart Chat</span>
             </button>
           )}
         </div>
