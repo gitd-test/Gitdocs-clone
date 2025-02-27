@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Step 5: Redirect the user
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "https://gitdocs-ai.vercel.app"}/close`);
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "https://gitdocs.space"}/close`);
   } catch (error: any) {
     console.error("GitHub OAuth Error:", error.message || error);
 

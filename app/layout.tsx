@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta name="keywords" content="GitHub, code analysis, AI, repository analysis, code quality, code review, readme generator, AI tools for developers, Git automation" />
             <meta name="author" content="Abhas Kumar Sinha" />
             <meta name="robots" content="index, follow" />
-            <link rel="canonical" href="https://gitdocs-ai.vercel.app" />
+            <link rel="canonical" href="https://gitdocs.space" />
             <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
             <meta name="google-site-verification" content="jE8xZwoJxnDc2ICzxeLXfUNjB1xxBdMBxkwOVsxsnEY" />
 
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta property="og:title" content="Gitdocs AI - AI-powered Code Analysis" />
             <meta property="og:description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
             <meta property="og:image" content="/og-image.png" />
-            <meta property="og:url" content="https://gitdocs-ai.vercel.app" />
+            <meta property="og:url" content="https://gitdocs.space" />
             <meta property="og:type" content="website" />
 
             {/* Twitter Card Meta Tags */}
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "@type": "SoftwareApplication",
                 name: "Gitdocs AI",
                 description: "AI-powered code analysis tool for GitHub repositories.",
-                url: "https://gitdocs-ai.vercel.app",
+                url: "https://gitdocs.space",
                 author: { "@type": "Person", name: "Abhas Kumar Sinha" },
                 applicationCategory: "Developer Tools",
                 operatingSystem: "Web-based",
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </script>
 
             {/* Sitemap */}
-            <link rel="sitemap" type="application/xml" title="Sitemap" href="https://gitdocs-ai.vercel.app/sitemap.xml" />
+            <link rel="sitemap" type="application/xml" title="Sitemap" href="https://gitdocs.space/sitemap.xml" />
 
             {/* Preconnect for faster asset loading */}
             <link rel="preconnect" href="https://fonts.googleapis.com" />
