@@ -11,15 +11,11 @@ export async function GET(request: NextRequest) {
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>${baseUrl}/features</loc>
+    <loc>${baseUrl}/dashboard</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>${baseUrl}/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
+
 </urlset>`.trim(); // Ensure no leading/trailing spaces or newlines
 
   return new NextResponse(sitemap, {
