@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import User from '@/app/api/lib/models/User';
 import Subscription from '@/app/api/lib/models/Subscription';
-import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
 export async function GET(req: NextRequest) {
     try {
         // Fetch authenticated user's ID
@@ -22,13 +21,10 @@ export async function GET(req: NextRequest) {
 
         // Immediately redirect user to /loading
         const response = NextResponse.redirect(new URL('/loading', req.url));
-
         // Perform database operations in the background
+        
         (async () => {
             try {
-
-                // Connect to the MongoDB database
-                await connectMongoWithRetry();
 
                 // Check if the user already exists in the database
                 const existingUser = await User.findOne({ clerkUid: userId });
