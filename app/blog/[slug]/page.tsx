@@ -8,14 +8,42 @@ const blogComponents = {
   BlogPost2,
 };
 
-const Page = ({ params }: { params: { slug: string } }) => {
-  const post = blogPosts.find((post) => post.slug === params.slug);
+// Verify if the blog post exists
+const verifyBlogPost = (slug: string) => {
+  const post = blogPosts.find((post) => post.slug === slug);
+  return post || null;
+};
+
+// Generate metadata for the page
+export const generateMetadata = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params; // Await params here
+
+  const post = verifyBlogPost(slug);
+
+  if (!post) {
+    return {
+      title: "Not Found | GitDocs AI",
+      description: "Page not found",
+    };
+  }
+
+  return {
+    title: `${post.title} | GitDocs AI`,
+    description: post.excerpt,
+  };
+};
+
+// Main component for the page
+const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params; // Await params here
+
+  const post = verifyBlogPost(slug);
 
   if (!post) {
     return <NotFound />;
   }
 
-  // Get the component to render based on the post id
+  // Get the component to render based on the post ID
   const ComponentToRender = blogComponents[`BlogPost${post.id}` as keyof typeof blogComponents];
 
   if (!ComponentToRender) {
@@ -24,19 +52,5 @@ const Page = ({ params }: { params: { slug: string } }) => {
 
   return <ComponentToRender />;
 };
-
-export const generateMetadata = async ({ params }: { params: { slug: string } }) => {
-    const post = blogPosts.find((post) => post.slug === params.slug);
-    if (!post) {
-      return {
-        title: "Not Found | GitDocs AI",
-        description: "Page not found",
-      };
-    }
-    return {
-      title: `${post.title} | GitDocs AI`,
-      description: post.excerpt,
-    };
-  };
 
 export default Page;
