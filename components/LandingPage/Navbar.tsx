@@ -70,8 +70,8 @@ const Navbar = () => {
             <Link href="/#pricing" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
               Pricing
             </Link>
-            <Link href="/#contact" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
-              Contact
+            <Link href="/contact" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+              Contact Us
             </Link>
           </nav>
 
@@ -190,11 +190,11 @@ const Navbar = () => {
                 </span>
               </Link>
               <Link 
-                href="/#contact" 
+                href="/contact" 
                 className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-blue relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Contact
+                Contact Us
                 <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-blue group-hover:w-full transition-all duration-300"></span>
                 <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-blue">
