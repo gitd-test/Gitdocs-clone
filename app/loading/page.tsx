@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const messages = [
   { text: "Brewing code magic...", emoji: "✨" },
@@ -52,7 +53,7 @@ const LoadingScreen = () => {
       {/* Logo */}
       <div className="w-16 h-16 mb-12 flex items-center justify-center">
         <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#F97316] flex items-center justify-center">
-          <div className="w-9 h-9 rounded-full bg-white"></div>
+          <Image src="/logo.png" alt="Logo" width={48} height={48} />
         </div>
       </div>
 
@@ -66,7 +67,7 @@ const LoadingScreen = () => {
 
         {/* Current emoji */}
         <div
-          className={`absolute inset-0 flex items-center justify-center text-5xl transition-opacity duration-500 ${
+          className={`absolute inset-0 flex items-center justify-center text-3xl transition-opacity duration-500 ${
             fadeState === "out" ? "opacity-0" : "opacity-100"
           }`}
         >
