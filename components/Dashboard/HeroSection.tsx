@@ -94,7 +94,7 @@ const HeroSection = () => {
   
 
   useEffect(() => {
-    if (user) {
+    if (user && isSignedIn && (storedUser?.stepsCompleted || 0) >= 2) {
       setRepositoriesLoading(true);
       let storedRepositories = localStorage.getItem("repositories");
       let staleTime = localStorage.getItem("staleTime");

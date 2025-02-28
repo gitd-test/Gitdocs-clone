@@ -23,7 +23,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-
 // PATCH User Data
 export async function PATCH(request: NextRequest) {
   const id = request.headers.get("Authorization")?.split(" ")[1];
@@ -35,22 +34,12 @@ export async function PATCH(request: NextRequest) {
   try {
     const data = await request.json();
 
-    // Specify updatable fields
-    const allowedFields = ["subscriptionType", "stepsCompleted"];
-
-    // Filter incoming data to include only allowed fields
-    const updateData = Object.keys(data)
-      .filter((key) => allowedFields.includes(key))
-      .reduce<Record<string, any>>((obj, key) => {
-        obj[key] = data[key];
-        return obj;
-      }, {});
-
-    if (Object.keys(updateData).length === 0) {
-      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+    // Validate incoming data
+    if (!data || typeof data !== "object") {
+      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
-    const updatedUser = await updateUser(id, updateData);
+    const updatedUser = await updateUser(id, data);
 
     if (!updatedUser) {
       return NextResponse.json({ error: "User not found or update failed" }, { status: 404 });

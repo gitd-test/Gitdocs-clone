@@ -1,7 +1,7 @@
 import { isValidObjectId } from "mongoose";
 import Repository from "@/app/api/lib/models/Repository";
 import User from "@/app/api/lib/models/User";
-import { UserType, RepositoryType } from "@/app/api/lib/models/AllModelSchemas";
+import { RepositoryType, RepositoryUserType } from "@/app/api/lib/models/AllModelSchemas";
 
 // Type guard for RepositoryType
 const isRepositoryType = (obj: any): obj is RepositoryType => {
@@ -19,7 +19,7 @@ const isRepositoryType = (obj: any): obj is RepositoryType => {
 export const getClientRepositories = async (userId: string): Promise<RepositoryType[]> => {
     try {
         // Fetch user with a lean query and cast to UserType
-        const user = await User.findOne({ clerkUid: userId }).lean<UserType>().exec();
+        const user = await User.findOne({ clerkUid: userId }).lean<RepositoryUserType>().exec();
 
         // Check if the user exists and has a githubUid
         if (!user || !user.githubUid) {

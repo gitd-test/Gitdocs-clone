@@ -46,3 +46,4 @@ export const updateUser = async (userId: string, data: any) => {
     throw error;
   }
 };
+
