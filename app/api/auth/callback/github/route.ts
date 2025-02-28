@@ -71,7 +71,26 @@ export async function GET(req: NextRequest) {
       const repositories = await fetchRepositoriesForInstallation(Number(installationId));
       const parsedRepositories = await parseRepositories(repositories);
 
-      await updateRepositoryDb(parsedRepositories, userId || "", Number(installationId), githubUsername);
+      // Safely fetch README for each repository
+      const repositoriesWithReadme = await Promise.all(
+        parsedRepositories.map(async (repo : any) => {
+          try {
+            const { data: readmeData } = await axios.get(
+              `https://api.github.com/repos/${repo.owner}/${repo.name}/readme`,
+              {
+                headers: { Authorization: `Bearer ${access_token}` },
+              }
+            );
+            repo.readmeContent = Buffer.from(readmeData.content, "base64").toString("utf-8");
+          } catch (readmeError) {
+            console.warn(`No README found for ${repo.name}`);
+            repo.readmeContent = null; // Gracefully handle missing README
+          }
+          return repo;
+        })
+      );
+
+      await updateRepositoryDb(repositoriesWithReadme, userId || "", Number(installationId), githubUsername);
     } catch (error: any) {
       console.error("Error fetching repositories:", error.message);
     }

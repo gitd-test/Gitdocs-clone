@@ -156,7 +156,7 @@ const HeroSection = () => {
 
   const handleRefresh = () => {
     setRepositoriesUpdated(false);
-    router.push("/?refresh=true");
+    router.push("/dashboard?refresh=true");
     router.refresh();
   };
 

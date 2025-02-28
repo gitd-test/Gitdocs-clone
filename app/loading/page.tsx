@@ -51,8 +51,8 @@ const LoadingScreen = () => {
       className="fixed inset-0 z-50 bg-[#f8f9fe] flex flex-col items-center justify-center"
     >
       {/* Logo */}
-      <div className="w-16 h-16 mb-12 flex items-center justify-center">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#F97316] flex items-center justify-center">
+      <div className="w-20 h-20 mb-12 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#F97316] flex items-center justify-center">
           <Image src="/logo.png" alt="Logo" width={48} height={48} />
         </div>
       </div>
