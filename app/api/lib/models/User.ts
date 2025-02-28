@@ -6,14 +6,11 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            index: true, // Indexed for faster lookups
         },
         githubUid: {
             type: String,
             unique: true,
-            sparse: true, // Allows multiple null values
-            required: false,
-            index: true, // Indexed for queries involving GitHub UID
+            sparse: true, // Allows multiple null or undefined values
         },
         firstName: {
             type: String,
@@ -25,7 +22,6 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            index: true, // Indexed for faster lookups by email
         },
         subscriptionType: {
             type: String,
@@ -56,13 +52,6 @@ const UserSchema = new mongoose.Schema(
         timestamps: true, // Adds createdAt and updatedAt fields automatically
     }
 );
-
-// Explicitly define indexes with additional options
-UserSchema.index({ githubUid: 1 }, { sparse: true }); // Sparse index for GitHub UID
-UserSchema.index({ clerkUid: 1 });
-UserSchema.index({ email: 1 });
-UserSchema.index({ signupDate: 1 });
-UserSchema.index({ lastLogin: 1 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
 

@@ -23,9 +23,6 @@ const subscriptionSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now, index: true }, // Indexed for filtering or sorting by last update
 });
 
-// Explicit compound indexes
-subscriptionSchema.index({ userId: 1, subscriptionStatus: 1 }); // Compound index for filtering by user ID and subscription status
-subscriptionSchema.index({ subscriptionType: 1, subscriptionEndDate: -1 }); // Compound index for filtering by type and sorting by end date
 
 const Subscription =
     mongoose.models.Subscription || mongoose.model("Subscription", subscriptionSchema);
