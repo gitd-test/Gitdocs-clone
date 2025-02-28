@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import connectMongoWithRetry from "../api/lib/db/connectMongo";
 import { useRouter } from "next/navigation";
 
 const messages = [
@@ -23,17 +22,13 @@ const LoadingScreen = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Connect to MongoDB and navigate to the dashboard
-    async function connectDB() {
-      try {
-        await connectMongoWithRetry();
-        router.push("/dashboard");
-      } catch (error) {
-        console.error("Failed to connect to MongoDB:", error);
-      }
-    }
 
-    connectDB();
+    const wait = setTimeout(() => {
+      router.push("/dashboard");
+    }, 2000);
+
+    return () => clearTimeout(wait);
+
   }, [router]);
 
   useEffect(() => {
