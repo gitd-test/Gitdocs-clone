@@ -5,7 +5,7 @@ import { SignUpButton } from "@clerk/nextjs";
 
 const Hero = () => {
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-32 lg:pt-48 lg:pb-36 relative overflow-hidden">
+    <section className="pt-36 pb-20 md:pt-40 md:pb-32 lg:pt-32 lg:pb-36 relative overflow-hidden">
       <div className="absolute inset-0 -z-10 opacity-50">
         <div className="absolute inset-0 bg-gradient-to-b from-gitdocs-blue/10 via-gitdocs-purple/5 to-gitdocs-orange/10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full hero-image-glow" />

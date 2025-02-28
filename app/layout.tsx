@@ -43,7 +43,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "@context": "https://schema.org",
                 "@type": "SoftwareApplication",
                 name: "Gitdocs AI",
-                description: "AI-powered code analysis tool for GitHub repositories.",
                 url: "https://gitdocs.space",
                 author: { "@type": "Person", name: "Abhas Kumar Sinha" },
                 applicationCategory: "Developer Tools",

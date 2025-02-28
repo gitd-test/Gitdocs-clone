@@ -1,6 +1,6 @@
 "use client"
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Link  from "next/link";
 import { buttonVariants } from "@/components/ui/button-variants";
@@ -24,6 +24,19 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [scrolled]);
+
+    // Prevent scrolling when mobile menu is open
+    useEffect(() => {
+      if (mobileMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+      
+      return () => {
+        document.body.style.overflow = 'auto';
+      };
+    }, [mobileMenuOpen]);
 
   return (
     <header
@@ -75,13 +88,14 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden flex items-center"
+            className="md:hidden flex items-center z-[51]"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             <span className="sr-only">Menu</span>
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
-              className="h-6 w-6" 
+              className={`h-6 w-6 transition-colors`}
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"
@@ -95,49 +109,105 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden pt-4 pb-2 border-t mt-4 animate-fade-in bg-white/90 backdrop-blur-md rounded-lg shadow-md">
-            <nav className="flex flex-col space-y-4">
+        {/* Mobile Menu - Fullscreen Overlay */}
+        <div 
+          className={`fixed inset-0 z-50 md:hidden transition-all duration-300 ${
+            mobileMenuOpen 
+              ? 'opacity-100 pointer-events-auto' 
+              : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          {/* Solid background with lighter color */}
+          <div className="absolute inset-0 bg-[#F1F0FB]"></div>
+          
+          {/* Decorative elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-gitdocs-blue/10"></div>
+            <div className="absolute bottom-1/3 right-1/5 w-40 h-40 rounded-full bg-gitdocs-purple/10"></div>
+            <div className="absolute top-2/3 right-1/4 w-24 h-24 rounded-full border border-gitdocs-blue/20"></div>
+            <div className="absolute bottom-1/4 left-1/5 w-20 h-20 rounded-full border border-gitdocs-purple/20"></div>
+            
+            {/* Code bracket decorations */}
+            <div className="absolute top-20 right-10 text-6xl opacity-20 text-gitdocs-blue font-mono">{"{"}</div>
+            <div className="absolute bottom-20 left-10 text-6xl opacity-20 text-gitdocs-purple font-mono">{"}"}</div>
+          </div>
+          
+          <div className="relative h-full flex flex-col justify-center items-center">
+            <nav className="flex flex-col items-center justify-center space-y-8 p-8">
               <a 
                 href="#features" 
-                className="text-sm font-medium p-2 hover:bg-gitdocs-blue/10 rounded-md transition-colors"
+                className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-blue relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Features
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-blue group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-blue">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
               </a>
               <a 
                 href="#how-it-works" 
-                className="text-sm font-medium p-2 hover:bg-gitdocs-blue/10 rounded-md transition-colors"
+                className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-purple relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-purple group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-purple">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
               </a>
               <a 
                 href="#pricing" 
-                className="text-sm font-medium p-2 hover:bg-gitdocs-blue/10 rounded-md transition-colors"
+                className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-orange relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pricing
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-orange group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-orange">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
               </a>
               <a 
                 href="#contact" 
-                className="text-sm font-medium p-2 hover:bg-gitdocs-blue/10 rounded-md transition-colors"
+                className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-blue relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-blue group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-blue">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
               </a>
-              <div className="flex space-x-4 pt-2">
-                <a href="#" className={buttonVariants({ variant: "outline-gradient", size: "sm" })}>
+              
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-8">
+                <SignInButton>
+                  <p 
+                    className="px-6 py-3 rounded-full bg-white text-gitdocs-blue font-medium border border-gitdocs-blue/20 hover:shadow-md hover:border-gitdocs-blue/50 transition-all duration-300 text-center transform hover:scale-105"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                   Log In
-                </a>
-                <a href="#" className={buttonVariants({ variant: "gradient", size: "sm" })}>
+                </p>
+                </SignInButton>
+                <SignUpButton>
+                <p 
+                  className="px-6 py-3 rounded-full bg-gradient-to-r from-gitdocs-blue to-gitdocs-purple text-white font-medium hover:shadow-lg transition-all duration-300 text-center transform hover:scale-105"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Get Started
-                </a>
+                </p>
+                </SignUpButton>
               </div>
             </nav>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );
