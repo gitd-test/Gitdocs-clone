@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
 import User from '@/app/api/lib/models/User';
 import Subscription from '@/app/api/lib/models/Subscription';
-
+import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
 export async function GET(req: NextRequest) {
     try {
         // Fetch authenticated user's ID
@@ -27,6 +26,7 @@ export async function GET(req: NextRequest) {
         // Perform database operations in the background
         (async () => {
             try {
+
                 // Connect to the MongoDB database
                 await connectMongoWithRetry();
 

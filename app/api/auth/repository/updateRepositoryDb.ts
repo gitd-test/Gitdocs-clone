@@ -1,4 +1,3 @@
-import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 import Repository from "@/app/api/lib/models/Repository";
 import User from "@/app/api/lib/models/User";
 import { fetchRepositoryReadme } from "./fetchRepositories";
@@ -41,7 +40,6 @@ export const parseRepositories = async (repositories: any) => {
 };
 
 export const updateRepositoryDb = async (repositories: Repository[], userId: string, installationId: number, githubUsername: string) => {
-    await connectMongoWithRetry();
 
     try {        
         // Iterate through the repositories and update existing ones, or insert new ones

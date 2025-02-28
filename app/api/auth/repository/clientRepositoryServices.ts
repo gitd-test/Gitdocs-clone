@@ -1,9 +1,7 @@
-import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 import Repository from "@/app/api/lib/models/Repository";
 import User from "@/app/api/lib/models/User";
 
 export const getClientRepositories = async (userId: string) => {
-    await connectMongoWithRetry();
 
     const user = await User.findOne({ clerkUid: userId });
 
@@ -20,26 +18,22 @@ export const getClientRepositories = async (userId: string) => {
 };
 
 export const getRepositoryById = async (repositoryId: string) => {
-    await connectMongoWithRetry();
     const repository = await Repository.findById(repositoryId);
     return repository;
 };
 
 export const getRepositoryByNamePopulated = async (name: string) => {
-    await connectMongoWithRetry();
     const repository = await Repository.findOne({ name: name });
     return repository;
 };
 
 
 export const getRepositoryByOwner = async (owner: string) => {
-    await connectMongoWithRetry();
     const repository = await Repository.find({ owner: owner });
     return repository;
 };
 
 export const getRepositoryByOwnerAndRepositoryId = async (owner: string, repositoryId: string) => {
-    await connectMongoWithRetry();
     const repository = await Repository.findOne({ owner: owner, repositoryId: repositoryId });
     return repository;
 };
