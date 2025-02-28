@@ -1,5 +1,6 @@
 import Image from "next/image";
 import logo from "@/app/favicon.ico";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -52,26 +53,26 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-semibold mb-4">Product</h3>
             <ul className="space-y-2">
-              <li><a href="#features" className="text-muted-foreground hover:text-gitdocs-blue">Features</a></li>
-              <li><a href="#pricing" className="text-muted-foreground hover:text-gitdocs-blue">Pricing</a></li>
-              <li><a href="#documentation" className="text-muted-foreground hover:text-gitdocs-blue">Documentation</a></li>
+              <li><Link href="/#features" className="text-muted-foreground hover:text-gitdocs-blue">Features</Link></li>
+              <li><Link href="/#pricing" className="text-muted-foreground hover:text-gitdocs-blue">Pricing</Link></li>
+              <li><Link href="/#documentation" className="text-muted-foreground hover:text-gitdocs-blue">Documentation</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-sm font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
-              <li><a href="#about" className="text-muted-foreground hover:text-gitdocs-blue">About</a></li>
-              <li><a href="#blog" className="text-muted-foreground hover:text-gitdocs-blue">Blog</a></li>
-              <li><a href="#contact" className="text-muted-foreground hover:text-gitdocs-blue">Contact</a></li>
+              <li><Link href="/#about" className="text-muted-foreground hover:text-gitdocs-blue">About</Link></li>
+              <li><Link href="/blog" className="text-muted-foreground hover:text-gitdocs-blue">Blog</Link></li>
+              <li><Link href="/#contact" className="text-muted-foreground hover:text-gitdocs-blue">Contact</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-sm font-semibold mb-4">Legal</h3>
             <ul className="space-y-2">
-              <li><a href="/terms" className="text-muted-foreground hover:text-gitdocs-blue">Terms</a></li>
-              <li><a href="/privacy" className="text-muted-foreground hover:text-gitdocs-blue">Privacy</a></li>
+              <li><Link href="/terms" className="text-muted-foreground hover:text-gitdocs-blue">Terms</Link></li>
+              <li><Link href="/privacy" className="text-muted-foreground hover:text-gitdocs-blue">Privacy</Link></li>
             </ul>
           </div>
         </div>

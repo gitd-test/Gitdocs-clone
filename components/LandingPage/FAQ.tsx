@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 
 const faqs = [
@@ -99,12 +100,12 @@ const FAQ = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to know about GitDocs AI. Can't find the answer
             you're looking for?
-            <a
-              href="#contact"
+            <Link
+              href="/#contact"
               className="text-gitdocs-blue font-medium hover:underline ml-1"
             >
               Contact our team
-            </a>
+            </Link>
           </p>
         </div>
 

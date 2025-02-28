@@ -2,7 +2,7 @@
 
 import { buttonVariants } from "@/components/ui/button-variants";
 import { SignUpButton } from "@clerk/nextjs";
-
+import Link from "next/link";
 const Hero = () => {
   return (
     <section className="pt-36 pb-20 md:pt-40 md:pb-32 lg:pt-32 lg:pb-36 relative overflow-hidden">
@@ -34,12 +34,12 @@ const Hero = () => {
                 Get Started Free
               </p>
             </SignUpButton>
-            <a 
-              href="#how-it-works" 
+            <Link 
+              href="/#how-it-works" 
               className={buttonVariants({ variant: "outline-gradient", size: "xl" })}
             >
               How It Works
-            </a>
+            </Link>
           </div>
           
           <div className="mt-12 md:mt-16 opacity-0 animate-fade-in-delay-4">

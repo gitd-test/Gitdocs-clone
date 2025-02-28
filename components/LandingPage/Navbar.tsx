@@ -41,7 +41,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass shadow-sm py-3' : 'bg-transparent py-5'
+        scrolled ? 'backdrop-blur-md bg-white/60 border border-white/20 shadow-md shadow-sm py-3' : 'bg-transparent py-5'
       }`}
     >
       <div className="container mx-auto px-4 md:px-10">
@@ -58,18 +58,21 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            <Link href="/" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+              Home
+            </Link>
+            <Link href="/blog" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+              Blogs
+            </Link>
+            <Link href="/#features" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
               Features
-            </a>
-            <a href="#how-it-works" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
-              How It Works
-            </a>
-            <a href="#pricing" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            </Link>
+            <Link href="/#pricing" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
               Pricing
-            </a>
-            <a href="#contact" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            </Link>
+            <Link href="/#contact" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
               Contact
-            </a>
+            </Link>
           </nav>
 
           {/* CTA Buttons */}
@@ -134,8 +137,34 @@ const Navbar = () => {
           
           <div className="relative h-full flex flex-col justify-center items-center">
             <nav className="flex flex-col items-center justify-center space-y-8 p-8">
-              <a 
-                href="#features" 
+              <Link 
+                  href="/" 
+                  className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-blue relative group transition-colors duration-300"
+                  onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-blue group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-blue">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
+              </Link>
+              <Link 
+                href="/blog" 
+                className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-purple relative group transition-colors duration-300"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blogs
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-purple group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-purple">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
+              </Link>
+              <Link 
+                href="/#features" 
                 className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-blue relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -146,22 +175,9 @@ const Navbar = () => {
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </span>
-              </a>
-              <a 
-                href="#how-it-works" 
-                className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-purple relative group transition-colors duration-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                How It Works
-                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gitdocs-purple group-hover:w-full transition-all duration-300"></span>
-                <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gitdocs-purple">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                  </svg>
-                </span>
-              </a>
-              <a 
-                href="#pricing" 
+              </Link>
+              <Link 
+                href="/#pricing" 
                 className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-orange relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -172,9 +188,9 @@ const Navbar = () => {
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </span>
-              </a>
-              <a 
-                href="#contact" 
+              </Link>
+              <Link 
+                href="/#contact" 
                 className="text-xl font-semibold text-[#221F26] hover:text-gitdocs-blue relative group transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -185,7 +201,7 @@ const Navbar = () => {
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </span>
-              </a>
+              </Link>
               
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-8">
                 <SignInButton>

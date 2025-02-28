@@ -47,7 +47,7 @@ const NotFound = () => {
                 </Link>
                 
                 <a 
-                href="mailto:support@gitdocs.ai" 
+                href="mailto:abhas.kumar@gitdocs.space" 
                 className={buttonVariants({ variant: "outline-gradient", size: "lg" })}
                 >
                 Contact Support
