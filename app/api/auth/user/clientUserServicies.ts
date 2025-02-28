@@ -19,10 +19,24 @@ export const getUser = async (userId: string): Promise<UserType | null> => {
 // Update User Data
 export const updateUser = async (userId: string, data: any) => {
   try {
+    const allowedUpdates = ["subscriptionType", "stepsCompleted"]; // Restrict updatable fields
+
+    // Filter the update data
+    const filteredData = Object.keys(data).reduce<Record<string, any>>((result, key) => {
+      if (allowedUpdates.includes(key)) {
+        result[key] = data[key];
+      }
+      return result;
+    }, {});
+
+    if (Object.keys(filteredData).length === 0) {
+      throw new Error("No valid fields to update");
+    }
+
     // Update and return the updated document
     const updatedUser = await User.findOneAndUpdate(
       { clerkUid: userId },
-      { $set: data },
+      { $set: filteredData },
       { new: true, fields: "subscriptionType stepsCompleted" } // Only return required fields
     ).lean();
 
