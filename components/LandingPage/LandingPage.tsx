@@ -6,6 +6,7 @@ import Navbar from "@/components/LandingPage/Navbar";
 import Hero from "@/components/LandingPage/Hero";
 import Features from "@/components/LandingPage/Features";
 import HowItWorks from "@/components/LandingPage/HowItWorks";
+import SupportedTechnologies from './SupportedTechnologies';
 import Testimonials from "@/components/LandingPage/Testimonials";
 import FAQ from "@/components/LandingPage/FAQ";
 import CTA from "@/components/LandingPage/CTA";
@@ -43,6 +44,7 @@ const Index = () => {
         <Hero />
         <Features />
         <HowItWorks />
+        <SupportedTechnologies />
         <Testimonials />
         <FAQ />
         <CTA />
