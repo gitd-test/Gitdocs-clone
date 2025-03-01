@@ -94,6 +94,7 @@ const HeroSection = () => {
       if (storedRepositories && !searchParams.get("refresh")) {
         setRepositories(JSON.parse(storedRepositories));
         setRepositoriesLoading(false);
+        router.push("/dashboard");
 
       } else {
         axios

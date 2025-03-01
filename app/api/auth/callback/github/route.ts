@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
         // Safely fetch README for each repository
         const repositoriesWithReadme = await Promise.all(
           parsedRepositories.map(async (repo: any) => {
-            return await fetchRepositoryReadme(repo.owner, repo.name, Number(installationId));
+            return await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
           })
         );
 

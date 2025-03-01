@@ -8,5 +8,6 @@ export const updateUserDb = async (user_id: string, github_user_id: string) => {
         { $set: { githubUid: github_user_id } }, // Update the githubUid field
         { new: true } // Return the updated document
     );
+
 };
 
