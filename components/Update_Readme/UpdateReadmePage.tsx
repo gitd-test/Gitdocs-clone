@@ -19,6 +19,7 @@ interface AppContextType {
   setIsSidebarUsed: (isSidebarUsed: boolean) => void;
   showModel: boolean;
   storedUser: User;
+  setStopAllActions: (stopAllActions: boolean) => void;
 }
 
 interface UpdateReadmePageProps {
@@ -31,7 +32,11 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
   const [isPreview, setIsPreview] = useState(false);
   const [content, setContent] = useState<string>("");
 
-  const { setNavbarTitle, setIsSidebarUsed, showModel, storedUser } = useContext(AppContext) as AppContextType;
+  const { setNavbarTitle, setIsSidebarUsed, showModel, storedUser, setStopAllActions } = useContext(AppContext) as AppContextType;
+
+  useEffect(() => {
+    setStopAllActions(false);
+  }, [setStopAllActions]);
 
   const modelProviders = [
     {
