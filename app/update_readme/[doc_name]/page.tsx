@@ -6,7 +6,7 @@ import axios from "axios";
 // Helper function to call the API
 const verifyDocWithAPI = async (userId: string, doc_name: string) => {
   try {
-    const response = await axios.post(`/api/verifydoc`, {
+    const response = await axios.post(`https://gitdocs.space/api/verifydoc`, {
       userId,
       doc_name,
     });
