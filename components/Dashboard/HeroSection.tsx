@@ -130,7 +130,6 @@ const HeroSection = () => {
 
 
   const handleStarClick = (repoName: string) => {
-    console.log(`Star clicked for ${repoName}`);
     const updatedRepositories = repositories.map((repo) =>
       repo.name === repoName ? { ...repo, starred: !repo.starred } : repo
     );

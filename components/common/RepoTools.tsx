@@ -29,7 +29,6 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
         } else {
             console.error("doc_name is undefined or empty");
         }
-        setStopAllActions(false);
     }
 
     const docScoreColor = () => {

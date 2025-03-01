@@ -1,43 +1,23 @@
 import UpdateReadmePage from "@/components/Update_Readme/UpdateReadmePage";
-import { getRepositoryByNamePopulated } from "@/app/api/auth/repository/clientRepositoryServices";
 import { auth } from "@clerk/nextjs/server";
 import User from "@/app/api/lib/models/User";
-
 
 export type paramsType = Promise<{ doc_name: string }>;
 
 const verifyUserWithDoc = async (userId: string, doc_name: string) => {
-  const user = await User.findOne({ clerkUid: userId });
-  const doc = await getRepositoryByNamePopulated(doc_name);
-  return user && doc && user.githubUid == doc.owner;
-
-};
-
-// Generate metadata for the page
-export const generateMetadata = async (props: { params: paramsType }) => {
-  const { userId } = await auth();
-  if (!userId) {
-    return {
-      title: `Error: Unauthorized`,
-
-      description: `Error: Unauthorized`,
-    };
-  }
-  const { doc_name } = await props.params;
-  const validDoc = await verifyUserWithDoc(userId, doc_name);
-
-  if (!validDoc) {
-    return {
-      title: `Error: Repository ${doc_name} not found`,
-      description: `Error: Repository ${doc_name} not found`,
-    };
-  }
-
-
-  return {
-    title: `Update Readme: ${doc_name} | Gitdocs AI`,
-    description: `Update Readme for ${doc_name}`,
-  };
+  const doc = await User.aggregate([
+    { $match: { clerkUid: userId } },
+    {
+      $lookup: {
+        from: "repositories",
+        localField: "githubUid",
+        foreignField: "owner",
+        as: "repository",
+      },
+    },
+    { $match: { "repository.name": doc_name } },
+  ]);
+  return doc.length > 0;
 };
 
 // Main component for the page
