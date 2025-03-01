@@ -72,6 +72,8 @@ export async function GET(req: NextRequest) {
         const repositories = await fetchRepositoriesForInstallation(Number(installationId));
         const parsedRepositories = await parseRepositories(repositories);
 
+        console.log(parsedRepositories);
+
         // Safely fetch README for each repository
         const repositoriesWithReadme = await Promise.all(
           parsedRepositories.map(async (repo: any) => {
