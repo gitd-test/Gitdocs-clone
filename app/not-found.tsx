@@ -3,12 +3,21 @@
 import { usePathname } from 'next/navigation';
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { useContext } from "react";
+import { AppContext } from "@/contexts/AppContext";
+
+type AppContextType = {
+    setStopAllActions: (stopAllActions: boolean) => void;
+}
 
 const NotFound = () => {
     const pathname = usePathname();
 
+    const { setStopAllActions } = useContext(AppContext) as unknown as AppContextType;
+
     const goDashboard = () => {
         if (pathname.includes("/update_readme") || pathname.includes("/dashboard")) {
+            setStopAllActions(false);
             return true;
         }
         return false;

@@ -15,9 +15,9 @@ const verifyDocWithAPI = async (userId: string, doc_name: string) => {
       return false;
     }
 
-    const { valid } = response.data;
-    
-    return valid;
+    const { data } = response.data;
+
+    return data;
   } catch (error) {
     console.error("Error verifying document:", error);
     return false;
