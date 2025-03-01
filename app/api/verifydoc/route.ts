@@ -18,13 +18,18 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, doc_name } = await req.json();
 
+    console.log(userId, doc_name);
+
     if (!userId || !doc_name) {
+      console.log("Invalid input");
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
     const validDoc = await verifyUserWithDoc(userId, doc_name);
+    console.log("validDoc", validDoc);
 
     if (!validDoc) {
+      console.log("Repository not found");
       return NextResponse.json({ error: `Repository ${doc_name} not found` }, { status: 404 });
     }
 
