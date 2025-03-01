@@ -14,7 +14,7 @@ export const fetchRepositoriesForInstallation = async (installationId: number) =
   }
 };
 
-export const fetchRepositoryReadme = async (owner: string,repo: string,installationId: number) => {
+export const fetchRepositoryReadme = async (owner: string, repo: string, installationId: number) => {
   const octokit = getAuthenticatedOctokit(installationId);
 
   try {
@@ -39,12 +39,14 @@ export const fetchRepositoryReadme = async (owner: string,repo: string,installat
   } catch (error: any) {
     console.error("Error fetching repository readme:", error);
 
-    // Differentiate error scenarios if needed
     if (error.response?.status === 404) {
-      return null;
+      // Explicitly log or handle 404 errors if needed
+      console.warn(`README not found for repository: ${owner}/${repo}`);
+      return null; // No README exists for this repository
     }
 
-    throw new Error("Failed to fetch repository readme");
+    throw new Error(`Failed to fetch repository README for ${owner}/${repo}`);
   }
 };
+
 
