@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import User from "@/app/api/lib/models/User";
 import Repository from "@/app/api/lib/models/Repository";
@@ -21,29 +21,28 @@ const verifyUserWithDoc = async (userId: string, doc_name: string) => {
   return valid;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
-  const { userId } = await auth();
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const { doc_name } = req.query;
-  if (!doc_name || typeof doc_name !== "string") {
-    return res.status(400).json({ error: "Invalid repository name" });
-  }
-
+export async function GET(req: Request) {
   try {
-    const validDoc = await verifyUserWithDoc(userId, doc_name);
-    if (!validDoc) {
-      return res.status(404).json({ error: `Repository ${doc_name} not found` });
+    const url = new URL(req.url);
+    const doc_name = url.searchParams.get("doc_name");
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    return res.status(200).json({ success: true });
+    if (!doc_name) {
+      return NextResponse.json({ error: "Invalid repository name" }, { status: 400 });
+    }
+
+    const validDoc = await verifyUserWithDoc(userId, doc_name);
+    if (!validDoc) {
+      return NextResponse.json({ error: `Repository ${doc_name} not found` }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("Error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
