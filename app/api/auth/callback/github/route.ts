@@ -72,6 +72,9 @@ export async function GET(req: NextRequest) {
         const repositories = await fetchRepositoriesForInstallation(Number(installationId));
         const parsedRepositories = await parseRepositories(repositories);
 
+        console.log("repositories", repositories);
+        console.log("parsedRepositories", parsedRepositories);
+
         updateRepositoryDb(parsedRepositories, userId || "", Number(installationId), githubUsername);
       } catch (error: any) {
         console.error("Error fetching repositories:", error.message);
