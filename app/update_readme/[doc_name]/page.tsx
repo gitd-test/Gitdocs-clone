@@ -1,21 +1,21 @@
 import UpdateReadmePage from "@/components/Update_Readme/UpdateReadmePage";
 import { auth } from "@clerk/nextjs/server";
 import NotFound from "@/app/not-found";
+import axios from "axios";
 
 // Helper function to call the API
 const verifyDocWithAPI = async (userId: string, doc_name: string) => {
   try {
-    const response = await fetch(`/api/verifydoc`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, doc_name }),
+    const response = await axios.post(`/api/verifydoc`, {
+      userId,
+      doc_name,
     });
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       return false;
     }
 
-    const { valid } = await response.json();
+    const { valid } = response.data;
     return valid;
   } catch (error) {
     console.error("Error verifying document:", error);
