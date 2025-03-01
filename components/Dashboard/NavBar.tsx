@@ -7,6 +7,7 @@ import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/comp
 import Link from "next/link";
 import LoadingAnimation from "../common/LoadingAnimation";
 import { useUser } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 
 interface AppContextType {
     navbarTitle: string;
@@ -19,7 +20,7 @@ interface AppContextType {
 const NavBar = () => {
 
     const { user } = useUser();
-
+    const pathname = usePathname();
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
     const { navbarTitle, isSidebarUsed, setRepositoriesUpdated, stopAllActions } = useContext(AppContext) as AppContextType;
@@ -28,7 +29,7 @@ const NavBar = () => {
         <>
             <div className={`flex justify-between items-center px-6 py-4 h-16 border-b border-[#3D444D]`}>
                 <div className="flex items-center gap-4">
-                {isSidebarUsed 
+                {pathname === "/dashboard" 
                 ? <p className="text-xs">Home</p>
                 : <Link href="/dashboard" onClick={() => setBackHomeLoading(true)} className="text-[#8b929d] flex items-center gap-2">
                     
@@ -37,7 +38,7 @@ const NavBar = () => {
                     <p className="text-xs">Back Home</p>
                 </Link>}
 
-                <h1 className="font-bold text border-l border-[#3D444D] pl-4 py-2">{navbarTitle}</h1>
+                <h1 className="font-semibold text-sm border-l border-[#3D444D] pl-4 py-2">{navbarTitle}</h1>
                 </div>
 
 

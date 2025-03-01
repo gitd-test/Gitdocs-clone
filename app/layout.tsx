@@ -17,16 +17,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta name="description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
             <meta name="keywords" content="GitHub, code analysis, AI, repository analysis, code quality, code review, readme generator, AI tools for developers, Git automation" />
+            <meta name="rating" content="General" />
+            <meta name="revisit-after" content="7 days" />
+            <meta name="distribution" content="Global" />
+            <meta name="coverage" content="Worldwide" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
             <meta name="author" content="Abhas Kumar Sinha" />
             <meta name="robots" content="index, follow" />
             <link rel="canonical" href="https://gitdocs.space" />
             <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
             <meta name="google-site-verification" content="jE8xZwoJxnDc2ICzxeLXfUNjB1xxBdMBxkwOVsxsnEY" />
 
+            <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+            <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+            <link rel="manifest" href="/site.webmanifest" />
+            <meta name="theme-color" content="#ffffff" />
+
             {/* Open Graph Meta Tags */}
+            <meta property="og:site_name" content="Gitdocs AI" />
+            <meta property="og:locale" content="en_US" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
             <meta property="og:title" content="Gitdocs AI - AI-powered Code Analysis" />
             <meta property="og:description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
-            <meta property="og:image" content="/og-image.png" />
+            <meta property="og:image" content="/logo.png" />
             <meta property="og:url" content="https://gitdocs.space" />
             <meta property="og:type" content="website" />
 
@@ -34,8 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content="Gitdocs AI - AI-powered Code Analysis" />
             <meta name="twitter:description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
-            <meta name="twitter:image" content="/og-image.png" />
-            <meta name="twitter:creator" content="@yourtwitterhandle" />
+            <meta name="twitter:image" content="/logo.png" />
 
             {/* Structured Data */}
             <script type="application/ld+json">
