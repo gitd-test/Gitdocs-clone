@@ -5,7 +5,7 @@ import NotFound from "@/app/not-found";
 // Helper function to call the API
 const verifyDocWithAPI = async (userId: string, doc_name: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/verifydoc`, {
+    const response = await fetch(`/api/verifydoc`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, doc_name }),
