@@ -72,16 +72,7 @@ export async function GET(req: NextRequest) {
         const repositories = await fetchRepositoriesForInstallation(Number(installationId));
         const parsedRepositories = await parseRepositories(repositories);
 
-        console.log(parsedRepositories);
-
-        // Safely fetch README for each repository
-        const repositoriesWithReadme = await Promise.all(
-          parsedRepositories.map(async (repo: any) => {
-            return await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
-          })
-        );
-
-        updateRepositoryDb(repositoriesWithReadme, userId || "", Number(installationId), githubUsername);
+        updateRepositoryDb(parsedRepositories, userId || "", Number(installationId), githubUsername);
       } catch (error: any) {
         console.error("Error fetching repositories:", error.message);
       }

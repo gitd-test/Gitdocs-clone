@@ -59,8 +59,12 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                         { $addToSet: { repositories: repo.repositoryId } }
                     );
 
-                    const readmeData = await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
-                    await updateReadmeDb(repo.repositoryId, readmeData);
+                    try {
+                        const readmeData = await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
+                        await updateReadmeDb(repo.repositoryId, readmeData);
+                    } catch (error) {
+                        console.error(`Error fetching README for ${repo.name}:`, error);
+                    }
                 }
 
             } catch (error) {
