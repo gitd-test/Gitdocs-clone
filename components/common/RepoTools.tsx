@@ -50,7 +50,7 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
         <div className={`flex ${gridView ? 'mt-3 justify-between items-center' : '-mt-1 mb-1 flex-col-reverse w-full'}`}>
             <div className="flex items-center">
 
-            <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] ${gridView ? 'px-3 py-2.5 -ms-1' : 'border px-2 py-[7px] mt-2'}`} onClick={() => {
+            <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] ${gridView ? 'px-3 py-2.5 -ms-1' : 'border px-2 py-[7px] mt-2'} ${stopAllActions ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={() => {
                 handleUpdateReadme()
             }} disabled={stopAllActions}>
                 

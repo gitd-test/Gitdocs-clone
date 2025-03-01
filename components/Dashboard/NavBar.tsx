@@ -12,6 +12,7 @@ interface AppContextType {
     navbarTitle: string;
     isSidebarUsed: boolean;
     setRepositoriesUpdated: (repositoriesUpdated: boolean) => void;
+    stopAllActions: boolean;
 }
 
 
@@ -21,7 +22,7 @@ const NavBar = () => {
 
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
-    const { navbarTitle, isSidebarUsed, setRepositoriesUpdated } = useContext(AppContext) as AppContextType;
+    const { navbarTitle, isSidebarUsed, setRepositoriesUpdated, stopAllActions } = useContext(AppContext) as AppContextType;
 
     return (
         <>
@@ -50,7 +51,7 @@ const NavBar = () => {
                                 <Tooltip>
                                     <TooltipTrigger>
                                         <a 
-                                        href={`https://github.com/apps/gitdocs-ai/installations/new`}
+                                        href={stopAllActions ? "#" : `https://github.com/apps/gitdocs-ai/installations/new`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={() => setRepositoriesUpdated(true)}

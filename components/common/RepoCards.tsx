@@ -50,7 +50,7 @@ const RepoCards = ({ repo, handleStarClick }: { repo: Repo, handleStarClick: (re
         <div className="border border-[#232323] hover:border-[#3196e3] bg-[#121212] transition-all duration-150 overflow-hidden px-6 pt-4 pb-2.5 rounded-lg shadow-sm">
             <div className="mb-3 flex items-center justify-between font-medium text-[#dedbdb]">
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full user-select-none text-black text-xl font-bold flex items-center justify-center`} style={{ backgroundColor: randomColor }}>
                     {repo.name.charAt(0).toUpperCase() + repo.name.charAt(1).toUpperCase()}
                 </div>

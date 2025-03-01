@@ -1,56 +1,46 @@
-import BlogPost1 from "@/blogs/BlogPost1";
-import BlogPost2 from "@/blogs/BlogPost2";
-import { blogPosts } from "@/data/BlogData";
+import UpdateReadmePage from "@/components/Update_Readme/UpdateReadmePage";
+import { auth } from "@clerk/nextjs/server";
 import NotFound from "@/app/not-found";
 
-const blogComponents = {
-  BlogPost1,
-  BlogPost2,
-};
+export type ParamsType = Promise<{ doc_name: string }>;
 
-// Verify if the blog post exists
-const verifyBlogPost = (slug: string) => {
-  const post = blogPosts.find((post) => post.slug === slug);
-  return post || null;
-};
+// Helper function to call the API
+const verifyDocWithAPI = async (userId: string, doc_name: string) => {
+  try {
+    const response = await fetch(`/api/verifydoc`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, doc_name }),
+    });
 
-// Generate metadata for the page
-export const generateMetadata = async ({ params }: { params: Promise<{ slug: string }> }) => {
-  const { slug } = await params; // Await params here
+    if (!response.ok) {
+      return false;
+    }
 
-  const post = verifyBlogPost(slug);
-
-  if (!post) {
-    return {
-      title: "Not Found | GitDocs AI",
-      description: "Page not found",
-    };
+    const { valid } = await response.json();
+    return valid;
+  } catch (error) {
+    console.error("Error verifying document:", error);
+    return false;
   }
-
-  return {
-    title: `${post.title} | GitDocs AI`,
-    description: post.excerpt,
-  };
 };
 
 // Main component for the page
-const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
-  const { slug } = await params; // Await params here
+const UpdateReadme = async ({ params }: { params: ParamsType }) => {
+  const { doc_name } = await params; // Await params here
 
-  const post = verifyBlogPost(slug);
+  const { userId } = await auth();
+  if (!userId) {
+    return <div>Error: Unauthorized</div>;
+  }
 
-  if (!post) {
+  const validDoc = await verifyDocWithAPI(userId, doc_name);
+
+  if (!validDoc) {
     return <NotFound />;
   }
 
-  // Get the component to render based on the post ID
-  const ComponentToRender = blogComponents[`BlogPost${post.id}` as keyof typeof blogComponents];
-
-  if (!ComponentToRender) {
-    return <NotFound />;
-  }
-
-  return <ComponentToRender />;
+  return <UpdateReadmePage doc_name={doc_name} />;
 };
 
-export default Page;
+export default UpdateReadme;
