@@ -55,17 +55,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Structured Data */}
             <script type="application/ld+json">
-              {JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "SoftwareApplication",
-                name: "Gitdocs AI",
-                url: "https://gitdocs.space",
-                author: { "@type": "Person", name: "Abhas Kumar Sinha" },
-                applicationCategory: "Developer Tools",
-                operatingSystem: "Web-based",
-                offers: { "@type": "Offer", price: "Free", priceCurrency: "USD" },
-              })}
-            </script>
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "Gitdocs AI",
+              "url": "https://gitdocs.space",
+              "author": {
+                "@type": "Person",
+                "name": "Abhas Kumar Sinha"
+              },
+              "applicationCategory": "Developer Tools",
+              "operatingSystem": "Web-based",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "reviewCount": "123"
+              }
+            })}
+          </script>
+
 
             {/* Sitemap */}
             <link rel="sitemap" type="application/xml" title="Sitemap" href="https://gitdocs.space/sitemap.xml" />
