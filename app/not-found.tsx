@@ -7,6 +7,13 @@ import { buttonVariants } from "@/components/ui/button-variants";
 const NotFound = () => {
     const pathname = usePathname();
 
+    const goDashboard = () => {
+        if (pathname.includes("/update_readme") || pathname.includes("/dashboard")) {
+            return true;
+        }
+        return false;
+    }
+
     return (
         <div className="min-h-screen relative overflow-hidden bg-[#F1F0FB] flex flex-col justify-center items-center px-4">
         {/* Background decorative elements */}
@@ -40,7 +47,7 @@ const NotFound = () => {
             
             <div className="flex flex-wrap justify-center gap-4 pt-4 animate-fade-in-delay-1">
                 <Link 
-                href="/" 
+                href={goDashboard() ? "/dashboard" : "/"} 
                 className={buttonVariants({ variant: "gradient", size: "lg" })}
                 >
                 Return Home

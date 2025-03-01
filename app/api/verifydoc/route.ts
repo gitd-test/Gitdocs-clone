@@ -1,15 +1,9 @@
-import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { NextResponse, NextRequest } from "next/server";
 import User from "@/app/api/lib/models/User";
 import Repository from "@/app/api/lib/models/Repository";
-import NodeCache from "node-cache";
 
-const cache = new NodeCache({ stdTTL: 300 }); // Cache for 5 minutes
 
 const verifyUserWithDoc = async (userId: string, doc_name: string) => {
-  const cacheKey = `${userId}:${doc_name}`;
-  const cachedResult = cache.get(cacheKey);
-  if (cachedResult !== undefined) return cachedResult;
 
   const user = await User.findOne({ clerkUid: userId }, { githubUid: 1 });
   if (!user) return false;
@@ -17,32 +11,26 @@ const verifyUserWithDoc = async (userId: string, doc_name: string) => {
   const repository = await Repository.findOne({ owner: user.githubUid, name: doc_name });
   const valid = !!repository;
 
-  cache.set(cacheKey, valid);
   return valid;
 };
 
-export async function GET(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const url = new URL(req.url);
-    const doc_name = url.searchParams.get("doc_name");
-    const { userId } = await auth();
+    const { userId, doc_name } = await req.json();
 
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (!doc_name) {
-      return NextResponse.json({ error: "Invalid repository name" }, { status: 400 });
+    if (!userId || !doc_name) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
     const validDoc = await verifyUserWithDoc(userId, doc_name);
+
     if (!validDoc) {
       return NextResponse.json({ error: `Repository ${doc_name} not found` }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error in POST handler:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
