@@ -23,6 +23,10 @@ export const fetchRepositoryReadme = async (owner: string,repo: string,installat
       repo,
     });
 
+    if (!data) {
+      return null;
+    }
+
     if (data.encoding === "base64") {
       const decodedContent = Buffer.from(data.content, "base64").toString("utf-8");
       return {

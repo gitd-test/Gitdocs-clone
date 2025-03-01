@@ -66,22 +66,15 @@ export async function GET(req: NextRequest) {
       installationId = await installations.installations[0].id.toString();
     }
 
-    // Step 4: Fetch and update repositories
-    async function fetchAndUpdateRepositories() {
-      try {
-        const repositories = await fetchRepositoriesForInstallation(Number(installationId));
-        const parsedRepositories = await parseRepositories(repositories);
+    try {
+      const repositories = await fetchRepositoriesForInstallation(Number(installationId));
+      const parsedRepositories = await parseRepositories(repositories);
 
-        console.log("repositories", repositories);
-        console.log("parsedRepositories", parsedRepositories);
 
-        updateRepositoryDb(parsedRepositories, userId || "", Number(installationId), githubUsername);
-      } catch (error: any) {
-        console.error("Error fetching repositories:", error.message);
-      }
+      updateRepositoryDb(parsedRepositories, userId || "", Number(installationId), githubUsername);
+    } catch (error: any) {
+      console.error("Error fetching repositories:", error.message);
     }
-
-    await fetchAndUpdateRepositories();
 
     // Step 5: Redirect the user
     return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "https://gitdocs.space"}/close`);
