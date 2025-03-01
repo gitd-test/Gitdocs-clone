@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import { fetchRepositoriesForInstallation } from "../../repository/fetchRepositories";
+import { fetchRepositoriesForInstallation, fetchRepositoryReadme } from "../../repository/fetchRepositories";
 import { parseRepositories, updateRepositoryDb } from "../../repository/updateRepositoryDb";
 import { auth } from "@clerk/nextjs/server";
 import { updateUserDb } from "../../user/updateUserDb";
@@ -67,33 +67,25 @@ export async function GET(req: NextRequest) {
     }
 
     // Step 4: Fetch and update repositories
-    try {
-      const repositories = await fetchRepositoriesForInstallation(Number(installationId));
-      const parsedRepositories = await parseRepositories(repositories);
+    async function fetchAndUpdateRepositories() {
+      try {
+        const repositories = await fetchRepositoriesForInstallation(Number(installationId));
+        const parsedRepositories = await parseRepositories(repositories);
 
-      // Safely fetch README for each repository
-      const repositoriesWithReadme = await Promise.all(
-        parsedRepositories.map(async (repo : any) => {
-          try {
-            const { data: readmeData } = await axios.get(
-              `https://api.github.com/repos/${repo.owner}/${repo.name}/readme`,
-              {
-                headers: { Authorization: `Bearer ${access_token}` },
-              }
-            );
-            repo.readmeContent = Buffer.from(readmeData.content, "base64").toString("utf-8");
-          } catch (readmeError) {
-            console.warn(`No README found for ${repo.name}`);
-            repo.readmeContent = null; // Gracefully handle missing README
-          }
-          return repo;
-        })
-      );
+        // Safely fetch README for each repository
+        const repositoriesWithReadme = await Promise.all(
+          parsedRepositories.map(async (repo: any) => {
+            return await fetchRepositoryReadme(repo.owner, repo.name, Number(installationId));
+          })
+        );
 
-      await updateRepositoryDb(repositoriesWithReadme, userId || "", Number(installationId), githubUsername);
-    } catch (error: any) {
-      console.error("Error fetching repositories:", error.message);
+        updateRepositoryDb(repositoriesWithReadme, userId || "", Number(installationId), githubUsername);
+      } catch (error: any) {
+        console.error("Error fetching repositories:", error.message);
+      }
     }
+
+    fetchAndUpdateRepositories();
 
     // Step 5: Redirect the user
     return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "https://gitdocs.space"}/close`);
