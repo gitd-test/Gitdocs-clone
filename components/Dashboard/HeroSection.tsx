@@ -67,24 +67,6 @@ const HeroSection = () => {
           setStoredUser(fetchedUser);
           localStorage.setItem("storedUser", JSON.stringify(fetchedUser));
   
-          // If stepsCompleted is 0, update it
-          if (fetchedUser.stepsCompleted === 0) {
-            axios
-              .patch(`/api/fetch/userdata`, {
-                stepsCompleted: 1,
-              }, {
-                headers: {
-                  Authorization: `Bearer ${user.id}`,
-                },
-              })
-              .then((patchResponse) => {
-                setStoredUser(patchResponse.data); // Update state with the patched data
-                localStorage.setItem("storedUser", JSON.stringify(patchResponse.data));
-              })
-              .catch((error) => {
-                console.error("Error updating stepsCompleted:", error);
-              });
-          }
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);

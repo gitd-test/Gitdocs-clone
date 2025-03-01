@@ -21,41 +21,51 @@ interface User {
 interface AppContextType {
   storedUser: User | null;
   setStoredUser: Dispatch<SetStateAction<User | null>>;
+  setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
 }
 
 const GettingStarted = () => {
   const activeClasses = "text-white text-lg";
   const inactiveClasses = "tracking-tight text-[#808080]";
   const completedClasses = "line-through text-[#808080]";
-  const { storedUser, setStoredUser } = useContext(
+  const { storedUser, setStoredUser, setRepositoriesUpdated } = useContext(
     AppContext
   ) as AppContextType;
   const { user } = useUser();
   const handleAddRepository = () => {
     try {
       if (storedUser?.stepsCompleted === 1) {
-        axios
-          .patch(
-            `/api/fetch/userdata`,
-            {
-              stepsCompleted: 2,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${user?.id}`,
-              },
-            }
-          )
-          .then((patchResponse) => {
-            setStoredUser(patchResponse.data); // Update state with the patched data
-            localStorage.setItem(
-              "storedUser",
-              JSON.stringify(patchResponse.data)
-            );
+
+        // Update the state with the patched data
+        setStoredUser({
+          ...storedUser,
+          stepsCompleted: 2,
+        });
+
+        // Update localStorage with the updated data
+        localStorage.setItem(
+          "storedUser",
+          JSON.stringify({
+            ...storedUser,
+            stepsCompleted: 2,
           })
-          .catch((error) => {
-            console.error("Error updating stepsCompleted:", error);
-          });
+        );
+
+        axios
+        .patch(
+          `/api/fetch/userdata`,
+          {
+            stepsCompleted: 2,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user?.id}`,
+            },
+          }
+        )
+        .catch((error) => {
+          console.error("Error updating stepsCompleted:", error);
+        });
       }
     } catch (error) {
       console.error("Error updating stepsCompleted:", error);
@@ -65,6 +75,20 @@ const GettingStarted = () => {
   const handleViewDashboard = () => {
     try {
       if (storedUser?.stepsCompleted === 2) {
+
+        // Update the state with the patched data
+        setStoredUser({
+          ...storedUser,
+          stepsCompleted: 3,
+        });
+        localStorage.setItem(
+          "storedUser",
+          JSON.stringify({
+            ...storedUser,
+            stepsCompleted: 3,
+          })
+        ); 
+
         axios
           .patch(
             `/api/fetch/userdata`,
@@ -77,16 +101,10 @@ const GettingStarted = () => {
               },
             }
           )
-          .then((patchResponse) => {
-            setStoredUser(patchResponse.data); // Update state with the patched data
-            localStorage.setItem(
-              "storedUser",
-              JSON.stringify(patchResponse.data)
-            );
-          })
           .catch((error) => {
             console.error("Error updating stepsCompleted:", error);
           });
+          setRepositoriesUpdated(true);
       }
     } catch (error) {
       console.error("Error updating stepsCompleted:", error);
@@ -104,7 +122,7 @@ const GettingStarted = () => {
       icon: CreditCard,
       label: "Add tokens",
       href: "#",
-      show: storedUser?.stepsCompleted || 0 >= 1 ? true : false,
+      show: (storedUser?.stepsCompleted || 1) >= 1 ? true : false,
     },
     {
       icon: MessageSquareText,

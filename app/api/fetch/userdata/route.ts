@@ -16,7 +16,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(user);
+    if (user.stepsCompleted === 1) {
+      updateUser(id, { stepsCompleted: 2 });
+    }
+
+    else if (user.stepsCompleted === 2) {
+      updateUser(id, { stepsCompleted: 3 });
+    }
+
+    return NextResponse.json({
+      ...user,
+      stepsCompleted: user.stepsCompleted < 3 ? user.stepsCompleted + 1 : 3,
+    });
   } catch (error) {
     console.error("Error fetching user:", error); // Log detailed error for debugging
     return NextResponse.json({ error: "Failed to fetch user" }, { status: 500 });
