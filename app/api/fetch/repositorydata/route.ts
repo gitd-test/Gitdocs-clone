@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getClientRepositories } from "@/app/api/auth/repository/clientRepositoryServices";
+import connectMongoWithRetry from "../../lib/db/connectMongo";
 
 export async function GET(request: NextRequest) {
+
+    await connectMongoWithRetry();
 
     const id = request.headers.get("Authorization")?.split(" ")[1];
 

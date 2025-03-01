@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUser, updateUser } from "@/app/api/auth/user/clientUserServicies";
+import connectMongoWithRetry from "../../lib/db/connectMongo";
 
 // GET User Data
 export async function GET(request: NextRequest) {
@@ -8,6 +9,8 @@ export async function GET(request: NextRequest) {
   if (!id) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
+
+  await connectMongoWithRetry();
 
   try {
     const user = await getUser(id);

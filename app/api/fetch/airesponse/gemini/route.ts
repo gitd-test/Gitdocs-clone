@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { systemPrompt } from "@/app/api/lib/ai/systemPrompt";
 import { getRepositoryByNamePopulated } from "@/app/api/auth/repository/clientRepositoryServices";
 import { fetchReadmeDb } from "../../../auth/repository/updateReadmeDb";
+import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 export async function POST(request: NextRequest) {
   const userId = request.headers.get("Authorization")?.split(" ")[1];
@@ -10,6 +11,8 @@ export async function POST(request: NextRequest) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  await connectMongoWithRetry();
 
   const body = await request.json();
   const prompt = body.prompt;
