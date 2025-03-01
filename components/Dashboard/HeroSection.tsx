@@ -94,7 +94,6 @@ const HeroSection = () => {
       if (storedRepositories && !searchParams.get("refresh")) {
         setRepositories(JSON.parse(storedRepositories));
         setRepositoriesLoading(false);
-        router.push("/dashboard");
 
       } else {
         axios
@@ -109,6 +108,7 @@ const HeroSection = () => {
           localStorage.setItem("repositories", JSON.stringify(response.data));
           localStorage.setItem("staleTime", new Date().toISOString());
           setRepositoriesLoading(false);
+          router.push("/dashboard");
         })
         .catch((error) => {
           console.error("Error fetching repositories:", error);
@@ -116,7 +116,7 @@ const HeroSection = () => {
         });
       }
     }
-  }, [user, searchParams, repositoriesUpdated, isSignedIn, storedUser]);
+  }, [user, searchParams, repositoriesUpdated, isSignedIn, storedUser, router]);
 
   const handleAddRepository = () => {
     setRepositoriesUpdated(true);

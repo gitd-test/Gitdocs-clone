@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    fetchAndUpdateRepositories();
+    await fetchAndUpdateRepositories();
 
     // Step 5: Redirect the user
     return NextResponse.redirect(`${process.env.NEXTAUTH_URL || "https://gitdocs.space"}/close`);
