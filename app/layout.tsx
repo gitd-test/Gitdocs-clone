@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta property="og:image:height" content="630" />
             <meta property="og:title" content="Gitdocs AI - AI-powered Code Analysis" />
             <meta property="og:description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
-            <meta property="og:image" content="/logo.png" />
+            <meta property="og:image" content="https://gitdocs.space/logo.png" />
             <meta property="og:url" content="https://gitdocs.space" />
             <meta property="og:type" content="website" />
 
@@ -60,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type": "SoftwareApplication",
               "name": "Gitdocs AI",
               "url": "https://gitdocs.space",
+              "logo": "https://gitdocs.space/logo.png",
               "author": {
                 "@type": "Person",
                 "name": "Abhas Kumar Sinha"
