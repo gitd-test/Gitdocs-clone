@@ -65,7 +65,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                 ?
                 <div className="flex items-center gap-2">
                     <Skeleton className="w-3 h-3 rounded-full bg-[#848c8e]"></Skeleton>
-                    <p className="text-gray-500">Gitdocs AI is thinking...</p> 
+                    <p className="text-gray-500 -my-2">Gitdocs AI is thinking...</p> 
                 </div>
                 : 
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.replace(/\\n/g, "\n")}</ReactMarkdown>}
