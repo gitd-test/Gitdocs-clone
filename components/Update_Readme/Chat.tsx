@@ -41,7 +41,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
             )}
             <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
                 <div className="flex items-start justify-between">
-                    <h1 className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</h1>
+                    <p className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</p>
                     <TooltipProvider delayDuration={0}>
                         <Tooltip>
                             <TooltipTrigger>
