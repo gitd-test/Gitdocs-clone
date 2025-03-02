@@ -4,6 +4,8 @@ import { LuCheck, LuCopy } from "react-icons/lu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type ChatProps = {
     role: string;
@@ -37,7 +39,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
             ) : (
                 <Image src="/gitdoc_ai.png" alt="logo" width={40} height={40} />
             )}
-            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "bg-[#131315]"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
+            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
                 <div className="flex items-start justify-between">
                     <h1 className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</h1>
                     <TooltipProvider delayDuration={0}>
@@ -66,8 +68,7 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                     <p className="text-gray-500">Gitdocs AI is thinking...</p> 
                 </div>
                 : 
-                <p className="text-gray-300 whitespace-pre-wrap">{content.replace(/\\n/g, "\n")}</p>}
-
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.replace(/\\n/g, "\n")}</ReactMarkdown>}
             </div>
         </div>
     );
