@@ -308,17 +308,6 @@ body {
   background-color: #1f2937; /* Darker background */
 }
 
-.raw-preview {
-  background-color: #1A1A1A; /* Slightly lighter than the main background */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
-  font-family: 'Inter', sans-serif; /* Modern font for better readability */
-  line-height: 1.8;
-  color: #EAEAEA; /* Light text for contrast */
-  overflow-y: auto;
-  word-wrap: break-word;
-  border: 1px solid #333; /* Subtle border */
-}
-
 /* Styling for headings */
 .raw-preview h1, 
 .raw-preview h2, 
