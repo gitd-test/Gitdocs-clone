@@ -329,13 +329,6 @@ body {
   font-size: 1.25rem;
 }
 
-/* Styling for paragraphs */
-.raw-preview p {
-  margin-bottom: 1.2rem;
-  font-size: 1rem;
-  color: #E0E0E0;
-}
-
 /* Lists */
 .raw-preview ul {
   list-style-type: disc;

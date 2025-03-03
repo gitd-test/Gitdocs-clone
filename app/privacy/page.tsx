@@ -95,7 +95,7 @@ const Privacy = () => {
             <p>
               If you have any questions about this Privacy Policy, please contact us at:
               <br />
-              <a href="mailto:privacy@gitdocs.ai" className="text-gitdocs-blue hover:underline">privacy@gitdocs.ai</a>
+              <a href="mailto:privacy@gitdocs.space" className="text-gitdocs-blue hover:underline">privacy@gitdocs.space</a>
             </p>
           </div>
           

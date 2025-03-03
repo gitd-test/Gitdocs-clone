@@ -1,8 +1,8 @@
-import SubscriptionPage from "@/components/Subscription/SubscriptionPage";
+import TemplatePage from "@/components/common/TemplatePage";
 
 const Subscription = () => {
   return (
-    <SubscriptionPage />
+    <TemplatePage />
   )
 }
 

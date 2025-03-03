@@ -305,7 +305,7 @@ const Contact = () => {
                 },
                 {
                   question: "How can I request a product demo?",
-                  answer: "You can request a product demo by selecting 'Product Support' in the contact form above or by emailing sales@gitdocs.ai directly with your requirements."
+                  answer: "You can request a product demo by selecting 'Product Support' in the contact form above or by emailing sales@gitdocs.space directly with your requirements."
                 },
               ].map((faq, index) => (
                 <div key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">

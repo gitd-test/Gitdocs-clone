@@ -83,7 +83,7 @@ const Terms = () => {
             <p>
               If you have any questions about these Terms, please contact us at:
               <br />
-              <a href="mailto:legal@gitdocs.ai" className="text-gitdocs-blue hover:underline">legal@gitdocs.ai</a>
+              <a href="mailto:legal@gitdocs.space" className="text-gitdocs-blue hover:underline">legal@gitdocs.space</a>
             </p>
           </div>
           

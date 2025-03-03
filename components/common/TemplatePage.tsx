@@ -4,13 +4,14 @@ import Sidebar from "../Dashboard/Sidebar";
 import NavBar from "../Dashboard/NavBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
+import SubscriptionHero from "../Subscription/SubscriptionHero";
 
 interface AppContextType {
     setIsSidebarUsed: (isSidebarUsed: boolean) => void;
     setNavbarTitle: (navbarTitle: string) => void;
 }
 
-const SubscriptionPage = () => {
+const TemplatePage = () => {
 
     const { setIsSidebarUsed, setNavbarTitle } = useContext(AppContext) as AppContextType;
 
@@ -25,10 +26,10 @@ const SubscriptionPage = () => {
         <div className={`flex-1 ms-16 transition-all duration-300 relative -z-10`}>
           <NavBar />
           <div className="max-w-[1600px] mx-auto">
-          
+            <SubscriptionHero />
           </div>
         </div>
       </div>
     )
   }
-  export default SubscriptionPage;
+  export default TemplatePage;
