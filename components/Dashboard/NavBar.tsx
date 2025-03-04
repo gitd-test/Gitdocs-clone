@@ -71,10 +71,10 @@ const NavBar = () => {
 
                             <Tooltip>
                                 <TooltipTrigger>
-                                    <div className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
+                                    <Link href="/subscription" className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                         <LuCreditCard size={18} />
                                         <p className="text-xs">Tokens</p>
-                                    </div>
+                                    </Link>
 
                                 </TooltipTrigger>
 

@@ -10,7 +10,6 @@ import {
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { LuUser } from "react-icons/lu";
 import Image from "next/image";
-import logo from "@/app/favicon.ico";
 import { cn } from "@/lib/utils";
 import { AppContext } from "@/contexts/AppContext";
 import { LayoutDashboard, Settings, HelpCircle, BookOpen, FolderOpen, Package, CreditCard } from "lucide-react";
@@ -105,7 +104,7 @@ export default function Sidebar() {
             <div className="px-4 h-16 border-b border-[#3D444D] flex items-center justify-between">
             <div className="relative mx-auto">
                 <Image
-                src={logo || "/default-logo.png"}
+                src={"/logo.png"}
                 width={30}
                 height={30}
                 alt="logo"

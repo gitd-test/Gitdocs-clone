@@ -4,13 +4,8 @@ import { TfiWrite } from "react-icons/tfi";
 import { useRouter } from "next/navigation";
 import { useState, Dispatch, SetStateAction, useContext } from "react";
 import LoadingAnimation from "./LoadingAnimation";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 
-type AppContextType = {
-    gridView: boolean;
-    stopAllActions: boolean;
-    setStopAllActions: Dispatch<SetStateAction<boolean>>;
-};
 
 const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: number }) => {
 

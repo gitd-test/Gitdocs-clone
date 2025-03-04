@@ -243,7 +243,7 @@ const HeroSection = () => {
                 ))
               )
             ) : (
-              <div className="flex items-center col-span-full justify-center h-full">
+              <div className="flex items-center col-span-full justify-center h-full bg-[#141414] border border-[#262626] rounded-md py-10">
                 <h3 className="font-bold">Added repositories will appear here</h3>
               </div>
             ))}

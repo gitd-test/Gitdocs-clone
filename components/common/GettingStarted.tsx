@@ -7,7 +7,7 @@ import {
   CreditCard,
   MessageSquareText,
 } from "lucide-react";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
@@ -16,12 +16,6 @@ import LoadingAnimation from "./LoadingAnimation";
 interface User {
   subscriptionType: string;
   stepsCompleted: number;
-}
-
-interface AppContextType {
-  storedUser: User | null;
-  setStoredUser: Dispatch<SetStateAction<User | null>>;
-  setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
 }
 
 const GettingStarted = () => {

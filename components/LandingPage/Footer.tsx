@@ -1,5 +1,4 @@
 import Image from "next/image";
-import logo from "@/app/favicon.ico";
 import Link from "next/link";
 
 const Footer = () => {
@@ -10,7 +9,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center space-x-2 mb-4">
             <Image
-                src={logo || "/default-logo.png"}
+                src={"/logo.png"}
                 width={33}
                 height={33}
                 alt="logo"

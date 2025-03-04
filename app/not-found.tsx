@@ -4,11 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { useContext } from "react";
-import { AppContext } from "@/contexts/AppContext";
-
-type AppContextType = {
-    setStopAllActions: (stopAllActions: boolean) => void;
-}
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 
 const NotFound = () => {
     const pathname = usePathname();
@@ -16,7 +12,7 @@ const NotFound = () => {
     const { setStopAllActions } = useContext(AppContext) as unknown as AppContextType;
 
     const goDashboard = () => {
-        if (pathname.includes("/update_readme") || pathname.includes("/dashboard")) {
+        if (pathname.includes("/update_readme") || pathname.includes("/dashboard") || pathname.includes("/subscription")) {
             setStopAllActions(false);
             return true;
         }

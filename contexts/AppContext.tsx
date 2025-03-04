@@ -6,7 +6,16 @@ interface User {
   subscriptionType: string;
   stepsCompleted: number;
 }
-interface AppContextType {
+interface BillingAddress {
+  id: number;
+  name: string;
+  contact: string;
+  address: string;
+  country: string;
+  isDefault: boolean;
+  isActive: boolean;
+}
+export interface AppContextType {
   stopAllActions: boolean;
   setStopAllActions: Dispatch<SetStateAction<boolean>>;
   selectedModel: Model;
@@ -25,6 +34,8 @@ interface AppContextType {
   setGridView: Dispatch<SetStateAction<boolean>>;
   repositoriesUpdated: boolean;
   setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
+  billingAddress: BillingAddress | null;
+  setBillingAddress: Dispatch<SetStateAction<BillingAddress | null>>;
 }
 
 interface Model {
@@ -44,6 +55,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
   const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
   const [stopAllActions, setStopAllActions] = useState<boolean>(false);
+  const [billingAddress, setBillingAddress] = useState<BillingAddress | null>(null);
 
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
@@ -68,7 +80,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showModel, setShowModel, 
       selectedProvider, setSelectedProvider, 
       selectedModel, setSelectedModel, 
-      stopAllActions, setStopAllActions 
+      stopAllActions, setStopAllActions,
+      billingAddress, setBillingAddress
     }}>
       {children}
     </AppContext.Provider>

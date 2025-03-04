@@ -1,4 +1,4 @@
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { useContext } from "react";
 import { RxArrowTopRight } from "react-icons/rx";
 import { geminiModels } from "@/lib/geminiModels";
@@ -8,14 +8,6 @@ import { LuChevronRight } from "react-icons/lu";
 interface Model {
   name: string;
   value: string;
-}
-
-type AppContextType = {
-  setShowModel: (showModel: boolean) => void;
-  selectedProvider: string;
-  setSelectedProvider: (selectedProvider: string) => void;
-  selectedModel: Model;
-  setSelectedModel: (selectedModel: Model) => void;
 }
 
 const ChooseModel = ({ modelProviders }: { modelProviders: any[] }) => {

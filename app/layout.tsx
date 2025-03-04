@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta name="revisit-after" content="7 days" />
             <meta name="distribution" content="Global" />
             <meta name="coverage" content="Worldwide" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
             <meta name="author" content="Abhas Kumar Sinha" />
             <meta name="robots" content="index, follow" />
             <link rel="canonical" href="https://gitdocs.space" />

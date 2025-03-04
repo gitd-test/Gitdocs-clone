@@ -6,7 +6,7 @@ import { useState, useRef, useEffect, useContext } from "react";
 import Chat from "./Chat";
 import { fetchStreamedResponse } from "@/lib/fetchStreamedAiResponse";
 import { useUser } from "@clerk/nextjs";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -19,12 +19,6 @@ interface ChatSectionProps {
 interface Model {
   name: string;
   value: string;
-}
-
-type AppContextType = {
-  showModel: boolean;
-  setShowModel: (showModel: boolean) => void;
-  selectedModel: Model;
 }
 
 const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }: ChatSectionProps) => {
