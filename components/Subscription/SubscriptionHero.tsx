@@ -3,7 +3,7 @@
 import Link from "next/link";
 import SubOverview from "./SubOverview";
 import SubBilling from "./SubBilling";
-import SubPaymentMethods from "./SubPaymentMethods";
+import SubAddresses from "./SubAddresses";
 import { useSearchParams } from "next/navigation";
 import { useContext } from "react";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
@@ -19,7 +19,7 @@ const SubscriptionHero = () => {
     const options = [
         {
             label: "Overview",
-            href: "/subscription",
+            href: "/subscription",  
             component: <SubOverview />,
             active: action === null
         },
@@ -32,7 +32,7 @@ const SubscriptionHero = () => {
         {
             label: "Addresses",
             href: "/subscription?action=addresses",
-            component: <SubPaymentMethods />,
+            component: <SubAddresses />,
             active: action === "addresses"
         }
     ]

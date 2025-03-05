@@ -1,14 +1,15 @@
 "use client"
 
-import { X } from "lucide-react";
+import { X, AlertCircle } from "lucide-react";
 import { countries } from "countries-list";
 import Image from "next/image";
 import { useState } from "react";
 
-const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, handleAddAddress, handleUpdateAddress, isEditing, setIsEditing }: { addressData: any, setAddressData: (address: any) => void, setShowAddAddressForm: (show: boolean) => void, handleAddAddress: () => void, handleUpdateAddress: () => void, isEditing: boolean, setIsEditing: (isEditing: boolean) => void }) => {
+const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, handleAddAddress, handleUpdateAddress, isEditing, setIsEditing, savedBillingAddresses }: { addressData: any, setAddressData: (address: any) => void, setShowAddAddressForm: (show: boolean) => void, handleAddAddress: () => void, handleUpdateAddress: () => void, isEditing: boolean, setIsEditing: (isEditing: boolean) => void, savedBillingAddresses: any }) => {
 
     const [showCountryList, setShowCountryList] = useState(false);
     const [country, setCountry] = useState(addressData?.country || "United States");
+    const [error, setError] = useState("");
 
     const handleClose = () => {
         if (showCountryList) {
@@ -38,10 +39,48 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, ha
 
     const handleSave = (e: any) => {
         e.preventDefault();
+
+        if (addressData?.name === "") {
+            setError("Name is required");
+            return;
+        }
+        if (addressData?.contact === "") {
+            setError("Contact is required");
+            return;
+        }
+        if (addressData?.address1 === "") {
+            setError("Address is required");
+            return;
+        }
+        if (addressData?.city === "") {
+            setError("City is required");
+            return;
+        }
+        if (addressData?.state === "") {
+            setError("State is required");
+            return;
+        }
+        if (addressData?.zip === "") {
+            setError("Zip code is required");
+            return;
+        }
+        if (addressData?.country === "") {
+            setError("Country is required");
+            return;
+        }
+
+        setError("");
+
         if (isEditing) {
             handleUpdateAddress();
             setIsEditing(false);
         } else {
+            const exists = savedBillingAddresses.some((address: any) => address.name === addressData?.name && address.contact === addressData?.contact);
+            if (exists) {
+                setError("Two addresses cannot have the same name and contact");
+                return;
+            }
+            setError("");
             handleAddAddress();
         }
         setShowAddAddressForm(false);
@@ -64,26 +103,26 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, ha
 
                     <div className="flex flex-col gap-2 mt-3">
                         <label htmlFor="name" className="text-sm font-semibold">Name</label>
-                        <input onChange={(e) => setAddressData({...addressData, name: e.target.value})} type="text" id="name" name="name" value={addressData?.name} placeholder="John Doe" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                        <input onChange={(e) => setAddressData({...addressData, name: e.target.value})} type="text" id="name" name="name" disabled={isEditing} value={addressData?.name} placeholder="John Doe" className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535] ${isEditing ? "cursor-not-allowed" : ""}`} />
 
                         <label htmlFor="contact" className="text-sm font-semibold">Contact</label>
-                        <input onChange={(e) => setAddressData({...addressData, contact: e.target.value})} type="text" id="contact" name="contact" value={addressData?.contact} placeholder="abc@gmail.com" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                        <input onChange={(e) => setAddressData({...addressData, contact: e.target.value})} type="text" id="contact" name="contact" disabled={isEditing} value={addressData?.contact} placeholder="abc@gmail.com" className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535] ${isEditing ? "cursor-not-allowed" : ""}`} />
                     </div>
 
                     <p className="text-[#999] border-b-2 border-[#353535] pb-1 mt-8 text-sm">Billing address</p>
 
                     <div className="flex flex-col gap-2 mt-3">
                         <p className="text-sm font-semibold">Country</p>
-                        <button type="button" className="w-full text-start max-h-[10rem] relative appearance-none cursor-pointer text-sm py-2 px-4 bg-transparent rounded-md border border-[#353535] focus:outline-2">
-                            <div onClick={(e) => {
+                        <button onClick={(e) => {
                                 e.stopPropagation();
                                 setShowCountryList(!showCountryList);
-                            }} className="flex items-center gap-4 appearance-none text-white">
+                            }} type="button" className="w-full text-start max-h-[10rem] relative cursor-pointer text-sm py-2 px-4 bg-transparent rounded-md border border-[#353535] focus:outline-2">
+                            <div  className="flex items-center gap-4 text-white">
                                 <Image src={defaultCountry?.flag || ""} alt={defaultCountry?.name || ""} width={25} height={25} />
                                 <p>{defaultCountry?.name}</p>
                             </div>
 
-                            {showCountryList && <div className="w-full absolute top-10 left-0 max-h-60 overflow-y-auto appearance-none cursor-pointer text-sm bg-transparent rounded-md border border-[#353535]">
+                            {showCountryList && <div className="w-full absolute top-10 left-0 max-h-60 overflow-y-auto cursor-pointer text-sm bg-transparent rounded-md border border-[#353535]">
                                 {data}
                             </div>}
 
@@ -108,7 +147,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, ha
                         </div>
 
                         <label htmlFor="postal-code" className="text-sm font-semibold">Zip code</label>
-                        <input onChange={(e) => setAddressData({...addressData, zip: e.target.value})} type="text" id="postal-code" name="postal-code" value={addressData?.zip} placeholder="12345" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                        <input onChange={(e) => setAddressData({...addressData, zip: e.target.value})} type="text" id="postal-code" name="postal-code" value={addressData?.zip ? addressData?.zip : ""} placeholder="12345" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
 
                         <div className="flex gap-4 justify-between">
                             <div className="flex flex-col gap-2">
@@ -122,7 +161,8 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, ha
                             </div>
                         </div>
 
-                        <div className="flex gap-4 mt-3">
+                        <div className="flex gap-4 mt-3 items-center">
+                            {error && <p className="text-[#f55757] flex items-center gap-3 ms-3"><AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}</p>}
                             <button onClick={handleClose} type="button" className="text-sm py-2 px-4 ms-auto rounded-lg border border-[#353535] text-[#ededed]">Cancel</button>
                             <button onClick={(e) => handleSave(e)} type="button" className="text-sm py-2 px-4 rounded-lg bg-[#ededed] text-black">Save</button>
                         </div>

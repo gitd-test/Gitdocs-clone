@@ -56,7 +56,28 @@ export const updateBillingAddress = async (userId: string, newBillingAddress: an
             throw new Error("Subscription not found");
         }
 
-        subscription.billingAddress = newBillingAddress; // Update the address
+        // Check if the billingAddress array exists
+        if (!Array.isArray(subscription.billingAddress)) {
+            subscription.billingAddress = [];
+        }
+
+        // Find the index of the existing address (if any)
+        const existingIndex = subscription.billingAddress.findIndex(
+            (addr: any) =>
+                addr.name === newBillingAddress.name && addr.contact === newBillingAddress.contact
+        );
+
+        if (existingIndex !== -1) {
+            // Update the existing address
+            subscription.billingAddress[existingIndex] = {
+                ...subscription.billingAddress[existingIndex],
+                ...newBillingAddress,
+            };
+        } else {
+            // Add the new address if no match is found
+            subscription.billingAddress.push(newBillingAddress);
+        }
+
         await subscription.save(); // Save changes to the database
         return subscription;
     } catch (error) {
@@ -64,6 +85,7 @@ export const updateBillingAddress = async (userId: string, newBillingAddress: an
         throw error;
     }
 };
+
 
 export const addBillingAddress = async (userId: string, newBillingAddress: any) => {
     try {
@@ -82,3 +104,40 @@ export const addBillingAddress = async (userId: string, newBillingAddress: any) 
         throw error;
     }
 }
+
+export const deleteBillingAddress = async (userId: string, addressData: any) => {
+    try {
+        await connectMongoWithRetry();
+        const subscription = await Subscription.findOne({ userId: userId });
+
+        if (!subscription) {
+            throw new Error("Subscription not found");
+        }
+
+        // Check if the address to be deleted has `isPrimary: true`
+        const isPrimaryToDelete = subscription.billingAddress.some(
+            (addr: any) =>
+                addr.name === addressData.name &&
+                addr.contact === addressData.contact &&
+                addr.isPrimary === true
+        );
+
+        // Filter the address to exclude the one being deleted
+        subscription.billingAddress = subscription.billingAddress.filter(
+            (addr: any) => !(addr.name === addressData.name && addr.contact === addressData.contact)
+        );
+
+        // If the deleted address was primary, set the first remaining address as primary
+        if (isPrimaryToDelete && subscription.billingAddress.length > 0) {
+            subscription.billingAddress[0].isPrimary = true;
+        }
+
+        await subscription.save(); // Save changes to the database
+        return subscription;
+    } catch (error) {
+        console.error("Error deleting billing address:", error);
+        throw error;
+    }
+};
+
+

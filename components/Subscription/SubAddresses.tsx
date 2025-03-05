@@ -13,14 +13,14 @@ interface AddressData {
     address2: string;
     city: string;
     state: string;
-    zip: number | undefined;
+    zip: number;
     country: string;
     taxId: string;
     taxIdType: string;
     isPrimary: boolean;
 }
 
-const SubPaymentMethods = () => {
+const SubAddresses = () => {
 
     const { user } = useUser();
 
@@ -32,15 +32,15 @@ const SubPaymentMethods = () => {
         address2: "",
         city: "",
         state: "",
-        zip: undefined,
-        country: "",
+        zip: 0,
+        country: "United States",
         taxId: "",
         taxIdType: "",
         isPrimary: false,
     });
-
     const [savedBillingAddresses, setSavedBillingAddresses] = useState<AddressData[]>([]);
     const [isEditing, setIsEditing] = useState(false);
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
 
     useEffect(() => {
         const fetchBillingAddress = async () => {
@@ -60,9 +60,10 @@ const SubPaymentMethods = () => {
             }
         }
         fetchBillingAddress();
-    }, [user]);
+    }, [user, refetchTrigger]);
 
     const handleAddBillingAddress = () => {
+        setIsEditing(false);
         setAddressData({
             name: "",
             contact: "",
@@ -70,8 +71,8 @@ const SubPaymentMethods = () => {
             address2: "",
             city: "",
             state: "",
-            zip: undefined,
-            country: "",
+            zip: 0,
+            country: "United States",
             taxId: "",
             taxIdType: "",
             isPrimary: false,
@@ -85,17 +86,55 @@ const SubPaymentMethods = () => {
         setShowAddAddressForm(true);
     }
 
-    const finalAddAddress = async () => {
-        if (savedBillingAddresses.length === 0) {
-            setAddressData({...addressData, isPrimary: true});
-        } else {
-            setAddressData({...addressData, isPrimary: false});
-        }
-    }
-
+    const finalAddAddress = () => {
+        return new Promise((resolve) => {
+            setAddressData((prev) => {
+                const updatedData = { ...prev, isPrimary: savedBillingAddresses.length === 0 };
+                resolve(updatedData);
+                return updatedData;
+            });
+        });
+    };
+    
     const handleAddAddress = async () => {
-        await finalAddAddress();
-        const response = await axios.post("/api/fetch/subscriptiondata?query=addBillingAddress", {
+        const updatedAddressData = await finalAddAddress();
+    
+        if (savedBillingAddresses.length > 0) {
+            setSavedBillingAddresses([...savedBillingAddresses, updatedAddressData as AddressData]);
+        } else {
+            setSavedBillingAddresses([updatedAddressData as AddressData]);
+        }
+    
+        await axios.post(
+            "/api/fetch/subscriptiondata?query=addBillingAddress",
+            { addressData: updatedAddressData },
+            {
+                headers: {
+                    Authorization: `Bearer ${user?.id}`,
+                },
+            }
+        );
+    };
+    
+
+    const handleUpdateAddress = async () => {
+
+        setSavedBillingAddresses((prevAddresses) => {
+            const updatedAddresses = prevAddresses.map((addr) =>
+                addr.name === addressData.name && addr.contact === addressData.contact
+                    ? { ...addr, ...addressData } // Update the existing address
+                    : addr
+            );
+    
+            // If no matching address is found, add the new one
+            const isExisting = updatedAddresses.some(
+                (addr) => addr.name === addressData.name && addr.contact === addressData.contact
+            );
+    
+            return isExisting ? updatedAddresses : [...updatedAddresses, addressData];
+        });
+
+        await axios.post("/api/fetch/subscriptiondata?query=updateBillingAddress", {
             addressData: addressData,
         }, {
             headers: {
@@ -103,28 +142,25 @@ const SubPaymentMethods = () => {
             },
         });
 
-        if (savedBillingAddresses.length > 0) {
-            setSavedBillingAddresses([...savedBillingAddresses, response.data.data]);
-        } else {
-            setSavedBillingAddresses([response.data.data]);
+    }
+
+    const handleDeleteAddress = async (address: any) => {
+        try {
+            await axios.delete("/api/fetch/subscriptiondata?query=deleteBillingAddress", {
+                data: { addressData: address },
+                headers: {
+                    Authorization: `Bearer ${user?.id}`,
+                },
+            });
+            setRefetchTrigger((prev) => prev + 1);
+        } catch (error) {
+            console.error("Error deleting address:", error);
         }
-    }
-
-    const handleUpdateAddress = async () => {
-        const response = await axios.post("/api/fetch/subscriptiondata?query=updateBillingAddress", {
-            addressData,
-        }, {
-            headers: {
-                Authorization: `Bearer ${user?.id}`,
-            },
-        });
-
-        setSavedBillingAddresses(response.data.data);
-    }
-
+    };
+    
     return (
     <>
-        {showAddAddressForm && <AddAddressForm handleAddAddress={handleAddAddress} handleUpdateAddress={handleUpdateAddress} addressData={addressData} setAddressData={setAddressData} setShowAddAddressForm={setShowAddAddressForm} isEditing={isEditing} setIsEditing={setIsEditing} />}
+        {showAddAddressForm && <AddAddressForm handleAddAddress={handleAddAddress} handleUpdateAddress={handleUpdateAddress} addressData={addressData} setAddressData={setAddressData} setShowAddAddressForm={setShowAddAddressForm} isEditing={isEditing} setIsEditing={setIsEditing} savedBillingAddresses={savedBillingAddresses} />}
         <div className="flex justify-between">
             <div className="flex flex-col">
                 <h1 className="text-lg font-semibold">Billing Address</h1>
@@ -139,8 +175,8 @@ const SubPaymentMethods = () => {
         </div>
 
         <div className="w-full mt-5 gap-4 grid grid-cols-3 ">
-            {(savedBillingAddresses?.length === 0) && <div onClick={() => handleAddBillingAddress()} className="p-6 bg-[#1A1A1A] rounded-lg text-[#999] h-60 col-span-1 cursor-pointer hover:border-[#414141] border border-[#262626] flex item-center justify-center">
-                Add a new billing address
+            {(savedBillingAddresses?.length === 0) && <div onClick={() => handleAddBillingAddress()} className="p-6 bg-[#1A1A1A] rounded-lg text-[#999] h-52 cursor-pointer border-2 border-dashed border-[#4c4b4b] font-semibold flex items-center justify-center">
+                Add a billing address to get started
             </div>}
             {savedBillingAddresses.map((address: any) => (
                 <div key={address.name} className={`p-4 relative bg-[#1A1A1A] rounded-lg h-60 col-span-1 border cursor-pointer ${address.isPrimary ? "border-[#3B82F6]" : "border-[#262626] hover:border-[#414141]"}`}>
@@ -163,7 +199,7 @@ const SubPaymentMethods = () => {
                     </div>
                     <div className="flex items-center gap-2 mt-4">
                         <Button onClick={() => handleEditAddress(address)} variant="outline" size="sm" className="text-[#000000] bg-[#ededed] hover:bg-[#ededed]/80 ms-auto">Edit</Button>
-                        <Button variant="outline" size="sm" className="text-[#ededed] bg-[#dc5353] hover:bg-[#dc5353]/80 hover:text-[#ededed] border-none">Delete</Button>
+                        <Button onClick={() => handleDeleteAddress(address)} disabled={savedBillingAddresses.length === 1} variant="outline" size="sm" className="text-[#ededed] bg-[#dc5353] hover:bg-[#dc5353]/80 hover:text-[#ededed] border-none">Delete</Button>
                     </div>
                 </div>
             ))}
@@ -171,4 +207,4 @@ const SubPaymentMethods = () => {
     </>
     )
 }
-export default SubPaymentMethods
+export default SubAddresses

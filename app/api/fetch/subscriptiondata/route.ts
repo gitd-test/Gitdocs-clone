@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUsageOverview, getBillingData, getBillingAddress, updateBillingAddress, addBillingAddress } from "@/app/api/auth/subscription/clientSubscriptionServices";
+import { getUsageOverview, getBillingData, getBillingAddress, updateBillingAddress, addBillingAddress, deleteBillingAddress } from "@/app/api/auth/subscription/clientSubscriptionServices";
 import connectMongoWithRetry from "../../lib/db/connectMongo";
 
 export async function GET(request: NextRequest) {
@@ -55,4 +55,16 @@ export async function POST(request: NextRequest) {
         const billingAddress = await addBillingAddress(id, requestBody.addressData);
         return NextResponse.json({ data: billingAddress });
     }
+}
+
+export async function DELETE(request: NextRequest) {
+    const id = request.headers.get("Authorization")?.split(" ")[1];
+    const requestBody = await request.json();
+
+    if (!id) {
+        return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    const billingAddress = await deleteBillingAddress(id, requestBody.addressData);
+    return NextResponse.json({ data: billingAddress });
 }
