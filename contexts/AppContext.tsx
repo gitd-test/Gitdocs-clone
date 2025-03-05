@@ -10,7 +10,11 @@ interface BillingAddress {
   id: number;
   name: string;
   contact: string;
-  address: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  zip: number;
   country: string;
   isDefault: boolean;
   isActive: boolean;

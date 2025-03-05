@@ -39,14 +39,6 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
     { name: 'Jul', tokens: stats.tokens },
   ];
 
-  // Repository usage by type
-  const repoTypeData = [
-    { name: 'JavaScript', value: 40 },
-    { name: 'TypeScript', value: 30 },
-    { name: 'Python', value: 20 },
-    { name: 'Other', value: 10 },
-  ];
-
   // AI features usage data
   const aiUsageData = [
     { name: 'Documentation', docs: 65, insights: 40 },
@@ -54,17 +46,6 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
     { name: 'Refactoring', docs: 30, insights: 50 },
     { name: 'Testing', docs: 20, insights: 35 },
     { name: 'Debugging', docs: 35, insights: 45 },
-  ];
-
-  // Time saved over time
-  const timeSavedData = [
-    { name: 'Week 1', time: 2 },
-    { name: 'Week 2', time: 3 },
-    { name: 'Week 3', time: 3.5 },
-    { name: 'Week 4', time: 5 },
-    { name: 'Week 5', time: 7 },
-    { name: 'Week 6', time: 6.5 },
-    { name: 'Week 7', time: 8 },
   ];
 
   const COLORS = ['#8B5CF6', '#0EA5E9', '#F97316', '#D946EF'];
@@ -120,44 +101,6 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
         </div>
       </div>
       
-      {/* Repository Distribution */}
-      <div 
-        className="bg-[#1A1A1A] p-6 rounded-xl"
-      >
-        <h3 className="text-lg font-medium mb-4">Repository Types</h3>
-        <div className="h-[300px] flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={repoTypeData}
-                cx="50%"
-                cy="50%"
-                innerRadius={70}
-                outerRadius={90}
-                fill="#8884d8"
-                paddingAngle={5}
-                dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                labelLine={false}
-              >
-                {repoTypeData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#1A1F2C', 
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '8px'
-                }}
-                itemStyle={{ color: 'white' }}
-                labelStyle={{ color: '#8E9196' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-      
       {/* AI Features Usage */}
       <div 
         className="bg-[#1A1A1A] p-6 rounded-xl"
@@ -200,47 +143,6 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
         </div>
       </div>
       
-      {/* Time Saved */}
-    <div 
-        className="bg-[#1A1A1A] p-6 rounded-xl"
-      >
-        <h3 className="text-lg font-medium mb-4">Time Saved (hours)</h3>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={timeSavedData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-              <XAxis 
-                dataKey="name" 
-                axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} 
-                tickLine={false}
-                tick={{ fill: '#8E9196', fontSize: 12 }}
-              />
-              <YAxis 
-                axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} 
-                tickLine={false}
-                tick={{ fill: '#8E9196', fontSize: 12 }}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#1A1F2C', 
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '8px'
-                }}
-                itemStyle={{ color: 'white' }}
-                labelStyle={{ color: '#8E9196' }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="time" 
-                stroke="#D946EF" 
-                strokeWidth={3}
-                dot={{ r: 4, fill: '#D946EF', strokeWidth: 0 }}
-                activeDot={{ r: 6, fill: '#F97316' }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
     </div>
   );
 };

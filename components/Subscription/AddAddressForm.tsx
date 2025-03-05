@@ -37,7 +37,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
       
     return (
 
-        <div onClick={handleClose} className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div onClick={handleClose} className="absolute z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div onClick={(e) => e.stopPropagation()} className="bg-[#1f1f1f] p-4 w-[32rem] h-[37rem] overflow-y-auto rounded-xl">
                 <div className="flex justify-between">
                     <h2 className="text-lg">Add a new billing address</h2>
@@ -75,10 +75,10 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
                         </button>
 
                         <label htmlFor="address-1" className="text-sm font-semibold">Address line 1</label>
-                        <input onChange={(e) => setAddressData({...addressData, address: e.target.value})} type="text" id="address-1" name="address-1" value={addressData?.address.split(",")[0]} placeholder="123 Main St" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                        <input onChange={(e) => setAddressData({...addressData, address1: e.target.value})} type="text" id="address-1" name="address-1" value={addressData?.address1} placeholder="123 Main St" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
 
                         <label htmlFor="address-2 (optional)" className="text-sm font-semibold">Address line 2 (optional)</label>
-                        <input onChange={(e) => setAddressData({...addressData, address: e.target.value})} type="text" id="address-2" name="address-2" value={addressData?.address.split(",")[1]} placeholder="Apt 1" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                        <input onChange={(e) => setAddressData({...addressData, address2: e.target.value})} type="text" id="address-2" name="address-2" value={addressData?.address2} placeholder="Apt 1" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
                         
                         <div className="flex gap-4 justify-between">
                             <div className="flex flex-col gap-2">
@@ -93,7 +93,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
                         </div>
 
                         <label htmlFor="postal-code" className="text-sm font-semibold">Zip code</label>
-                        <input onChange={(e) => setAddressData({...addressData, postalCode: e.target.value})} type="text" id="postal-code" name="postal-code" value={addressData?.postalCode} placeholder="12345" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                        <input onChange={(e) => setAddressData({...addressData, zip: e.target.value})} type="text" id="postal-code" name="postal-code" value={addressData?.zip} placeholder="12345" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
 
                         <div className="flex gap-4 justify-between">
                             <div className="flex flex-col gap-2">
