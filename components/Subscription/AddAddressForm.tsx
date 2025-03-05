@@ -5,9 +5,10 @@ import { countries } from "countries-list";
 import Image from "next/image";
 import { useState } from "react";
 
-const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: { addressData: any, setAddressData: (address: any) => void, setShowAddAddressForm: (show: boolean) => void }) => {
+const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, handleAddAddress, handleUpdateAddress, isEditing, setIsEditing }: { addressData: any, setAddressData: (address: any) => void, setShowAddAddressForm: (show: boolean) => void, handleAddAddress: () => void, handleUpdateAddress: () => void, isEditing: boolean, setIsEditing: (isEditing: boolean) => void }) => {
 
     const [showCountryList, setShowCountryList] = useState(false);
+    const [country, setCountry] = useState(addressData?.country || "United States");
 
     const handleClose = () => {
         if (showCountryList) {
@@ -16,7 +17,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
             setShowAddAddressForm(false);
         }
     }
-
+    
     const countriesWithFlags = Object.entries(countries)
     .map(([key, country]) => ({
       name: country.name || "Unknown", // Fallback for missing name
@@ -27,20 +28,31 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
     .sort((a, b) => a.name.localeCompare(b.name));
 
     const data = countriesWithFlags.map((country) => (
-    <div className="flex items-center gap-4 appearance-none bg-[#343333] text-white py-2 px-4 hover:bg-[#474646] cursor-pointer" key={country.name}>
+    <div onClick={() => {setCountry(country.name); setAddressData({...addressData, country: country.name})}} className="flex items-center gap-4 appearance-none bg-[#343333] text-white py-2 px-4 hover:bg-[#474646] cursor-pointer" key={country.name}>
         <Image src={country.flag} alt={country.name} width={25} height={25} />
         <p>{country.name}</p>
     </div>
     ));
 
-    const defaultCountry = countriesWithFlags.find((country) => country.name === (addressData?.country || "United States"));
-      
+    const defaultCountry = countriesWithFlags.find((AllCountry) => AllCountry.name === (country || "United States"));
+
+    const handleSave = (e: any) => {
+        e.preventDefault();
+        if (isEditing) {
+            handleUpdateAddress();
+            setIsEditing(false);
+        } else {
+            handleAddAddress();
+        }
+        setShowAddAddressForm(false);
+    }
+
     return (
 
         <div onClick={handleClose} className="absolute z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div onClick={(e) => e.stopPropagation()} className="bg-[#1f1f1f] p-4 w-[32rem] h-[37rem] overflow-y-auto rounded-xl">
                 <div className="flex justify-between">
-                    <h2 className="text-lg">{addressData?.id ? "Edit address" : "Add a new billing address"}</h2>
+                    <h2 className="text-lg">{isEditing ? "Edit address" : "Add a new billing address"}</h2>
                     <button onClick={handleClose} className="text-sm text-gray-500">
                     <X />
                 </button>
@@ -63,12 +75,15 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
                     <div className="flex flex-col gap-2 mt-3">
                         <p className="text-sm font-semibold">Country</p>
                         <button type="button" className="w-full text-start max-h-[10rem] relative appearance-none cursor-pointer text-sm py-2 px-4 bg-transparent rounded-md border border-[#353535] focus:outline-2">
-                            <div onClick={() => setShowCountryList(!showCountryList)} className="flex items-center gap-4 appearance-none text-white">
+                            <div onClick={(e) => {
+                                e.stopPropagation();
+                                setShowCountryList(!showCountryList);
+                            }} className="flex items-center gap-4 appearance-none text-white">
                                 <Image src={defaultCountry?.flag || ""} alt={defaultCountry?.name || ""} width={25} height={25} />
                                 <p>{defaultCountry?.name}</p>
                             </div>
 
-                            {showCountryList && <div  className="w-full absolute top-10 left-0 max-h-60 overflow-y-auto appearance-none cursor-pointer text-sm bg-transparent rounded-md border border-[#353535]">
+                            {showCountryList && <div className="w-full absolute top-10 left-0 max-h-60 overflow-y-auto appearance-none cursor-pointer text-sm bg-transparent rounded-md border border-[#353535]">
                                 {data}
                             </div>}
 
@@ -103,13 +118,13 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
 
                             <div className="flex flex-col gap-2">
                             <label htmlFor="tax-number" className="text-sm font-semibold">Tax Number (optional)</label>
-                            <input onChange={(e) => setAddressData({...addressData, taxIdNumber: e.target.value})} type="text" id="tax-number" name="tax-number" value={addressData?.taxIdNumber} placeholder="1234567890" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
+                            <input onChange={(e) => setAddressData({...addressData, taxId: e.target.value})} type="text" id="tax-number" name="tax-number" value={addressData?.taxId} placeholder="1234567890" className="w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]" />
                             </div>
                         </div>
 
                         <div className="flex gap-4 mt-3">
                             <button onClick={handleClose} type="button" className="text-sm py-2 px-4 ms-auto rounded-lg border border-[#353535] text-[#ededed]">Cancel</button>
-                            <button type="button" className="text-sm py-2 px-4 rounded-lg bg-[#ededed] text-black">Save</button>
+                            <button onClick={(e) => handleSave(e)} type="button" className="text-sm py-2 px-4 rounded-lg bg-[#ededed] text-black">Save</button>
                         </div>
 
                     </div>

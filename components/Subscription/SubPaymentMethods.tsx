@@ -1,8 +1,11 @@
-import { useContext, useState } from "react";
-import { AppContext, AppContextType } from "../../contexts/AppContext";
+"use client";
+
+import { useEffect, useState } from "react";
 import AddAddressForm from "./AddAddressForm";
 import { Star, Mail, MapPin, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 interface AddressData {
     name: string;
     contact: string;
@@ -10,11 +13,16 @@ interface AddressData {
     address2: string;
     city: string;
     state: string;
-    zip: number;
+    zip: number | undefined;
     country: string;
+    taxId: string;
+    taxIdType: string;
+    isPrimary: boolean;
 }
 
 const SubPaymentMethods = () => {
+
+    const { user } = useUser();
 
     const [showAddAddressForm, setShowAddAddressForm] = useState(false);
     const [addressData, setAddressData] = useState<AddressData>({
@@ -24,38 +32,35 @@ const SubPaymentMethods = () => {
         address2: "",
         city: "",
         state: "",
-        zip: 0,
+        zip: undefined,
         country: "",
+        taxId: "",
+        taxIdType: "",
+        isPrimary: false,
     });
 
-    const { billingAddress, setBillingAddress } = useContext(AppContext) as AppContextType;
+    const [savedBillingAddresses, setSavedBillingAddresses] = useState<AddressData[]>([]);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const savedBillingAddresses = [
-        {
-            id: 1,
-            name: "John Doe",
-            contact: "abc@gmail.com",
-            address1: "123 Main St",
-            address2: "",
-            city: "Anytown",
-            state: "CA",
-            zip: 12345,
-            country: "United States",
-            isDefault: billingAddress?.id === 1,
-        },
-        {
-            id: 2,
-            name: "Jane Doe",
-            contact: "abc@gmail.com",
-            address1: "456 Main St",
-            address2: "Apt 1",
-            city: "Anytown",
-            state: "CA",
-            zip: 12345,
-            country: "United States",
-            isDefault: billingAddress?.id === 2,
+    useEffect(() => {
+        const fetchBillingAddress = async () => {
+
+            const response = await axios.patch("/api/fetch/subscriptiondata?query=billingAddress", 
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${user?.id}`,
+                    },
+                }
+            );
+            if (response.data.data) {
+                setSavedBillingAddresses(response.data.data.billingAddress);
+            } else {
+                setSavedBillingAddresses([]);
+            }
         }
-    ]
+        fetchBillingAddress();
+    }, [user]);
 
     const handleAddBillingAddress = () => {
         setAddressData({
@@ -65,20 +70,61 @@ const SubPaymentMethods = () => {
             address2: "",
             city: "",
             state: "",
-            zip: 0,
+            zip: undefined,
             country: "",
+            taxId: "",
+            taxIdType: "",
+            isPrimary: false,
         });
         setShowAddAddressForm(true);
     }
 
     const handleEditAddress = (address: any) => {
         setAddressData(address);
+        setIsEditing(true);
         setShowAddAddressForm(true);
+    }
+
+    const finalAddAddress = async () => {
+        if (savedBillingAddresses.length === 0) {
+            setAddressData({...addressData, isPrimary: true});
+        } else {
+            setAddressData({...addressData, isPrimary: false});
+        }
+    }
+
+    const handleAddAddress = async () => {
+        await finalAddAddress();
+        const response = await axios.post("/api/fetch/subscriptiondata?query=addBillingAddress", {
+            addressData: addressData,
+        }, {
+            headers: {
+                Authorization: `Bearer ${user?.id}`,
+            },
+        });
+
+        if (savedBillingAddresses.length > 0) {
+            setSavedBillingAddresses([...savedBillingAddresses, response.data.data]);
+        } else {
+            setSavedBillingAddresses([response.data.data]);
+        }
+    }
+
+    const handleUpdateAddress = async () => {
+        const response = await axios.post("/api/fetch/subscriptiondata?query=updateBillingAddress", {
+            addressData,
+        }, {
+            headers: {
+                Authorization: `Bearer ${user?.id}`,
+            },
+        });
+
+        setSavedBillingAddresses(response.data.data);
     }
 
     return (
     <>
-        {showAddAddressForm && <AddAddressForm addressData={addressData} setAddressData={setAddressData} setShowAddAddressForm={setShowAddAddressForm} />}
+        {showAddAddressForm && <AddAddressForm handleAddAddress={handleAddAddress} handleUpdateAddress={handleUpdateAddress} addressData={addressData} setAddressData={setAddressData} setShowAddAddressForm={setShowAddAddressForm} isEditing={isEditing} setIsEditing={setIsEditing} />}
         <div className="flex justify-between">
             <div className="flex flex-col">
                 <h1 className="text-lg font-semibold">Billing Address</h1>
@@ -93,12 +139,12 @@ const SubPaymentMethods = () => {
         </div>
 
         <div className="w-full mt-5 gap-4 grid grid-cols-3 ">
-            {savedBillingAddresses.length === 0 && <div onClick={() => handleAddBillingAddress()} className="p-6 bg-[#1A1A1A] rounded-lg text-[#999] h-60 col-span-1 cursor-pointer hover:border-[#414141] border border-[#262626] flex item-center justify-center">
+            {(savedBillingAddresses?.length === 0) && <div onClick={() => handleAddBillingAddress()} className="p-6 bg-[#1A1A1A] rounded-lg text-[#999] h-60 col-span-1 cursor-pointer hover:border-[#414141] border border-[#262626] flex item-center justify-center">
                 Add a new billing address
             </div>}
-            {savedBillingAddresses.map((address) => (
-                <div key={address.id} onClick={() => setBillingAddress(address)} className={`p-4 relative bg-[#1A1A1A] rounded-lg h-60 col-span-1 border cursor-pointer ${address.isDefault ? "border-[#3B82F6]" : "border-[#262626] hover:border-[#414141]"}`}>
-                    {address.isDefault && <div className="absolute text-sm top-0 right-0 flex items-center gap-2 bg-[#3B82F6] rounded-bl-lg rounded-tr-lg px-2 py-1 text-[#ededed]">
+            {savedBillingAddresses.map((address: any) => (
+                <div key={address.name} className={`p-4 relative bg-[#1A1A1A] rounded-lg h-60 col-span-1 border cursor-pointer ${address.isPrimary ? "border-[#3B82F6]" : "border-[#262626] hover:border-[#414141]"}`}>
+                    {address.isPrimary && <div className="absolute text-sm top-0 right-0 flex items-center gap-2 bg-[#3B82F6] rounded-bl-lg rounded-tr-lg px-2 py-1 text-[#ededed]">
                         <Star className="w-3 h-3" />
                         <span>Primary</span>
                     </div>}

@@ -1,9 +1,11 @@
 "use client"
 
 import PlanCards from "./PlanCards";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import { BsDownload, BsEye } from "react-icons/bs";
+import axios from "axios";
+import { useUser } from "@clerk/nextjs";
 import {
   Tooltip,
   TooltipContent,
@@ -25,33 +27,38 @@ interface AppContextType {
 const SubBilling = () => {
 
     const { storedUser } = useContext(AppContext) as AppContextType;
+    const { user } = useUser();
 
-    const billingHistory = [
-        {
-        planName: "Starter Plan",
-        amount: 0,
-        purchaseDate: "2024-01-01",
-        endDate: "2024-01-01",
-        status: "Active",
-        actions: "Edit",
-        },
-        {
-        planName: "Pro Plan",
-        amount: 9,
-        purchaseDate: "2024-01-01",
-        endDate: "2024-01-01",
-        status: "Active",
-        actions: "Edit",
-        },
-        {
-        planName: "Advanced Plan",
-        amount: 19,
-        purchaseDate: "2024-01-01",
-        endDate: "2024-01-01",
-        status: "Active",
-        actions: "Edit",
+    const [billingData, setBillingData] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchBillingData = async () => {
+            try {
+                const response = await axios.patch(
+                    "/api/fetch/subscriptiondata?query=billingData",
+                    {}, // Empty body for PATCH request
+                    {
+                        headers: {
+                            Authorization: `Bearer ${user?.id}`,
+                        },
+                    }
+                );
+                setBillingData(response.data.data);
+            } catch (error) {
+                console.error("Error fetching billing data:", error);
+            }
+        };
+    
+        if (user) {
+            fetchBillingData();
         }
-    ];
+    }, [user, billingData]);
+    
+    let billingHistory: any[] = [];
+
+    if (billingData) {
+        billingHistory = billingData.billingHistory;
+    }
 
     const plans = [
         {
@@ -118,7 +125,7 @@ const SubBilling = () => {
                     <span className="text-sm text-[#999] col-span-1">Actions</span>
                 </div>
                 <div className="w-full max-h-80 overflow-y-auto">
-                {billingHistory.length > 0 && billingHistory.map((history) => (
+                {billingHistory && billingHistory.length > 0 && billingHistory.map((history: any) => (
                 <div key={history.planName} className="grid grid-cols-12 w-full px-3 border-b border-[#2d3237] py-2 hover:bg-[#2d3237]/50 rounded-lg text-sm">
                     <span className="text-sm text-[#999] col-span-3 mt-1.5">{history.planName}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">$ {history.amount}.00</span>

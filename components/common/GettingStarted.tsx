@@ -13,11 +13,6 @@ import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import LoadingAnimation from "./LoadingAnimation";
 
-interface User {
-  subscriptionType: string;
-  stepsCompleted: number;
-}
-
 const GettingStarted = () => {
   const activeClasses = "text-white text-lg";
   const inactiveClasses = "tracking-tight text-[#808080]";

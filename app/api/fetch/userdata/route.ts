@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUser, updateUser } from "@/app/api/auth/user/clientUserServicies";
 import connectMongoWithRetry from "../../lib/db/connectMongo";
-
+import { getUsageOverview } from "@/app/api/auth/subscription/clientSubscriptionServices";
 // GET User Data
 export async function GET(request: NextRequest) {
   const id = request.headers.get("Authorization")?.split(" ")[1];
@@ -19,17 +19,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (user.stepsCompleted === 1) {
-      updateUser(id, { stepsCompleted: 2 });
-    }
+    const usageOverview = await getUsageOverview(id);
 
-    else if (user.stepsCompleted === 2) {
-      updateUser(id, { stepsCompleted: 3 });
+    if (user.stepsCompleted == 0) {
+      updateUser(id, { stepsCompleted: 1 });
     }
 
     return NextResponse.json({
       ...user,
-      stepsCompleted: user.stepsCompleted < 3 ? user.stepsCompleted + 1 : 3,
+      stepsCompleted: user.stepsCompleted == 0 ? 1 : user.stepsCompleted,
+      usageOverview: usageOverview,
     });
   } catch (error) {
     console.error("Error fetching user:", error); // Log detailed error for debugging

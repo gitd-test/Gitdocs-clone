@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import User from '@/app/api/lib/models/User';
-import Subscription from '@/app/api/lib/models/Subscription';
-import connectMongoWithRetry from '@/app/api/lib/db/connectMongo';
+
 export async function GET(req: NextRequest) {
     try {
         // Fetch authenticated user's ID
@@ -22,45 +20,7 @@ export async function GET(req: NextRequest) {
 
         // Immediately redirect user to /loading
         const response = NextResponse.redirect(new URL('/loading', req.url));
-        
-        // Connect to the MongoDB database
-        await connectMongoWithRetry();
         // Perform database operations in the background
-        
-        (async () => {
-            try {
-
-                // Check if the user already exists in the database
-                const existingUser = await User.findOne({ clerkUid: userId });
-
-                if (!existingUser) {
-                    // Create a new user if not found
-                    await User.create({
-                        clerkUid: userId,
-                        email: user.emailAddresses[0].emailAddress, // Replace this with a method to fetch the email securely
-                        firstName: user.firstName, // Replace with user's first name
-                        lastName: user.lastName, // Replace with user's last name
-                        subscriptionType: 'Free',
-                        signupDate: new Date(),
-                        repositories: [],
-                    });
-
-                    await Subscription.create({
-                        userId: userId,
-                        subscriptionType: 'Free',
-                        subscriptionStatus: 'Inactive',
-                        subscriptionStartDate: new Date(),
-                        subscriptionEndDate: new Date(),
-                        subscriptionPrice: 0,
-                        leftOverTokens: 10000,
-                        bonusTokens: 0,
-                    });
-
-                }
-            } catch (error) {
-                console.error('Background processing error:', error);
-            }
-        })();
 
         return response; // Return redirect response immediately
     } catch (error) {

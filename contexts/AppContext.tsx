@@ -2,22 +2,26 @@
 
 import { createContext, Dispatch, SetStateAction, useState, useEffect } from "react";
 
+interface UsageOverview {
+  tokensUsed: number;
+  totalTokens: number;
+  maxRepositories: number;
+  weeklyTokensUsed: {
+    day: string;
+    tokensUsed: number;
+  }[];
+  monthlyTokensUsed: {
+    month: string;
+    tokensUsed: number;
+  }[];
+}
+
 interface User {
   subscriptionType: string;
   stepsCompleted: number;
+  usageOverview: UsageOverview;
 }
-interface BillingAddress {
-  id: number;
-  name: string;
-  contact: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: number;
-  country: string;
-  isDefault: boolean;
-}
+
 export interface AppContextType {
   stopAllActions: boolean;
   setStopAllActions: Dispatch<SetStateAction<boolean>>;
@@ -37,8 +41,6 @@ export interface AppContextType {
   setGridView: Dispatch<SetStateAction<boolean>>;
   repositoriesUpdated: boolean;
   setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
-  billingAddress: BillingAddress | null;
-  setBillingAddress: Dispatch<SetStateAction<BillingAddress | null>>;
 }
 
 interface Model {
@@ -58,7 +60,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
   const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
   const [stopAllActions, setStopAllActions] = useState<boolean>(false);
-  const [billingAddress, setBillingAddress] = useState<BillingAddress | null>(null);
 
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
@@ -84,7 +85,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       selectedProvider, setSelectedProvider, 
       selectedModel, setSelectedModel, 
       stopAllActions, setStopAllActions,
-      billingAddress, setBillingAddress
     }}>
       {children}
     </AppContext.Provider>
