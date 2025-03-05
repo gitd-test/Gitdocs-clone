@@ -17,7 +17,6 @@ interface BillingAddress {
   zip: number;
   country: string;
   isDefault: boolean;
-  isActive: boolean;
 }
 export interface AppContextType {
   stopAllActions: boolean;

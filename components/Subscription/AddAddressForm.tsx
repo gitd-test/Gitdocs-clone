@@ -40,7 +40,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm }: 
         <div onClick={handleClose} className="absolute z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div onClick={(e) => e.stopPropagation()} className="bg-[#1f1f1f] p-4 w-[32rem] h-[37rem] overflow-y-auto rounded-xl">
                 <div className="flex justify-between">
-                    <h2 className="text-lg">Add a new billing address</h2>
+                    <h2 className="text-lg">{addressData?.id ? "Edit address" : "Add a new billing address"}</h2>
                     <button onClick={handleClose} className="text-sm text-gray-500">
                     <X />
                 </button>

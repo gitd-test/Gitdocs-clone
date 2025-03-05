@@ -41,21 +41,19 @@ const SubPaymentMethods = () => {
             state: "CA",
             zip: 12345,
             country: "United States",
-            isDefault: true,
-            isActive: billingAddress?.id === 1,
+            isDefault: billingAddress?.id === 1,
         },
         {
             id: 2,
             name: "Jane Doe",
             contact: "abc@gmail.com",
             address1: "456 Main St",
-            address2: "",
+            address2: "Apt 1",
             city: "Anytown",
             state: "CA",
             zip: 12345,
             country: "United States",
-            isDefault: false,
-            isActive: billingAddress?.id === 2,
+            isDefault: billingAddress?.id === 2,
         }
     ]
 
@@ -99,23 +97,22 @@ const SubPaymentMethods = () => {
                 Add a new billing address
             </div>}
             {savedBillingAddresses.map((address) => (
-                <div key={address.id} onClick={() => setBillingAddress(address)} className={`p-4 relative bg-[#1A1A1A] rounded-lg h-60 col-span-1 border cursor-pointer ${address.isActive ? "text-[#ededed]" : "border-[#262626] hover:border-[#414141] text-[#999]"}`}>
+                <div key={address.id} onClick={() => setBillingAddress(address)} className={`p-4 relative bg-[#1A1A1A] rounded-lg h-60 col-span-1 border cursor-pointer ${address.isDefault ? "border-[#3B82F6]" : "border-[#262626] hover:border-[#414141]"}`}>
                     {address.isDefault && <div className="absolute text-sm top-0 right-0 flex items-center gap-2 bg-[#3B82F6] rounded-bl-lg rounded-tr-lg px-2 py-1 text-[#ededed]">
                         <Star className="w-3 h-3" />
                         <span>Primary</span>
                     </div>}
                     <h2 className="text-lg font-semibold mb-1">{address.name}</h2>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-[#999]">
                         <Mail className="w-4 h-4" />
                         <p className="text-sm">{address.contact}</p>
                     </div>
                     <div className="flex items-start gap-3 mt-4 bg-[#262626] rounded-lg py-2 px-3">
                         <MapPin className="w-5 h-5" />
                         <div>
-                            <p className="">{address.address1}</p>
-                            <p className="">{address.address2}</p>
-                            <p className="">{address.city}, {address.state} {address.zip}</p>
-                            <p className="">{address.country}</p>
+                            <p>{address.address1}, {address.address2}</p>
+                            <p>{address.city}, {address.state} {address.zip}</p>
+                            <p className="text-[#999]">{address.country}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 mt-4">

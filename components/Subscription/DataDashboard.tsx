@@ -1,13 +1,7 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { 
   BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  PieChart, 
-  Pie, 
-  Cell, 
+  Bar,  
   AreaChart, 
   Area,
   XAxis, 
