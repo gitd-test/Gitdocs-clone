@@ -11,7 +11,7 @@ import {
   Legend, 
   ResponsiveContainer 
 } from 'recharts';
-
+import { LuSettings } from 'react-icons/lu';
 interface DataDashboardProps {
   stats: {
     tokens: number;
@@ -19,18 +19,37 @@ interface DataDashboardProps {
     repositories: number;
     maxRepositories: number;
   };
+  monthlyStats: {
+    january: number;
+    february: number;
+    march: number;
+    april: number;
+    may: number;
+    june: number;
+    july: number;
+    august: number;
+    september: number;
+    october: number;
+    november: number;
+    december: number;
+  };
 }
 
-const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
+const DataDashboard: React.FC<DataDashboardProps> = ({ stats, monthlyStats }) => {
   // Monthly token usage data
   const monthlyUsageData = [
-    { name: 'Jan', tokens: 1200 },
-    { name: 'Feb', tokens: 1900 },
-    { name: 'Mar', tokens: 1500 },
-    { name: 'Apr', tokens: 2800 },
-    { name: 'May', tokens: 2100 },
-    { name: 'Jun', tokens: 2400 },
-    { name: 'Jul', tokens: stats.tokens },
+    { name: 'Jan', tokens: monthlyStats.january },
+    { name: 'Feb', tokens: monthlyStats.february },
+    { name: 'Mar', tokens: monthlyStats.march },
+    { name: 'Apr', tokens: monthlyStats.april },
+    { name: 'May', tokens: monthlyStats.may },
+    { name: 'Jun', tokens: monthlyStats.june },
+    { name: 'Jul', tokens: monthlyStats.july },
+    { name: 'Aug', tokens: monthlyStats.august },
+    { name: 'Sep', tokens: monthlyStats.september },
+    { name: 'Oct', tokens: monthlyStats.october },
+    { name: 'Nov', tokens: monthlyStats.november },
+    { name: 'Dec', tokens: monthlyStats.december },
   ];
 
   // AI features usage data
@@ -42,11 +61,9 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
     { name: 'Debugging', docs: 35, insights: 45 },
   ];
 
-  const COLORS = ['#8B5CF6', '#0EA5E9', '#F97316', '#D946EF'];
-
   return (
     <div 
-      className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-5"
+      className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8 mt-5"
     >
       {/* Monthly Token Consumption */}
       <div 
@@ -96,7 +113,7 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
       </div>
       
       {/* AI Features Usage */}
-      <div 
+      {/* <div 
         className="bg-[#1A1A1A] p-6 rounded-xl"
       >
         <h3 className="text-lg font-medium mb-4">AI Features Usage</h3>
@@ -135,7 +152,7 @@ const DataDashboard: React.FC<DataDashboardProps> = ({ stats }) => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </div> */}
       
     </div>
   );

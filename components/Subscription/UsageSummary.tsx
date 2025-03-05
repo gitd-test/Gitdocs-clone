@@ -9,18 +9,27 @@ interface UsageSummaryProps {
     repositories: number;
     maxRepositories: number;
   };
+  weeklyStats: {
+    monday: number;
+    tuesday: number;
+    wednesday: number;
+    thursday: number;
+    friday: number;
+    saturday: number;
+    sunday: number;
+  };
 }
 
-const UsageSummary: React.FC<UsageSummaryProps> = ({ stats }) => {
+const UsageSummary: React.FC<UsageSummaryProps> = ({ stats, weeklyStats }) => {
   // Sample usage data for chart
   const usageData = [
-    { day: 'Mon', usage: 10 },
-    { day: 'Tue', usage: 25 },
-    { day: 'Wed', usage: 15 },
-    { day: 'Thu', usage: 30 },
-    { day: 'Fri', usage: 22 },
-    { day: 'Sat', usage: 8 },
-    { day: 'Sun', usage: 12 },
+    { day: 'Mon', usage: weeklyStats.monday },
+    { day: 'Tue', usage: weeklyStats.tuesday },
+    { day: 'Wed', usage: weeklyStats.wednesday },
+    { day: 'Thu', usage: weeklyStats.thursday },
+    { day: 'Fri', usage: weeklyStats.friday },
+    { day: 'Sat', usage: weeklyStats.saturday },
+    { day: 'Sun', usage: weeklyStats.sunday },
   ];
 
   return (

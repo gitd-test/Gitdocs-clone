@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { LuPlus, LuLayoutGrid, LuList } from "react-icons/lu";
 import RepoCards from "../common/RepoCards";
@@ -26,28 +26,11 @@ interface Repository {
   score?: number;
 }
 
-interface User {
-  subscriptionType: string;
-  stepsCompleted: number;
-}
-
-interface AppContextType {
-  gridView: boolean;
-  setGridView: Dispatch<SetStateAction<boolean>>;
-  repositoriesUpdated: boolean;
-  setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
-  storedUser: User | null;
-  setStoredUser: Dispatch<SetStateAction<User | null>>;
-  stopAllActions: boolean;
-  setStopAllActions: Dispatch<SetStateAction<boolean>>;
-}
-
-
 const HeroSection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isSignedIn } = useUser();
-  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, storedUser, setStoredUser, stopAllActions, setStopAllActions } = useContext(AppContext) as AppContextType;
+  const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, storedUser, setStoredUser, stopAllActions, setStopAllActions, setNumRepositories } = useContext(AppContext) as AppContextType;
   const [repositoriesLoading, setRepositoriesLoading] = useState(false);
   const [repositories, setRepositories] = useState<Repository[]>([]);
 
@@ -108,6 +91,7 @@ const HeroSection = () => {
           localStorage.setItem("repositories", JSON.stringify(response.data));
           localStorage.setItem("staleTime", new Date().toISOString());
           setRepositoriesLoading(false);
+          setNumRepositories(response.data.length);
           router.push("/dashboard");
         })
         .catch((error) => {

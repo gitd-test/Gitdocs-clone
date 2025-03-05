@@ -41,6 +41,8 @@ export interface AppContextType {
   setGridView: Dispatch<SetStateAction<boolean>>;
   repositoriesUpdated: boolean;
   setRepositoriesUpdated: Dispatch<SetStateAction<boolean>>;
+  numRepositories: number;
+  setNumRepositories: Dispatch<SetStateAction<number>>;
 }
 
 interface Model {
@@ -60,6 +62,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
   const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
   const [stopAllActions, setStopAllActions] = useState<boolean>(false);
+  const [numRepositories, setNumRepositories] = useState<number>(0);
 
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
@@ -85,6 +88,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       selectedProvider, setSelectedProvider, 
       selectedModel, setSelectedModel, 
       stopAllActions, setStopAllActions,
+      numRepositories, setNumRepositories,
     }}>
       {children}
     </AppContext.Provider>
