@@ -46,6 +46,7 @@ const SubBilling = () => {
                     }
                 );
                 setBillingData(response.data.data);
+                setBillingHistory(response.data.data.billingHistory);
             } catch (error) {
                 console.error("Error fetching billing data:", error);
             }
@@ -55,10 +56,6 @@ const SubBilling = () => {
             fetchBillingData();
         }
     }, [user, trigger]);
-    
-    if (billingData) {
-        setBillingHistory(billingData.billingHistory);
-    }
 
     const plans = [
         {
