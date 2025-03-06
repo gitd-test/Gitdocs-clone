@@ -2,12 +2,13 @@
 
 import { LuArrowLeft, LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
 import { AppContext } from "@/contexts/AppContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
 import Link from "next/link";
 import LoadingAnimation from "../common/LoadingAnimation";
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
+import LoadingBar from "react-top-loading-bar";
 
 interface AppContextType {
     navbarTitle: string;
@@ -24,9 +25,19 @@ const NavBar = () => {
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
     const { navbarTitle, isSidebarUsed, setRepositoriesUpdated, stopAllActions } = useContext(AppContext) as AppContextType;
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        setProgress(100);
+    }, []);
 
     return (
         <>
+            <LoadingBar
+                color="#1496D8"
+                progress={progress}
+                onLoaderFinished={() => setProgress(0)}
+            />
             <div className={`flex justify-between items-center px-6 py-4 h-16 border-b border-[#3D444D]`}>
                 <div className="flex items-center gap-4">
                 {pathname === "/dashboard" 

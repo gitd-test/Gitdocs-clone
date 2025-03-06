@@ -15,12 +15,14 @@ const addressSchema = new mongoose.Schema({
 });
 
 const billingHistorySchema = new mongoose.Schema({
+    razorpayOrderId: { type: String, required: true },
+    razorpayPaymentId: { type: String },
     subscriptionType: { type: String, enum: ["Free", "Pro", "Enterprise"], required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    price: { type: Number, required: true },
-    status: { type: String, enum: ["Success", "Failed", "Pending"], required: true },
-});
+    subscriptionStartDate: { type: Date, required: true },
+    subscriptionEndDate: { type: Date, required: true },
+    subscriptionPrice: { type: Number, required: true },
+    status: { type: String, enum: ["completed", "failed", "pending"], default: "pending", required: true },
+}, { timestamps: true });
 
 const subscriptionSchema = new mongoose.Schema({
     userId: { type: String, required: true, index: true }, // Indexed for searching subscriptions by user ID
@@ -32,7 +34,7 @@ const subscriptionSchema = new mongoose.Schema({
     },
     subscriptionStatus: {
         type: String,
-        enum: ["Active", "Inactive", "Expired"],
+        enum: ["Active", "Inactive", "Pending"],
         required: true,
         index: true, // Indexed for filtering by subscription status
     },

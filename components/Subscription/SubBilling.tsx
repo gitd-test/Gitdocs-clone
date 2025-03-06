@@ -30,6 +30,7 @@ const SubBilling = () => {
     const { user } = useUser();
 
     const [billingData, setBillingData] = useState<any>(null);
+    const [trigger, setTrigger] = useState(0);
 
     useEffect(() => {
         const fetchBillingData = async () => {
@@ -52,7 +53,7 @@ const SubBilling = () => {
         if (user) {
             fetchBillingData();
         }
-    }, [user, billingData]);
+    }, [user, trigger]);
     
     let billingHistory: any[] = [];
 
@@ -81,7 +82,7 @@ const SubBilling = () => {
         isActive: storedUser?.subscriptionType === "Pro",
         features: [
             "Upto 10 repositories",
-            "2M tokens",
+            "5M tokens",
             "Advanced AI Documentation",
             "Priority Support",
             "Unlimited Access to Premium Features",
@@ -94,7 +95,7 @@ const SubBilling = () => {
         isActive: storedUser?.subscriptionType === "Enterprise",
         features: [
             "Upto 100 repositories",
-            "20M tokens",
+            "10M tokens",
             "Custom Features",
         ],
         },
@@ -108,7 +109,7 @@ const SubBilling = () => {
             <div className="flex gap-5 mt-4">
             {plans.map((plan) => (
                 <div key={plan.name} className="flex flex-col items-start transition-all duration-150 bg-[#1A1A1A] hover:bg-gradient-to-br hover:from-[#1A1A1A] hover:to-[#282828] p-3 rounded-xl w-full border border-[#282828]">
-                <PlanCards plan={plan} />
+                <PlanCards plan={plan} setTrigger={setTrigger} />
                 </div>
             ))}
             </div>
@@ -126,7 +127,7 @@ const SubBilling = () => {
                 </div>
                 <div className="w-full max-h-80 overflow-y-auto">
                 {billingHistory && billingHistory.length > 0 && billingHistory.map((history: any) => (
-                <div key={history.planName} className="grid grid-cols-12 w-full px-3 border-b border-[#2d3237] py-2 hover:bg-[#2d3237]/50 rounded-lg text-sm">
+                <div key={history.name} className="grid grid-cols-12 w-full px-3 border-b border-[#2d3237] py-2 hover:bg-[#2d3237]/50 rounded-lg text-sm">
                     <span className="text-sm text-[#999] col-span-3 mt-1.5">{history.planName}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">$ {history.amount}.00</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.purchaseDate}</span>

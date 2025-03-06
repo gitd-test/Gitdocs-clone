@@ -140,4 +140,76 @@ export const deleteBillingAddress = async (userId: string, addressData: any) => 
     }
 };
 
+export const createSubscription = async (userId: string, razorpayOrderId: string, subscriptionType: string, price: number) => {
+    try {
+        await connectMongoWithRetry();
+        const subscription = await Subscription.findOne({ userId: userId });
+
+        if (!subscription) {
+            throw new Error("User not found");
+        }
+
+        const updatedSubscription = await Subscription.findOneAndUpdate(    
+            { userId: userId },
+            { $set: {
+                        billingHistory: [...subscription.billingHistory, {
+                            razorpayOrderId: razorpayOrderId,
+                            subscriptionType: subscriptionType,
+                            subscriptionPrice: price,
+                            status: "pending",
+                            subscriptionStartDate: new Date(),
+                            subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+                        }]
+                     } },
+            { new: true }
+        );
+
+        if (!updatedSubscription) {
+            throw new Error("Failed to update subscription");
+        }
+
+        return updatedSubscription;
+    } catch (error) {
+        console.error("Error creating subscription:", error);
+        throw error;
+    }
+};
+
+export const updateSubscriptionStatus = async (userId: string, razorpayOrderId: string, razorpayPaymentId: string, subscriptionStatus: string, subscriptionType: string, price: number) => {
+    try {
+        await connectMongoWithRetry();
+        const subscription = await Subscription.findOne({ userId: userId });
+
+        if (!subscription) {
+            throw new Error("Subscription not found");
+        }
+
+        const leftOverTokens = subscription.leftOverTokens + (price === 9 ? 5000000 : 10000000);
+        const bonusTokens = subscription.bonusTokens + (price === 9 ? 10000 : 20000);
+
+        const updatedSubscription = await Subscription.findOneAndUpdate(
+            { userId: userId, "billingHistory.razorpayId": razorpayOrderId  },
+            { $set: {   subscriptionType: subscriptionType, 
+                        subscriptionPrice: price,
+                        subscriptionStatus: subscriptionStatus,
+                        subscriptionStartDate: new Date(),
+                        subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+                        leftOverTokens: leftOverTokens,
+                        bonusTokens: bonusTokens,
+                        "billingHistory.$.paymentId": razorpayPaymentId,
+                        "billingHistory.$.status": "completed"
+                        } },
+                        { new: true }
+        );
+
+        if (!updatedSubscription) {
+            throw new Error("Failed to update subscription");
+        }
+
+        return updatedSubscription;
+    } catch (error) {
+        console.error("Error updating subscription status:", error);
+        throw error;
+    }
+}
 

@@ -7,6 +7,8 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   '/api/auth/callback/clerk(.*)',
   '/api/webhook/clerk(.*)',
+  '/api/webhook/razorpay(.*)',
+
 ])
 
 export const config = {

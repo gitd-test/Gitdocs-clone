@@ -4,7 +4,29 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 import { TooltipProvider,Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
-const PlanCards = ({ plan }: { plan: any }) => {
+const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
+
+    const handleCreateOrder = async () => {
+        const response = await fetch("/api/subscribe", {
+            method: "POST",
+            body: JSON.stringify({ amount: plan.price }),
+        });
+
+        const data = await response.json();
+
+        const paymentData = {
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+            order_id: data.order.id,
+            
+            handler: async function (response: any) {
+                setTrigger((prev: number) => prev + 1);
+            }
+        }
+
+        const razorpay = new (window as any).Razorpay(paymentData);
+        razorpay.open();
+        
+    }
 
     return (
         <>
@@ -45,7 +67,7 @@ const PlanCards = ({ plan }: { plan: any }) => {
                     </div>
                 </div>
 
-                <button className={`w-full my-6 px-4 py-2 rounded-lg transition-all duration-150 ${plan.isActive ? "bg-[#ededed]/50 text-black" : "bg-gradient-to-r from-[#8D61F6] to-[#1FABEB] text-[#ededed] hover:from-[#8D61F6]/80 hover:to-[#1FABEB]/80"}`}>
+                <button onClick={handleCreateOrder} disabled={plan.isActive} className={`w-full my-6 px-4 py-2 rounded-lg transition-all duration-150 ${plan.isActive ? "bg-[#ededed]/50 text-black" : "bg-gradient-to-r from-[#8D61F6] to-[#1FABEB] text-[#ededed] hover:from-[#8D61F6]/80 hover:to-[#1FABEB]/80"}`}>
                     {plan.isActive ? "Current Plan" : "Upgrade"}
                 </button>
 
