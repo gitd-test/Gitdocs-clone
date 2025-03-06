@@ -34,7 +34,7 @@ export const getBillingData = async (userId: string) => {
         console.error("Error getting billing data:", error);
         throw error;
     }
-}
+};
 
 export const getBillingAddress = async (userId: string) => {
     try {

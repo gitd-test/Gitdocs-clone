@@ -30,6 +30,7 @@ const SubBilling = () => {
     const { user } = useUser();
 
     const [billingData, setBillingData] = useState<any>(null);
+    const [billingHistory, setBillingHistory] = useState<any>([]);
     const [trigger, setTrigger] = useState(0);
 
     useEffect(() => {
@@ -55,10 +56,8 @@ const SubBilling = () => {
         }
     }, [user, trigger]);
     
-    let billingHistory: any[] = [];
-
     if (billingData) {
-        billingHistory = billingData.billingHistory;
+        setBillingHistory(billingData.billingHistory);
     }
 
     const plans = [
@@ -101,6 +100,10 @@ const SubBilling = () => {
         },
     ];
 
+    const generatePlanName = (subscriptionType: string) => {
+        return plans.find((plan) => plan.name === subscriptionType)?.name || subscriptionType;
+    }
+
     return (
         <>
             <h1 className="text-xl font-semibold mt-2">Billing & Subscription</h1>
@@ -128,10 +131,10 @@ const SubBilling = () => {
                 <div className="w-full max-h-80 overflow-y-auto">
                 {billingHistory && billingHistory.length > 0 && billingHistory.map((history: any) => (
                 <div key={history.name} className="grid grid-cols-12 w-full px-3 border-b border-[#2d3237] py-2 hover:bg-[#2d3237]/50 rounded-lg text-sm">
-                    <span className="text-sm text-[#999] col-span-3 mt-1.5">{history.planName}</span>
-                    <span className="text-sm text-[#999] col-span-2 mt-1.5">$ {history.amount}.00</span>
-                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.purchaseDate}</span>
-                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.endDate}</span>
+                    <span className="text-sm text-[#999] col-span-3 mt-1.5">{generatePlanName(history.subscriptionType)}</span>
+                    <span className="text-sm text-[#999] col-span-2 mt-1.5">$ {history.subscriptionPrice}.00</span>
+                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionStartDate}</span>
+                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionEndDate}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.status}</span>
                     <span className="text-sm text-[#999] col-span-1 flex gap-3">
                     <TooltipProvider delayDuration={0}>
