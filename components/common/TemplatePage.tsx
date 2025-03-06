@@ -5,6 +5,8 @@ import NavBar from "../Dashboard/NavBar";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
 import SubscriptionHero from "../Subscription/SubscriptionHero";
+import AiModelsHero from "../AiModels/AiModelsHero";
+import { usePathname } from "next/navigation";
 
 interface AppContextType {
     setIsSidebarUsed: (isSidebarUsed: boolean) => void;
@@ -12,6 +14,8 @@ interface AppContextType {
 }
 
 const TemplatePage = () => {
+
+    const pathname = usePathname();
 
     const { setIsSidebarUsed, setNavbarTitle } = useContext(AppContext) as AppContextType;
 
@@ -26,7 +30,8 @@ const TemplatePage = () => {
         <div className={`flex-1 ms-16 transition-all duration-300 relative -z-10`}>
           <NavBar />
           <div className="max-w-[1600px] mx-auto">
-            <SubscriptionHero />
+            {pathname === "/subscription" && <SubscriptionHero />}
+            {pathname === "/ai-models" && <AiModelsHero />}
           </div>
         </div>
       </div>

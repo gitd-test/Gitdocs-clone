@@ -163,8 +163,8 @@ const SubAddresses = () => {
         {showAddAddressForm && <AddAddressForm handleAddAddress={handleAddAddress} handleUpdateAddress={handleUpdateAddress} addressData={addressData} setAddressData={setAddressData} setShowAddAddressForm={setShowAddAddressForm} isEditing={isEditing} setIsEditing={setIsEditing} savedBillingAddresses={savedBillingAddresses} />}
         <div className="flex justify-between">
             <div className="flex flex-col">
-                <h1 className="text-lg font-semibold">Billing Address</h1>
-                <p className="text-sm mt-1 text-[#999]">Manage your billing address.</p>
+                <h1 className="text-xl font-semibold mt-2">Billing Address</h1>
+                <p className="text-sm mt-1 text-[#999]">Manage your billing and shipping address.</p>
             </div>
             <div className="flex items-center gap-2">
                 <Button onClick={() => handleAddBillingAddress()} variant="outline" className="text-[#000000]">

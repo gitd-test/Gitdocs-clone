@@ -102,7 +102,7 @@ const SubBilling = () => {
 
     return (
         <>
-            <h1 className="text-lg font-semibold">Billing & Subscription</h1>
+            <h1 className="text-xl font-semibold mt-2">Billing & Subscription</h1>
             <p className="text-sm mt-1 text-[#999]">Keep track of your subscription and billing information.</p>
 
             <div className="flex gap-5 mt-4">

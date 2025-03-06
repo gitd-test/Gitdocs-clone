@@ -57,8 +57,8 @@ export default function Sidebar() {
         {
         icon: Package,
         label: "AI Models",
-        href: "#",
-        isActive: pathname === "/models",
+        href: "/ai-models",
+        isActive: pathname === "/ai-models",
         },
         {
         icon: FolderOpen,

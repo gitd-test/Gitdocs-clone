@@ -100,7 +100,7 @@ const HeroSection = () => {
         });
       }
     }
-  }, [user, searchParams, repositoriesUpdated, isSignedIn, storedUser, router]);
+  }, [user, searchParams, repositoriesUpdated, isSignedIn, storedUser, router, setNumRepositories]);
 
   const handleAddRepository = () => {
     setRepositoriesUpdated(true);
@@ -128,19 +128,19 @@ const HeroSection = () => {
 
   return (
     <div className={`flex flex-col gap-4 px-10 py-5 min-h-[calc(100vh-64px)]`}>
-      <div className="gap-4 ">
-        <h1 className="text-sm5 font-bold font-raleway-dots w-fit">
+      <div>
+        <h1 className="w-fit">
           {user && !((storedUser?.stepsCompleted || 0) < 3) ? (
             <>
               Welcome, {user.fullName || user.firstName || "User"}
-              <hr className="border-[#3D444D] mt-2" />
+              <hr className="border-[#3D444D] mt-1" />
             </>
           ) : null}
         </h1>
         <div className="flex items-center mt-5 justify-between">
           {user && !((storedUser?.stepsCompleted || 0) < 3) && (
             <>
-              <h2 className="text-3xl font-bold text-white">Overview</h2>
+              <h2 className="text-2xl font-bold text-white">Overview</h2>
               <div className="flex items-center gap-4">
                 <div className="flex items-center border border-[#383737] rounded-md">
                   <button

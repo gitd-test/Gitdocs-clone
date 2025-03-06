@@ -43,7 +43,7 @@ const SubOverview = () => {
 
   return (
     <div>
-    <h1 className="text-lg font-semibold">Overview</h1>
+    <h1 className="text-xl font-semibold mt-2">Overview</h1>
     <p className="text-sm mt-1 text-[#999]">View your subscription and billing information.</p>
     <UsageSummary stats={stats} weeklyStats={weeklyStats} />
     <DataDashboard stats={stats} monthlyStats={monthlyStats} />
