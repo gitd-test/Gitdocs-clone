@@ -98,7 +98,13 @@ const SubBilling = () => {
     ];
 
     const generatePlanName = (subscriptionType: string) => {
-        return plans.find((plan) => plan.name === subscriptionType)?.name || subscriptionType;
+        if (subscriptionType === "Free") {
+            return "Starter Plan";
+        } else if (subscriptionType === "Pro") {
+            return "Growth Plan";
+        } else if (subscriptionType === "Enterprise") {
+            return "Custom Plan";
+        }
     }
 
     return (
@@ -117,7 +123,7 @@ const SubBilling = () => {
             <div className="flex flex-col mt-6 items-start bg-[#1A1A1A] p-3 pb-5 rounded-xl w-full border border-[#2d3237]">
             <h3 className="font-semibold">Billing History</h3>
             <p className="text-sm mt-1 text-[#999]">View your billing history and manage your payment information.</p>
-                <div className="grid grid-cols-12 w-full px-3 mt-5 bg-[#262626] rounded-lg py-3.5 mb-1">
+                <div className="grid grid-cols-12 w-full px-3 mt-5 bg-[#262626] rounded-lg py-3.5">
                     <span className="text-sm text-[#999] col-span-3">Plan Name</span>
                     <span className="text-sm text-[#999] col-span-2">Amount</span>
                     <span className="text-sm text-[#999] col-span-2">Purchase Date</span>
@@ -130,14 +136,14 @@ const SubBilling = () => {
                 <div key={history.name} className="grid grid-cols-12 w-full px-3 border-b border-[#2d3237] py-2 hover:bg-[#2d3237]/50 rounded-lg text-sm">
                     <span className="text-sm text-[#999] col-span-3 mt-1.5">{generatePlanName(history.subscriptionType)}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">$ {history.subscriptionPrice}.00</span>
-                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionStartDate}</span>
-                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionEndDate}</span>
+                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionStartDate.toLocaleString().split("T")[0]}</span>
+                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionEndDate.toLocaleString().split("T")[0]}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.status}</span>
                     <span className="text-sm text-[#999] col-span-1 flex gap-3">
                     <TooltipProvider delayDuration={0}>
                         <Tooltip>
                         <TooltipTrigger>
-                            <Link href="/billing" className="cursor-pointer flex p-2 rounded-md text-[#ededed] bg-[#2d3237]"><BsDownload /></Link>
+                            <Link href="/subscription" className="cursor-pointer flex p-2 rounded-md text-[#ededed] bg-[#2d3237]"><BsDownload /></Link>
                         </TooltipTrigger>
                         <TooltipContent side="top" sideOffset={8} className="bg-[#E8E8E9] text-black">
                             <span className="text-xs">Download</span>
