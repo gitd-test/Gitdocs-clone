@@ -3,14 +3,20 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 import { TooltipProvider,Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+import {  useState } from "react";
+import LoadingAnimation from "@/components/common/LoadingAnimation";
 
 const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleCreateOrder = async () => {
+        setIsLoading(true);
         const response = await fetch("/api/subscribe", {
             method: "POST",
             body: JSON.stringify({ amount: plan.price }),
         });
+        setIsLoading(false);
 
         const data = await response.json();
 
@@ -67,8 +73,10 @@ const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
                     </div>
                 </div>
 
-                <button onClick={handleCreateOrder} disabled={plan.isActive} className={`w-full my-6 px-4 py-2 rounded-lg transition-all duration-150 ${plan.isActive ? "bg-[#ededed]/50 text-black" : "bg-gradient-to-r from-[#8D61F6] to-[#1FABEB] text-[#ededed] hover:from-[#8D61F6]/80 hover:to-[#1FABEB]/80"}`}>
-                    {plan.isActive ? "Current Plan" : "Upgrade"}
+                <button onClick={handleCreateOrder} disabled={plan.isActive || isLoading} className={`w-full my-6 px-4 py-2 rounded-lg transition-all duration-150 ${plan.isActive ? "bg-[#ededed]/50 text-black" : "bg-gradient-to-r from-[#8D61F6] to-[#1FABEB] text-[#ededed] hover:from-[#8D61F6]/80 hover:to-[#1FABEB]/80"}`}>
+                    {isLoading ? 
+                    <span className="flex items-center gap-3 justify-center w-full"> <LoadingAnimation /> Processing...</span>  
+                    : plan.isActive ? "Current Plan" : "Upgrade"}
                 </button>
 
                 <div className="flex flex-col gap-2">

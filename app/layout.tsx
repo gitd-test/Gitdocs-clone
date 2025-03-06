@@ -5,6 +5,7 @@ import { Theme } from "@radix-ui/themes";
 import { AppProvider } from "@/contexts/AppContext";
 import SessionWrapper from "@/lib/SessionWrapper";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <AppProvider>
                 {children}
                 <Analytics />
+                <SpeedInsights />
               </AppProvider>
             </Theme>
           </body>

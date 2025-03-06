@@ -107,6 +107,16 @@ const SubBilling = () => {
         }
     }
 
+    const generateStatus = (status: string) => {
+        if (status === "completed") {
+            return <p className="text-[#37C892] flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#37C892]"></span>Success</p>;
+        } else if (status === "failed") {
+            return <p className="text-[#e95032] flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e95032]"></span>Failed</p>;
+        } else if (status === "pending") {
+            return <p className="text-[#f1c058] flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#f1c058]"></span>Processing</p>;
+        }
+    }
+
     return (
         <>
             <h1 className="text-xl font-semibold mt-2">Billing & Subscription</h1>
@@ -138,7 +148,7 @@ const SubBilling = () => {
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">$ {history.subscriptionPrice}.00</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionStartDate.toLocaleString().split("T")[0]}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionEndDate.toLocaleString().split("T")[0]}</span>
-                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.status}</span>
+                    <span className="text-sm text-[#999] col-span-2 mt-1.5">{generateStatus(history.status)}</span>
                     <span className="text-sm text-[#999] col-span-1 flex gap-3">
                     <TooltipProvider delayDuration={0}>
                         <Tooltip>
