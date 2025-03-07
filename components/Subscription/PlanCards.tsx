@@ -4,10 +4,9 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 import { TooltipProvider,Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import {  useState } from "react";
-import LoadingAnimation from "@/components/common/LoadingAnimation";
 import Checkout from "./Checkout";
 
-const PlanCards = ({ plan, setTrigger, activePlanId }: { plan: any, setTrigger: any, activePlanId: number }) => {
+const PlanCards = ({ plan, setTrigger, activePlanId, billingAddress }: { plan: any, setTrigger: any, activePlanId: number, billingAddress: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     
@@ -76,7 +75,7 @@ const PlanCards = ({ plan, setTrigger, activePlanId }: { plan: any, setTrigger: 
                     </div>
                 </div>
 
-                <Checkout plan={plan} activePlanId={activePlanId} isLoading={isLoading} handleCreateOrder={handleCreateOrder} />
+                <Checkout plan={plan} activePlanId={activePlanId} isLoading={isLoading} handleCreateOrder={handleCreateOrder} billingAddress={billingAddress} />
 
                 <div className="flex flex-col gap-2">
                     {plan.features.map((feature: string, index: number) => (

@@ -138,7 +138,7 @@ const SubBilling = () => {
             <div className="flex gap-5 mt-4">
             {plans.map((plan) => (
                 <div key={plan.name} className="flex flex-col items-start transition-all duration-150 bg-[#1A1A1A] hover:bg-gradient-to-br hover:from-[#1A1A1A] hover:to-[#282828] p-3 rounded-xl w-full border border-[#282828]">
-                <PlanCards plan={plan} setTrigger={setTrigger} activePlanId={activePlanId || 1} />
+                <PlanCards plan={plan} setTrigger={setTrigger} activePlanId={activePlanId || 1} billingAddress={billingAddress} />
                 </div>
             ))}
             </div>

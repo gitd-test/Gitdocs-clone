@@ -125,15 +125,15 @@ const AnimatedCards = ({cards}: {cards: any}) => {
                     <div className="">
                         <motion.h3
                         layoutId={`title-${active.name}-${id}`}
-                        className="font-medium text-neutral-700 dark:text-neutral-200 text-base"
+                        className="font-medium text-[#c6c6c6]/60 text-base"
                         >
                         {active.name}
                         </motion.h3>
                         <motion.p
                         layoutId={`pricePerMillionTokens-${active.name}-${id}`}
-                        className="text-neutral-600 dark:text-neutral-400 text-base"
+                        className="text-[#c6c6c6]/60 text-base"
                         >
-                        Price per million tokens: {active.pricePerMillionTokens}
+                        Price per million tokens: {active.pricePerMillionTokens} $
                         </motion.p>
                     </div>
     
@@ -176,34 +176,31 @@ const AnimatedCards = ({cards}: {cards: any}) => {
             >
                 <div className="flex gap-4 flex-col w-full">
                 <motion.div layoutId={`image-${card.name}-${id}`}>
-                    <div className="relative flex items-center justify-start">
+                    <div className="relative flex items-center justify-center">
                     <div
                         className="h-20 rounded-lg object-cover object-top"
                     > 
                     {card.src}
                     </div>
-                    <h2 className="text-white font-semibold text-wrap w-[49%] -ms-2 text-lg -mt-5">
+                    <h2 className="text-white font-semibold text-wrap w-full -ms-2 text-lg -mt-5">
                     {card.name}
                     </h2>
                     <div className="absolute top-1 right-0">
-                    <Button className="bg-transparent" variant="outline" size="icon">
-                        <LuArrowRight />
-                    </Button>
                     </div>
                     </div>
                 </motion.div>
                 <div className="flex justify-center items-center flex-col">
                     <motion.h3
                     layoutId={`title-${card.name}-${id}`}
-                    className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base"
+                    className="font-medium text-neutral-500 dark:text-neutral-50 text-center md:text-left text-base"
                     >
                     {card.name}
                     </motion.h3>
                     <motion.p
                     layoutId={`pricePerMillionTokens-${card.pricePerMillionTokens}-${id}`}
-                    className="text-neutral-600 dark:text-neutral-400 text-center md:text-left text-base"
+                    className="text-neutral-600 dark:text-neutral-50 text-center md:text-left text-base"
                     >
-                    Price per million tokens: {card.pricePerMillionTokens}
+                    Price per million tokens: {card.pricePerMillionTokens} $
                     </motion.p>
                 </div>
                 </div>
