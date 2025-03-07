@@ -76,6 +76,7 @@ const HeroSection = () => {
 
       if (storedRepositories && !searchParams.get("refresh")) {
         setRepositories(JSON.parse(storedRepositories));
+        setNumRepositories(JSON.parse(localStorage.getItem("numRepositories") || "0"));
         setRepositoriesLoading(false);
 
       } else {
@@ -90,6 +91,7 @@ const HeroSection = () => {
           setRepositories(response.data);
           localStorage.setItem("repositories", JSON.stringify(response.data));
           localStorage.setItem("staleTime", new Date().toISOString());
+          localStorage.setItem("numRepositories", JSON.stringify(response.data.length));
           setRepositoriesLoading(false);
           setNumRepositories(response.data.length);
           router.push("/dashboard");

@@ -11,6 +11,7 @@ const Logout = () => {
         localStorage.removeItem("storedUser");
         localStorage.removeItem("repositories");
         localStorage.removeItem("staleTime");
+        localStorage.removeItem("numRepositories");
 
         // Redirect to home page
         router.push("/");
