@@ -39,7 +39,7 @@ export const parseRepositories = async (repositories: any) => {
     return parsedRepositories;
 };
 
-export const updateRepositoryDb = async (repositories: Repository[], userId: string, installationId: number, githubUsername: string) => {
+export const updateRepositoryDb = async (repositories: Repository[], userId: string, installationId: number, githubUsername: string, githubUserId: string) => {
 
     try {        
         // Iterate through the repositories and update existing ones, or insert new ones
@@ -65,7 +65,7 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                             const readmeData = await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
                             
                             if (readmeData) {
-                                await updateReadmeDb(repo.repositoryId, readmeData);
+                                await updateReadmeDb(githubUserId, repo.repositoryId, readmeData);
                             } else {
                                 console.warn(`No README found for repository: ${repo.name}`);
                             }
@@ -89,8 +89,9 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
 
         // Delete repositories in the database that are no longer in the passed list
         const retainedRepositoryIds = repositories.map(repo => repo.repositoryId)
-        await Repository.deleteMany({ repositoryId: { $nin: retainedRepositoryIds } });
-        await Readme.deleteMany({ repositoryId: { $nin: retainedRepositoryIds } });
+        
+        await Repository.deleteMany({ owner: githubUserId, repositoryId: { $nin: retainedRepositoryIds } });
+        await Readme.deleteMany({ owner: githubUserId, repositoryId: { $nin: retainedRepositoryIds } });
 
         // If some repositories were retained, also remove them from the user's repositories array
         if (retainedRepositoryIds.length > 0) {
