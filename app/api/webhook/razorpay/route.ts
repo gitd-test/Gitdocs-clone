@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { updateSubscriptionStatus } from "../../auth/subscription/clientSubscriptionServices";
+import { updateUser } from "../../auth/user/clientUserServicies";
 
 export async function POST(request: NextRequest) {
     const body = await request.text();
@@ -24,6 +25,8 @@ export async function POST(request: NextRequest) {
         if (!subscription) {
             return NextResponse.json({ message: "Subscription not found" }, { status: 400 });
         }
+
+        await updateUser(payment.notes.userId, { subscriptionType: payment.notes.subscriptionType });
 
         return NextResponse.json({ message: "Subscription updated" });
     } 
