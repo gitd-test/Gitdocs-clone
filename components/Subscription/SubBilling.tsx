@@ -14,12 +14,6 @@ import {
 } from "../ui/tooltip";
 import Link from "next/link";
 
-
-interface User {
-  subscriptionType: string;
-  stepsCompleted: number;
-}
-
 const SubBilling = () => {
 
     const { storedUser, setStoredUser } = useContext(AppContext) as AppContextType;
@@ -42,7 +36,7 @@ const SubBilling = () => {
                     }
                 );
                 setBillingAddress(response.data.data.billingAddress);
-                setBillingHistory(response.data.data.billingHistory);
+                setBillingHistory(response.data.data.billingHistory.reverse());
             } catch (error) {
                 console.error("Error fetching billing data:", error);
             }
@@ -73,6 +67,7 @@ const SubBilling = () => {
 
     const plans = [
         {
+        id: 1,
         name: "Free",
         tagline: "Starter plan",
         price: 0,
@@ -86,10 +81,11 @@ const SubBilling = () => {
         ],
         },
         {
+        id: 2,
         name: "Pro",
         tagline: "Growth plan",
         price: 9,
-        isActive: storedUser?.subscriptionType === "Pro",
+        isActive: storedUser?.subscriptionType === "Pro" ,
         features: [
             "Upto 15 repositories",
             "5M tokens",
@@ -99,6 +95,7 @@ const SubBilling = () => {
         ],
         },
         {
+        id: 3,
         name: "Advanced",
         tagline: "Custom plan",
         price: 19,
@@ -110,6 +107,8 @@ const SubBilling = () => {
         ],
         },
     ];
+
+    const activePlanId = plans.find((plan) => plan.isActive)?.id;
 
     const generatePlanName = (subscriptionType: string) => {
         if (subscriptionType === "Free") {
@@ -139,7 +138,7 @@ const SubBilling = () => {
             <div className="flex gap-5 mt-4">
             {plans.map((plan) => (
                 <div key={plan.name} className="flex flex-col items-start transition-all duration-150 bg-[#1A1A1A] hover:bg-gradient-to-br hover:from-[#1A1A1A] hover:to-[#282828] p-3 rounded-xl w-full border border-[#282828]">
-                <PlanCards plan={plan} setTrigger={setTrigger} />
+                <PlanCards plan={plan} setTrigger={setTrigger} activePlanId={activePlanId || 1} />
                 </div>
             ))}
             </div>

@@ -30,7 +30,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, ha
 
     const data = countriesWithFlags.map((country) => (
     <div onClick={() => {setCountry(country.name); setAddressData({...addressData, country: country.name})}} className="flex items-center gap-4 appearance-none bg-[#343333] text-white py-2 px-4 hover:bg-[#474646] cursor-pointer" key={country.name}>
-        <Image src={country.flag} alt={country.name} width={25} height={25} />
+        <Image src={country.flag} alt={country.name} width={25} height={25} className="rounded-[2.5px]" />
         <p>{country.name}</p>
     </div>
     ));
@@ -118,7 +118,7 @@ const AddAddressForm = ({ addressData, setAddressData, setShowAddAddressForm, ha
                                 setShowCountryList(!showCountryList);
                             }} type="button" className="w-full text-start max-h-[10rem] relative cursor-pointer text-sm py-2 px-4 bg-transparent rounded-md border border-[#353535] focus:outline-2">
                             <div  className="flex items-center gap-4 text-white">
-                                <Image src={defaultCountry?.flag || ""} alt={defaultCountry?.name || ""} width={25} height={25} />
+                                <Image src={defaultCountry?.flag || ""} alt={defaultCountry?.name || ""} width={25} height={25} className="rounded-[2.5px]" />
                                 <p>{defaultCountry?.name}</p>
                             </div>
 
