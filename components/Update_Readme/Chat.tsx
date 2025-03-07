@@ -63,8 +63,8 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                 </div>
                 {content === "" 
                 ?
-                <div className="flex items-center gap-2">
-                    <Skeleton className="w-3 h-3 rounded-full mb-8 bg-[#848c8e]"></Skeleton>
+                <div className="flex items-center mt-3 gap-2">
+                    <Skeleton className="w-3 h-3 rounded-full bg-[#848c8e]"></Skeleton>
                     <p className="text-gray-500 -my-2">Gitdocs AI is thinking...</p> 
                 </div>
                 : 
