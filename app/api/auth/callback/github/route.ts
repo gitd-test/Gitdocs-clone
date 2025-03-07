@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import { fetchRepositoriesForInstallation, fetchRepositoryReadme } from "../../repository/fetchRepositories";
+import { fetchRepositoriesForInstallation } from "../../repository/fetchRepositories";
 import { parseRepositories, updateRepositoryDb } from "../../repository/updateRepositoryDb";
 import { auth } from "@clerk/nextjs/server";
 import { updateUserDb } from "../../user/updateUserDb";

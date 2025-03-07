@@ -59,18 +59,22 @@ export const updateRepositoryDb = async (repositories: Repository[], userId: str
                         { $addToSet: { repositories: repo.repositoryId } }
                     );
 
-                    try {
-                        const readmeData = await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
-                      
-                        if (readmeData) {
-                          await updateReadmeDb(repo.repositoryId, readmeData);
-                        } else {
-                          console.warn(`No README found for repository: ${repo.name}`);
+                    const updateReadme = async () => {
+
+                        try {
+                            const readmeData = await fetchRepositoryReadme(githubUsername, repo.name, Number(installationId));
+                            
+                            if (readmeData) {
+                                await updateReadmeDb(repo.repositoryId, readmeData);
+                            } else {
+                                console.warn(`No README found for repository: ${repo.name}`);
+                            }
+                        } catch (error) {
+                            console.error(`Error fetching README for ${repo.name}:`, error);
                         }
-                      } catch (error) {
-                        console.error(`Error fetching README for ${repo.name}:`, error);
-                      }
-                      
+                    }
+
+                    updateReadme();
                 }
 
             } catch (error) {
