@@ -3,20 +3,54 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 import { TooltipProvider,Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
-import {  useState } from "react";
+import { useState } from "react";
 import LoadingAnimation from "@/components/common/LoadingAnimation";
+import { useContext } from "react";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 
 const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
-
+    const { setStoredUser } = useContext(AppContext) as AppContextType;
+    const { user } = useUser();
     const handleCreateOrder = async () => {
+
+        if(!user) {
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoading(true);
+
         const response = await fetch("/api/subscribe", {
             method: "POST",
             body: JSON.stringify({ amount: plan.price }),
         });
         setIsLoading(false);
+        localStorage.removeItem("storedUser");
+
+        if (user) {
+            // Fetch user data from the backend
+            axios
+            .get(`/api/fetch/userdata`, {
+                headers: {
+                Authorization: `Bearer ${user.id}`,
+                },
+            })
+            .then((response) => {
+                const fetchedUser = response.data;
+        
+                // Update state and localStorage with fetched user data
+                setStoredUser(fetchedUser);
+                localStorage.setItem("storedUser", JSON.stringify(fetchedUser));
+        
+            })
+            .catch((error) => {
+                console.error("Error fetching user data:", error);
+            });
+        }
 
         const data = await response.json();
 

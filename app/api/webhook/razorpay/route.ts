@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     else if (event.event === "payment.failed") {
         const payment = event.payload.payment.entity;
-        const subscription = await updateSubscriptionStatus(payment.notes.userId, payment.order_id, payment.id, "Inactive", payment.notes.subscriptionType, payment.notes.price);
+        const subscription = await updateSubscriptionStatus(payment.notes.userId, payment.order_id, payment.id, "Inactive", "", 0);
 
         if (!subscription) {
             return NextResponse.json({ message: "Subscription not found" }, { status: 400 });

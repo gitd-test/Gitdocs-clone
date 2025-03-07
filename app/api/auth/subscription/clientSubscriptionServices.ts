@@ -189,13 +189,13 @@ export const updateSubscriptionStatus = async (userId: string, razorpayOrderId: 
 
         const updatedSubscription = await Subscription.findOneAndUpdate(
             { userId: userId, "billingHistory.razorpayOrderId": razorpayOrderId },
-            { $set: {   subscriptionType: subscriptionType, 
-                        subscriptionPrice: price,
+            { $set: {   subscriptionType: subscriptionStatus === "Active" ? subscriptionType : subscription.subscriptionType, 
+                        subscriptionPrice: subscriptionStatus === "Active" ? price : subscription.subscriptionPrice,
                         subscriptionStatus: subscriptionStatus,
                         subscriptionStartDate: new Date(),
                         subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
-                        leftOverTokens: leftOverTokens,
-                        bonusTokens: bonusTokens,
+                        leftOverTokens: subscriptionStatus === "Active" ? leftOverTokens : subscription.leftOverTokens,
+                        bonusTokens: subscriptionStatus === "Active" ? bonusTokens : subscription.bonusTokens,
                         "billingHistory.$.razorpayPaymentId": razorpayPaymentId,
                         "billingHistory.$.status": subscriptionStatus === "Active" ? "completed" : "failed"
                         } },
