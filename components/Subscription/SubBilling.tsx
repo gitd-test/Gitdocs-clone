@@ -2,7 +2,7 @@
 
 import PlanCards from "./PlanCards";
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { BsDownload, BsEye } from "react-icons/bs";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
@@ -20,16 +20,12 @@ interface User {
   stepsCompleted: number;
 }
 
-interface AppContextType {
-  storedUser: User | null;
-}
-
 const SubBilling = () => {
 
-    const { storedUser } = useContext(AppContext) as AppContextType;
+    const { storedUser, setStoredUser } = useContext(AppContext) as AppContextType;
     const { user } = useUser();
 
-    const [billingData, setBillingData] = useState<any>(null);
+    const [billingAddress, setBillingAddress] = useState<any>(null);
     const [billingHistory, setBillingHistory] = useState<any>([]);
     const [trigger, setTrigger] = useState(0);
 
@@ -45,17 +41,35 @@ const SubBilling = () => {
                         },
                     }
                 );
-                setBillingData(response.data.data);
+                setBillingAddress(response.data.data.billingAddress);
                 setBillingHistory(response.data.data.billingHistory);
             } catch (error) {
                 console.error("Error fetching billing data:", error);
             }
+
+            axios
+            .get(`/api/fetch/userdata`, {
+              headers: {
+                Authorization: `Bearer ${user?.id}`,
+              },
+            })
+            .then((response) => {
+              const fetchedUser = response.data;
+      
+              // Update state and localStorage with fetched user data
+              setStoredUser(fetchedUser);
+              localStorage.setItem("storedUser", JSON.stringify(fetchedUser));
+      
+            })
+            .catch((error) => {
+              console.error("Error fetching user data:", error);
+            });
         };
     
         if (user) {
             fetchBillingData();
         }
-    }, [user, trigger]);
+    }, [user, trigger, setStoredUser]);
 
     const plans = [
         {

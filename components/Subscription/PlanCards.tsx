@@ -3,52 +3,17 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 import { TooltipProvider,Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import LoadingAnimation from "@/components/common/LoadingAnimation";
 import { useContext } from "react";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
-import { useUser } from "@clerk/nextjs";
-import axios from "axios";
 
 const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const { setStoredUser } = useContext(AppContext) as AppContextType;
-    const { user } = useUser();
-    const [updateUserTrigger, setUpdateUserTrigger] = useState(0);
-
-    useEffect(() => {
-        localStorage.removeItem("storedUser");
-
-        if (user) {
-            // Fetch user data from the backend
-            axios
-            .get(`/api/fetch/userdata`, {
-                headers: {
-                Authorization: `Bearer ${user.id}`,
-                },
-            })
-            .then((response) => {
-                const fetchedUser = response.data;
-        
-                // Update state and localStorage with fetched user data
-                setStoredUser(fetchedUser);
-                localStorage.setItem("storedUser", JSON.stringify(fetchedUser));
-        
-            })
-            .catch((error) => {
-                console.error("Error fetching user data:", error);
-            });
-        }
-    }, [user, setStoredUser, updateUserTrigger])
-
+    
     const handleCreateOrder = async () => {
-
-        if(!user) {
-            setIsLoading(false);
-            return;
-        }
-
         setIsLoading(true);
 
         const response = await fetch("/api/subscribe", {
@@ -56,6 +21,7 @@ const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
             body: JSON.stringify({ amount: plan.price }),
         });
         setIsLoading(false);
+        localStorage.removeItem("storedUser");
 
         const data = await response.json();
 
@@ -65,14 +31,11 @@ const PlanCards = ({ plan, setTrigger }: { plan: any, setTrigger: any }) => {
             
             handler: async function (response: any) {
                 setTrigger((prev: number) => prev + 1);
-                
             }
         }
 
         const razorpay = new (window as any).Razorpay(paymentData);
         razorpay.open();
-
-        setUpdateUserTrigger((prev: number) => prev + 1);
         
     }
 
