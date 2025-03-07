@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { updateSubscriptionStatus } from "../../auth/subscription/clientSubscriptionServices";
 import { updateUser } from "../../auth/user/clientUserServicies";
+import { updateUsageOverview } from "../../auth/overview/clientOverviewServices";
 
 export async function POST(request: NextRequest) {
     const body = await request.text();
@@ -27,6 +28,16 @@ export async function POST(request: NextRequest) {
         }
 
         await updateUser(payment.notes.userId, { subscriptionType: payment.notes.subscriptionType });
+
+        let maxRepositories = 3;
+
+        if (subscription.subscriptionType === "Pro") {
+            maxRepositories = 15;
+        } else if (subscription.subscriptionType === "Enterprise") {
+            maxRepositories = 100;
+        }
+
+        await updateUsageOverview(payment.notes.userId, { totalTokens: subscription.leftOverTokens + subscription.bonusTokens, maxRepositories: maxRepositories });
 
         return NextResponse.json({ message: "Subscription updated" });
     } 

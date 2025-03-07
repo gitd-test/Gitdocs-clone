@@ -91,7 +91,7 @@ const SubBilling = () => {
         price: 9,
         isActive: storedUser?.subscriptionType === "Pro",
         features: [
-            "Upto 10 repositories",
+            "Upto 15 repositories",
             "5M tokens",
             "Advanced AI Documentation",
             "Priority Support",
