@@ -162,7 +162,7 @@ const SubBilling = () => {
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionStartDate.toLocaleString().split("T")[0]}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{history.subscriptionEndDate.toLocaleString().split("T")[0]}</span>
                     <span className="text-sm text-[#999] col-span-2 mt-1.5">{generateStatus(history.status)}</span>
-                    <span className="text-sm text-[#999] col-span-1 flex gap-3">
+                    {history.status === "completed" && <span className="text-sm text-[#999] col-span-1 flex gap-3">
                     <TooltipProvider delayDuration={0}>
                         <Tooltip>
                         <TooltipTrigger>
@@ -181,7 +181,7 @@ const SubBilling = () => {
                         </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    </span>
+                    </span>}
                 </div>
                 ))}
                 </div>

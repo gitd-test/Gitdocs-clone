@@ -172,7 +172,7 @@ const AnimatedCards = ({cards}: {cards: any}) => {
                 layoutId={`card-${card.name}-${id}`}
                 key={card.name}
                 onClick={() => setActive(card)}
-                className="p-4 flex flex-col border border-white/10  hover:bg-[#1a1a1a] dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+                className="p-4 flex flex-col border border-white/10 bg-[#121212] hover:bg-[#1a1a1a] dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
             >
                 <div className="flex gap-4 flex-col w-full">
                 <motion.div layoutId={`image-${card.name}-${id}`}>
