@@ -126,7 +126,7 @@ export default function Sidebar() {
                                 router.push(item.href);
                             }}
                             className={cn(
-                            "w-full flex p-2 mb-3 rounded-lg group cursor-pointer",
+                            "w-full flex p-2 mb-3 rounded-md group cursor-pointer",
                             item.isActive
                                 ? "bg-white text-black"
                                 : "hover:bg-[#232A34] text-[#cfcfd1]"
@@ -163,7 +163,7 @@ export default function Sidebar() {
                                 router.push(item.href);
                             }}
                             className={cn(
-                            "w-full flex p-2 mt-3 rounded-lg group cursor-pointer",
+                            "w-full flex p-2 mt-3 rounded-md group cursor-pointer",
                             item.isActive
                                 ? "bg-white text-black"
                                 : "hover:bg-[#232A34] text-[#cfcfd1]"

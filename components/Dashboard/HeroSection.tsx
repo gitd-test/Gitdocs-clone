@@ -144,9 +144,9 @@ const HeroSection = () => {
             <>
               <h2 className="text-2xl font-bold text-white">Overview</h2>
               <div className="flex items-center gap-4">
-                <div className="flex items-center border border-[#383737] rounded-md">
+                <div className="flex items-center border border-[#383737] rounded-sm">
                   <button
-                    className={`text-sm hover:text-white px-3 py-[9px] border-r border-[#383737] flex items-center gap-2 ${
+                    className={`text-sm hover:text-white px-3 py-[9px] border-r border-[#383737] rounded-l-sm flex items-center gap-2 ${
                       gridView ? "bg-[#1f1f1f] text-white" : "bg-transparent text-[#a0a0a3]"
                     }`}
                     onClick={() => handleGridView("grid")}
@@ -154,7 +154,7 @@ const HeroSection = () => {
                     <LuLayoutGrid size={16} />
                   </button>
                   <button
-                    className={`text-sm hover:text-white px-3 py-[9px] flex items-center gap-2 ${
+                    className={`text-sm hover:text-white px-3 py-[9px] flex items-center gap-2 rounded-r-sm ${
                       gridView ? "bg-transparent text-[#a0a0a3]" : "bg-[#1f1f1f] text-white"
                     }`}
                     onClick={() => handleGridView("list")}
@@ -166,7 +166,7 @@ const HeroSection = () => {
                   href={ stopAllActions ? "#" : `https://github.com/apps/gitdocs-ai/installations/new` }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm bg-[#0791F9] hover:bg-[#3196e3] text-white rounded-md px-4 py-2 flex items-center gap-2"
+                  className="text-sm bg-[#0791F9] hover:bg-[#3196e3] text-white rounded-sm px-4 py-2 flex items-center gap-2"
                   onClick={() => handleAddRepository()}
                 >
                   {repositoriesLoading ? <LoadingAnimation /> : <LuPlus size={16} />}
@@ -180,12 +180,12 @@ const HeroSection = () => {
       {user && !((storedUser?.stepsCompleted || 0) < 3) ? (
         <div className="bg-[#0D0D0D] text-[#EDEDED]">
           {repositoriesUpdated && (
-            <div className="flex items-center justify-between border py-1.5 px-3 rounded-lg border-[#F18B65] gap-4 h-full w-full">
+            <div className="flex items-center justify-between border py-1.5 px-3 rounded-md border-[#F18B65] gap-4 h-full w-full">
               <div className="flex items-center gap-2 text-[#F18B65]">
                 <PiWarning size={18} />
                 <h3 className="text-sm text-[#F18B65]">Repositories updated, click to refresh</h3>
               </div>
-              <button className="text-sm rounded-md p-1 flex items-center gap-2 text-[#F18B65] hover:underline" onClick={() => handleRefresh()}>
+              <button className="text-sm p-1 flex items-center gap-2 text-[#F18B65] hover:underline" onClick={() => handleRefresh()}>
                 refresh
               </button>
             </div>
