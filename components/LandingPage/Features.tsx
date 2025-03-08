@@ -171,7 +171,7 @@ const Features = () => {
                 <a 
                   href="#" 
                   className="inline-flex items-center text-sm font-medium text-gitdocs-blue 
-                    relative overflow-hidden group-hover:font-semibold"
+                    relative group-hover:font-semibold"
                 >
                   <span className="relative z-10">Learn more</span>
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gitdocs-blue/30 

@@ -3,8 +3,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { useEffect, useId, useRef, useState } from "react";
-import { LuArrowRight } from "react-icons/lu";
-import { Button } from "../ui/button";
 
 export const CloseIcon = () => {
     return (
@@ -110,11 +108,11 @@ const AnimatedCards = ({cards}: {cards: any}) => {
                 <motion.div layoutId={`image-${active.name}-${id}`}>
                     <div className="flex items-center justify-around">
                     <div
-                    className="h-30 lg:h-30 pt-5 pe-0 pb-0 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
+                    className="h-30 lg:h-36 mt-9 -mb-3 pt-5 pe-0 pb-0 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
                     > 
                     {active.src}
                     </div>
-                    <h3 className="text-white font-semibold text-wrap -ms-24 w-1/2 text-lg">
+                    <h3 className="text-white -mt-1 font-semibold text-wrap -ms-24 w-1/2 text-lg">
                     {active.name}
                     </h3>
                     </div>

@@ -1,10 +1,12 @@
 "use client"
 
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Link  from "next/link";
 import { buttonVariants } from "@/components/ui/button-variants";
 import Image from "next/image";
+import { UserButton } from "@clerk/nextjs";
+import { LayoutDashboard } from "lucide-react";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -40,10 +42,10 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'backdrop-blur-md bg-white/60 border border-white/20 shadow-sm py-3' : 'bg-transparent py-5'
+        scrolled && !mobileMenuOpen ? 'backdrop-blur-md bg-white/60 border border-white/20 shadow-sm py-3' : 'bg-transparent py-5'
       }`}
     >
-      <div className="container mx-auto px-4 md:px-10">
+      <div className="container mx-auto px-4 md:px-10 lg:px-20">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
           <Image
@@ -56,25 +58,36 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:ms-20 ms-6 md:flex items-center lg:space-x-8 space-x-5">
-            <Link href="/" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+          <nav className="hidden lg:ms-10 ms-6 md:flex items-center lg:space-x-8 space-x-5">
+            <Link href="/" className="text-sm relative group font-medium hover:text-gitdocs-blue transition-colors">
               Home
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gitdocs-blue/30 
+                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left"></span>
             </Link>
-            <Link href="/blog" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            <Link href="/blog" className="text-sm relative group font-medium hover:text-gitdocs-blue transition-colors">
               Blogs
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gitdocs-blue/30 
+                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left"></span>
             </Link>
-            <Link href="/#features" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            <Link href="/#features" className="text-sm relative group font-medium hover:text-gitdocs-blue transition-colors">
               Features
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gitdocs-blue/30 
+                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left"></span>
             </Link>
-            <Link href="/#pricing" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            <Link href="/#pricing" className="text-sm relative group font-medium hover:text-gitdocs-blue transition-colors">
               Pricing
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gitdocs-blue/30 
+                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left"></span>
             </Link>
-            <Link href="/contact" className="text-sm font-medium hover:text-gitdocs-blue transition-colors">
+            <Link href="/contact" className="text-sm relative group font-medium hover:text-gitdocs-blue transition-colors">
               Contact Us
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gitdocs-blue/30 
+                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left"></span>
             </Link>
           </nav>
 
           {/* CTA Buttons */}
+          <SignedOut>
           <div className="hidden md:flex items-center space-x-4">
             <SignInButton>
               <p className={`cursor-pointer ${buttonVariants({ variant: "outline-gradient" })}`}>
@@ -87,6 +100,21 @@ const Navbar = () => {
               </p>
             </SignUpButton>
           </div>
+          </SignedOut>
+
+          <SignedIn>
+            <div className="scale-110 hidden md:block">
+              <UserButton showName={true} >
+                <UserButton.MenuItems>
+                  <UserButton.Link
+                    label="Dashboard"
+                    labelIcon={<LayoutDashboard size={16} />}
+                    href="/dashboard"
+                  />
+                </UserButton.MenuItems>
+              </UserButton>
+            </div>
+          </SignedIn>
 
           {/* Mobile Menu Button */}
           <button 
@@ -202,6 +230,7 @@ const Navbar = () => {
                 </span>
               </Link>
               
+              <SignedOut>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-8">
                 <SignInButton>
                   <p 
@@ -220,6 +249,21 @@ const Navbar = () => {
                 </p>
                 </SignUpButton>
               </div>
+              </SignedOut>
+
+              <SignedIn>
+                <div className="pt-8 scale-110">
+                  <UserButton showName={true} >
+                    <UserButton.MenuItems>
+                      <UserButton.Link
+                        label="Dashboard"
+                        labelIcon={<LayoutDashboard size={16} />}
+                        href="/dashboard"
+                      />
+                    </UserButton.MenuItems>
+                  </UserButton>
+                </div>
+              </SignedIn>
             </nav>
           </div>
         </div>
