@@ -3,6 +3,68 @@ import crypto from "crypto";
 import { updateSubscriptionStatus } from "../../auth/subscription/clientSubscriptionServices";
 import { updateUser } from "../../auth/user/clientUserServicies";
 import { updateUsageOverview } from "../../auth/overview/clientOverviewServices";
+import Razorpay from "razorpay";
+
+export interface InvoiceCreateRequestBody {
+    type: "invoice" | "link";
+    description: string;
+    customer: {
+      name: string;
+      email: string;
+      contact: string;
+    };
+    line_items: Array<{
+      name: string;
+      amount: number;
+      currency: string;
+      quantity: number;
+    }>;
+    sms_notify?: 0 | 1;
+    email_notify?: 0 | 1;
+    currency: string;
+    payment_id?: string;
+}
+
+const razorpay = new Razorpay({
+    key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+
+const issueInvoiceForPayment = async (payment: any) => {
+try {
+    const invoiceData: InvoiceCreateRequestBody = {
+    type: "invoice", 
+    description: "Invoice for successful payment",
+    customer: {
+        name: payment.notes.address.name,
+        email: payment.notes.address.contact,
+        contact: payment.notes.address.phoneNumber,
+    },
+    line_items: [
+        {
+        name: payment.notes.subscriptionType + " Subscription",
+        amount: payment.amount,
+        currency: "USD",
+        quantity: 1,
+        },
+    ],
+    sms_notify: 1,
+    email_notify: 1,
+    currency: "USD",
+    payment_id: payment.id,
+    };
+
+    // Create the invoice
+    const invoice = await razorpay.invoices.create(invoiceData);
+    console.log("Invoice Created: ", invoice);
+
+    // Issue the invoice (send it to the customer)
+    const issuedInvoice = await razorpay.invoices.issue(invoice.id);
+    console.log("Invoice Issued: ", issuedInvoice);
+} catch (error) {
+    console.error("Error issuing invoice: ", error);
+}
+};
 
 export async function POST(request: NextRequest) {
     const body = await request.text();
@@ -39,7 +101,10 @@ export async function POST(request: NextRequest) {
 
         await updateUsageOverview(payment.notes.userId, { totalTokens: subscription.leftOverTokens + subscription.bonusTokens, maxRepositories: maxRepositories });
 
+        await issueInvoiceForPayment(payment);
+        
         return NextResponse.json({ message: "Subscription updated" });
+
     } 
 
     else if (event.event === "payment.failed") {

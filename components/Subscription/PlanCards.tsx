@@ -5,17 +5,30 @@ import { GoInfo } from "react-icons/go";
 import { TooltipProvider,Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import {  useState } from "react";
 import Checkout from "./Checkout";
+import { toast } from "sonner"
 
 const PlanCards = ({ plan, setTrigger, activePlanId, billingAddress }: { plan: any, setTrigger: any, activePlanId: number, billingAddress: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     
-    const handleCreateOrder = async () => {
+    const handleCreateOrder = async (address: any, phoneNumber: string) => {
         setIsLoading(true);
+
+        if (!address.address1) {
+            toast("Please fill the address")
+            setIsLoading(false);
+            return;
+        }
+
+        if (!phoneNumber) {
+            toast("Please fill the phone number")
+            setIsLoading(false);
+            return;
+        }
 
         const response = await fetch("/api/subscribe", {
             method: "POST",
-            body: JSON.stringify({ amount: plan.price }),
+            body: JSON.stringify({ amount: plan.price, address, phoneNumber }),
         });
         setIsLoading(false);
         localStorage.removeItem("storedUser");
