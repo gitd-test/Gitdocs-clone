@@ -38,8 +38,7 @@ export async function POST(request: NextRequest) {
     <update>true or false</update>
     <readme>The updated README.md file, start this section with # (project_name) replace this with the actual name of the project</readme>
     <conclusion>Reason for the update</conclusion>
-    VERY IMPORTANT: give the response in the block format above, dont include any other text or markdown or update or reason or conclusion, just the text.
-    ${systemPrompt()}`,
+    VERY IMPORTANT: give the response in the block format above, dont include any other text or markdown or update or reason or conclusion, just the text.`,
     userPrompt: prompt,
     previousReadme: readme,
   };
