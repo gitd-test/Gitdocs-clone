@@ -22,7 +22,9 @@ export interface InvoiceCreateRequestBody {
     sms_notify?: 0 | 1;
     email_notify?: 0 | 1;
     currency: string;
-    payment_id?: string;
+    notes: {
+        [key: string]: string
+    }
 }
 
 const razorpay = new Razorpay({
@@ -30,41 +32,44 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET,
   });
 
-const issueInvoiceForPayment = async (payment: any) => {
-try {
-    const invoiceData: InvoiceCreateRequestBody = {
-    type: "invoice", 
-    description: "Invoice for successful payment",
-    customer: {
-        name: payment.notes.address.name,
-        email: payment.notes.address.contact,
-        contact: payment.notes.address.phoneNumber,
-    },
-    line_items: [
-        {
-        name: payment.notes.subscriptionType + " Subscription",
-        amount: payment.amount,
-        currency: "USD",
-        quantity: 1,
-        },
-    ],
-    sms_notify: 1,
-    email_notify: 1,
-    currency: "USD",
-    payment_id: payment.id,
-    };
+  const issueInvoiceForPayment = async (payment: any) => {
+    try {
+        const invoiceData: InvoiceCreateRequestBody = {
+            type: "invoice",
+            description: "Invoice for successful payment",
+            customer: {
+                name: payment.notes.address.name,
+                email: payment.notes.address.contact,
+                contact: payment.notes.address.phoneNumber,
+            },
+            line_items: [
+                {
+                    name: payment.notes.subscriptionType + " Subscription",
+                    amount: payment.amount,
+                    currency: "USD",
+                    quantity: 1,
+                },
+            ],
+            sms_notify: 1,
+            email_notify: 1,
+            currency: "USD",
+            notes: {
+                payment_id: payment.id, // Store the payment_id here
+            },
+        };
 
-    // Create the invoice
-    const invoice = await razorpay.invoices.create(invoiceData);
-    console.log("Invoice Created: ", invoice);
+        // Create the invoice
+        const invoice = await razorpay.invoices.create(invoiceData);
+        console.log("Invoice Created: ", invoice);
 
-    // Issue the invoice (send it to the customer)
-    const issuedInvoice = await razorpay.invoices.issue(invoice.id);
-    console.log("Invoice Issued: ", issuedInvoice);
-} catch (error) {
-    console.error("Error issuing invoice: ", error);
-}
+        // Issue the invoice (send it to the customer)
+        const issuedInvoice = await razorpay.invoices.issue(invoice.id);
+        console.log("Invoice Issued: ", issuedInvoice);
+    } catch (error) {
+        console.error("Error issuing invoice: ", error);
+    }
 };
+
 
 export async function POST(request: NextRequest) {
     const body = await request.text();
