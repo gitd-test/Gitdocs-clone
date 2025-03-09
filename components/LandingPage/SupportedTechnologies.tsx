@@ -341,7 +341,14 @@ const SupportedTechnologies = () => {
             Smart Technology
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">
-            Powered by <span className="text-gitdocs-purple">Codebase-Aware</span> AI
+            Powered by <span className="text-gitdocs-purple relative">
+              Codebase-Aware
+              <svg className="absolute -bottom-1.5 left-0 w-full" viewBox="0 0 300 12" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 5.5C32 2.5 62.5 8 93.5 9.5C124.5 11 156 6.5 187 4.5C218 2.5 249 5.5 280 8.5C311 11.5 330.5 5.83333 342 3" 
+                    stroke="currentColor" strokeOpacity="0.35" strokeWidth="8" strokeLinecap="round" fill="none" />
+              </svg>
+              
+              </span> AI
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             GitDocs AI understands your code at a deep level, supporting multiple languages and

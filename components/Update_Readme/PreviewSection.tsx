@@ -25,14 +25,13 @@ const PreviewSection = ({ isPreview, setIsPreview, content, setContent }: Previe
 
             <div className={`text-white bg-[#171717] rounded-t-lg flex items-center justify-between px-5 h-12 transition-all duration-300 ${isPreview ? 'block' : 'hidden'}`}>
                 <div className="flex items-center gap-2">
-                    <span>Preview README: </span>
-
-                    <div className="flex items-center border border-[#383737] rounded-full p-1 ">
-                        <button className={`text-sm hover:text-[#ffffff] px-3 py-0.5 flex items-center rounded-full ${previewType === "raw" ? "bg-[#1f1f1f] text-[#ffffff]" : "bg-transparent text-[#cec7c7]"}`} onClick={() => setPreviewType("raw")}>
+                    
+                    <div className="flex items-center border border-[#383737] rounded-md p-1 ">
+                        <button className={`text-sm hover:text-[#ffffff] px-3 py-0.5 flex items-center rounded-md ${previewType === "raw" ? "bg-[#1f1f1f] text-[#ffffff]" : "bg-transparent text-[#cec7c7]"}`} onClick={() => setPreviewType("raw")}>
                             Raw
                         </button>
 
-                        <button className={`text-sm hover:text-[#ffffff] px-3 py-0.5 flex gap-2 items-center rounded-full ${previewType === "markdown" ? "bg-[#1f1f1f] text-[#ffffff]" : "bg-transparent text-[#cec7c7]"}`} onClick={() => setPreviewType("markdown")}>
+                        <button className={`text-sm hover:text-[#ffffff] px-3 py-0.5 flex gap-2 items-center rounded-md ${previewType === "markdown" ? "bg-[#1f1f1f] text-[#ffffff]" : "bg-transparent text-[#cec7c7]"}`} onClick={() => setPreviewType("markdown")}>
                             Markdown
                         </button>
 

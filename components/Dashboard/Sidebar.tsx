@@ -75,18 +75,6 @@ export default function Sidebar() {
             href: "/subscription",
             isActive: pathname === "/subscription",
         },
-        {
-            icon: HelpCircle,
-            label: "Help & Support",
-            href: "#",
-            isActive: pathname === "/help",
-        },
-        {
-            icon: Settings,
-            label: "Settings",
-            href: "#",
-            isActive: pathname === "/settings",
-        },
     ];
 
     if (!isClient) {

@@ -1,12 +1,13 @@
 "use client";
 
-import { LuPaperclip, LuSend, LuBrain, LuChevronDown } from "react-icons/lu";
+import { LuBrain, LuChevronDown } from "react-icons/lu";
 import { HiArrowPath } from "react-icons/hi2";
 import { useState, useRef, useEffect, useContext } from "react";
 import Chat from "./Chat";
 import { fetchStreamedResponse } from "@/lib/fetchStreamedAiResponse";
 import { useUser } from "@clerk/nextjs";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
+import { CircleArrowUp } from "lucide-react";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -229,11 +230,8 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
         }`}
       >
         <div
-          className={`flex items-end h-full border py-3 -mb-5 bg-[#141415] border-[#383737] transition-all duration-300 ${
-            isFocused ? "w-[81%] mx-auto rounded-2xl" : "w-1/2 mx-auto rounded-full"
-          }`}
+          className={`flex items-end h-full border py-3 -mb-2 bg-[#141415] border-[#383737] transition-all duration-300 w-[81%] mx-auto rounded-2xl`}
         >
-          <LuPaperclip className="text-[#B4B4B4] hover:text-white cursor-pointer w-14 h-5" />
           <textarea
             placeholder={isAiGenerating ? "Generating..." : !(content.length > 0) ? "Share project highlights..." : "what you'd like to improve in your README..."}
             ref={textareaRef}
@@ -241,12 +239,12 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
             onKeyDown={handleKeyDown}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className="bg-transparent flex-1 h-6 text-[#ece7e7] outline-none resize-none placeholder:truncate"
-            rows={1}
+            className="bg-transparent flex-1 ps-4 h-12 text-[#ece7e7] outline-none resize-none placeholder:truncate"
+            rows={2}
             disabled={isAiGenerating}
           />
-          <LuSend
-            className="text-[#B4B4B4] hover:text-white transform transition-all duration-200 hover:rotate-45 cursor-pointer w-14 h-5"
+          <CircleArrowUp
+            className="text-[#B4B4B4] hover:text-white cursor-pointer w-14"
             onClick={handleSend}
           />
         </div>

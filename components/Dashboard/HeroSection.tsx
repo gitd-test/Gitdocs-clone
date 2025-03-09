@@ -166,7 +166,7 @@ const HeroSection = () => {
                   href={ stopAllActions ? "#" : `https://github.com/apps/gitdocs-ai/installations/new` }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm bg-[#0791F9] hover:bg-[#3196e3] text-white rounded-sm px-4 py-2 flex items-center gap-2"
+                  className="text-sm bg-[#0791F9] hover:bg-[#3196e3] text-white rounded-md px-4 py-2 flex items-center gap-2"
                   onClick={() => handleAddRepository()}
                 >
                   {repositoriesLoading ? <LoadingAnimation /> : <LuPlus size={16} />}

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import Image from "next/image";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { FileText, ListFilter, Monitor, Smartphone, Settings, Check, BarChart, User } from "lucide-react";
+import { Check, Monitor, Smartphone, FileText, ListFilter, BarChart, Settings, User, Sparkles, Zap, BrainCircuit } from "lucide-react";
 
 const people = [
   {
@@ -55,7 +55,67 @@ const people = [
 
 const Hero = () => {
   return (
-    <section className="pt-[4.5rem] pb-20 md:pt-40 md:pb-32 lg:pt-28 lg:pb-36 relative overflow-hidden">
+    <section className="pt-[5rem] pb-20 md:pt-40 md:pb-32 lg:pt-32 lg:pb-36 relative overflow-hidden">
+
+      {/* Floating decorative elements */}
+      <div className="absolute top-28 left-[20%] w-8 h-8 text-gitdocs-purple/60 animate-float">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" />
+          <path d="M8 12L11 15L16 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      
+      <div className="absolute top-36 right-[40%] w-10 h-10 text-gitdocs-orange/70 animate-float" style={{ animationDelay: "1s" }}>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.5 6.5L17.5 9.5L14.5 12.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9.5 17.5L6.5 14.5L9.5 11.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M17.5 9.5H10.5C8.29086 9.5 6.5 11.2909 6.5 13.5V14.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+
+      <div className="absolute bottom-52 left-[30%] w-12 h-12 text-gitdocs-blue/50 animate-float" style={{ animationDelay: "2s" }}>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 3H15L12 9L15 15H9L12 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      
+      <div className="absolute bottom-48 right-[25%] w-9 h-9 text-gitdocs-purple/60 animate-float" style={{ animationDelay: "1.5s" }}>
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fillOpacity="0.5" />
+          <path d="M19.7942 10C19.4839 8.49694 18.7424 7.13722 17.6569 6.05164C16.5715 4.96605 15.2018 4.22467 13.6987 3.91429C12.1956 3.6039 10.6319 3.73929 9.20494 4.30074C7.778 4.8622 6.5559 5.82404 5.69802 7.05991C4.84014 8.29578 4.3862 9.7509 4.39311 11.2413C4.40002 12.7316 4.86755 14.183 5.73752 15.411C6.60748 16.639 7.84005 17.5897 9.27348 18.1381C10.7069 18.6864 12.2736 18.8074 13.7742 18.4834M16.5 15C16.5 15 15 13.5 12 13.5C9 13.5 7.5 15 7.5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      
+      {/* Light bulb floating element */}
+      <div className="absolute top-20 right-[15%] w-14 h-14 animate-float" style={{ animationDelay: "0.5s" }}>
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 rounded-full bg-yellow-100 animate-pulse-subtle"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Sparkles className="h-7 w-7 text-yellow-400" />
+          </div>
+        </div>
+      </div>
+      
+      {/* Brain with circuit floating element */}
+      <div className="absolute bottom-24 right-[8%] w-14 h-14 animate-float" style={{ animationDelay: "1.2s" }}>
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 rounded-full bg-gitdocs-purple/10 animate-pulse-subtle"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <BrainCircuit className="h-7 w-7 text-gitdocs-purple/70" />
+          </div>
+        </div>
+      </div>
+      
+      {/* Zap floating element */}
+      <div className="absolute top-44 left-[28%] w-10 h-10 animate-float" style={{ animationDelay: "1.8s" }}>
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 rounded-full bg-gitdocs-orange/10 animate-pulse-subtle"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Zap className="h-5 w-5 text-gitdocs-orange/70" />
+          </div>
+        </div>
+      </div>
+
       <div className="absolute inset-0 -z-10 opacity-50">
         <div className="absolute inset-0 bg-gradient-to-b from-gitdocs-blue/10 via-gitdocs-purple/5 to-gitdocs-orange/10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full hero-image-glow" />
@@ -68,7 +128,13 @@ const Hero = () => {
             </div>
           
           <h1 className="text-4xl text-center lg:text-left lg:text-5xl font-bold leading-tight md:leading-tight lg:leading-tight mb-6 opacity-0 animate-fade-in-delay-1">
-            Transform Your <span className="text-gitdocs-blue">Documentation</span> with AI
+            Transform Your <span className="text-gitdocs-blue relative">
+              Documentation
+              <svg className="absolute -bottom-1.5 left-0 w-full" viewBox="0 0 300 12" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 5.5C32 2.5 62.5 8 93.5 9.5C124.5 11 156 6.5 187 4.5C218 2.5 249 5.5 280 8.5C311 11.5 330.5 5.83333 342 3" 
+                    stroke="currentColor" strokeOpacity="0.35" strokeWidth="8" strokeLinecap="round" fill="none" />
+              </svg>
+              </span> with AI
           </h1>
           
           <p className="text-lg text-muted-foreground mb-8 opacity-0 animate-fade-in-delay-2 max-w-2xl mx-auto">
@@ -136,12 +202,12 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="mt-12 md:mt-20 opacity-0 animate-fade-in-delay-4 md:w-[45%]">
+        <div className="mt-12 md:mt-20 opacity-0 animate-fade-in-delay-4 mx-auto sm:w-[70%] md:w-[50%] lg:w-[45%]">
           {/* Right content - Custom Laptop and Mobile mockup */}
           <div className="mt-8 lg:mt-0 relative">
             <div className="relative w-full h-full flex items-center justify-center">
               {/* Laptop mockup */}
-              <div className="relative z-10 bg-white rounded-lg shadow-xl transform transition-transform hover:scale-105 duration-300 w-full mx-auto">
+              <div className="relative z-10 bg-white rounded-lg shadow-xl transform transition-transform lg:scale-110 duration-300 w-full mx-auto">
                 <div className="bg-gray-800 rounded-t-lg p-2 flex items-center">
                   <div className="flex space-x-1.5 ml-2">
                     <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -208,7 +274,7 @@ const Hero = () => {
               </div>
               
               {/* Mobile mockup */}
-              <div className="absolute -right-4 -bottom-16 z-20 w-[180px] bg-white rounded-2xl shadow-xl transform transition-transform hover:scale-105 duration-300 border-4 border-gray-800">
+              <div className="absolute -right-4 -bottom-16 z-20 w-[180px] bg-white rounded-2xl shadow-xl transform transition-transform lg:scale-110 duration-300 border-4 border-gray-800">
                 <div className="rounded-t-xl bg-gray-800 h-6 flex justify-center items-center">
                   <div className="w-16 h-2 bg-gray-600 rounded-full"></div>
                 </div>
@@ -253,13 +319,13 @@ const Hero = () => {
               </div>
               
               {/* Decorative elements */}
-              <div className="absolute -right-4 -top-4 w-24 h-24 text-gitdocs-orange/20 animate-float z-0 hidden md:block">
+              <div className="absolute -right-16 -top-16 w-24 h-24 text-gitdocs-orange/20 animate-float z-0 hidden md:block">
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor" d="M45.3,-75.3C58.4,-69.8,68.9,-56.5,75.2,-41.9C81.5,-27.2,83.6,-11.2,81.1,3.4C78.6,18.1,71.5,31.5,62.7,43.9C53.9,56.3,43.5,67.7,30.4,73.1C17.3,78.5,1.6,77.9,-12.4,74C-26.4,70.1,-38.8,62.8,-47.2,52.3C-55.6,41.8,-60.1,28.2,-65.6,13.8C-71.1,-0.6,-77.6,-15.7,-76.2,-30.9C-74.8,-46.1,-65.4,-61.3,-52.2,-66.8C-39,-72.4,-22.1,-68.3,-6.2,-68.5C9.7,-68.6,32.1,-80.9,45.3,-75.3Z" transform="translate(100 100)" />
                 </svg>
               </div>
               
-              <div className="absolute -left-6 bottom-4 w-20 h-20 text-gitdocs-purple/20 animate-float" style={{ animationDelay: "1s" }}>
+              <div className="absolute -left-20 -bottom-10 w-20 h-20 text-gitdocs-purple/20 animate-float" style={{ animationDelay: "1s" }}>
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor" d="M47.7,-79.1C62.3,-71.9,75.2,-58.7,81.7,-42.7C88.2,-26.7,88.4,-7.8,84.6,9.6C80.9,27.1,73.1,43.1,61.5,56.3C49.9,69.5,34.4,79.8,17.1,82.9C-0.3,86.1,-19.5,82,-35.7,73.4C-51.9,64.8,-65.1,51.6,-73.2,35.8C-81.4,19.9,-84.6,1.3,-81.9,-16.2C-79.2,-33.6,-70.7,-49.9,-57.9,-58.2C-45.1,-66.6,-28,-67.1,-12.6,-70.1C2.9,-73.1,33.1,-86.4,47.7,-79.1Z" transform="translate(100 100)" />
                 </svg>

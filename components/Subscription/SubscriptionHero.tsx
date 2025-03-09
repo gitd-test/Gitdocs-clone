@@ -5,16 +5,12 @@ import SubOverview from "./SubOverview";
 import SubBilling from "./SubBilling";
 import SubAddresses from "./SubAddresses";
 import { useSearchParams } from "next/navigation";
-import { useContext } from "react";
-import { AppContext, AppContextType } from "@/contexts/AppContext";
-
 
 const SubscriptionHero = () => {
 
     const searchParams = useSearchParams();
     const action = searchParams.get("action");
 
-    const { storedUser } = useContext(AppContext) as AppContextType;
 
     const options = [
         {

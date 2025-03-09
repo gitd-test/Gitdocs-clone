@@ -67,7 +67,7 @@ const NavBar = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={() => setRepositoriesUpdated(true)}
-                                        className="flex items-center gap-2 border border-[#3D444D] rounded-sm px-2 py-1.5 hover:bg-gray-800">
+                                        className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                             <LuPlus size={18} />
                                             <p
                                             className="text-xs">New</p>
@@ -82,7 +82,7 @@ const NavBar = () => {
 
                             <Tooltip>
                                 <TooltipTrigger>
-                                    <Link href="/subscription" className="flex items-center gap-2 border border-[#3D444D] rounded-sm px-2 py-1.5 hover:bg-gray-800">
+                                    <Link href="/subscription" className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                         <LuCreditCard size={18} />
                                         <p className="text-xs">Tokens</p>
                                     </Link>
@@ -100,7 +100,7 @@ const NavBar = () => {
                         <TooltipProvider delayDuration={0}>
                             <Tooltip>
                                 <TooltipTrigger>
-                                    <div className="relative hover:bg-gray-800 rounded-sm p-2">
+                                    <div className="relative hover:bg-gray-800 rounded-md p-2">
                                     <LuBell  size={20} />
                                     {notifications && (
                                         <div className="absolute top-2 right-2 w-2 h-2 bg-[#DF737D] rounded-full"></div>
