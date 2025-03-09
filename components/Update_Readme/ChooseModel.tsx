@@ -3,6 +3,8 @@ import { useContext } from "react";
 import { RxArrowTopRight } from "react-icons/rx";
 import { geminiModels } from "@/lib/geminiModels";
 import { chatgptModels } from "@/lib/chatgptModels";
+import { claudeModels } from "@/lib/claudeModels";
+import { deepseekModels } from "@/lib/deepseekModels";
 import { LuChevronRight } from "react-icons/lu";
 
 interface Model {
@@ -13,7 +15,19 @@ interface Model {
 const ChooseModel = ({ modelProviders }: { modelProviders: any[] }) => {
   const { setShowModel, selectedProvider, setSelectedProvider, selectedModel, setSelectedModel } = useContext(AppContext) as AppContextType;
 
-  const Models = selectedProvider === "Gemini" ? geminiModels : chatgptModels;
+  const Models = () => {
+    if (selectedProvider == "Gemini") {
+        return geminiModels
+    } else if (selectedProvider == "ChatGPT") {
+        return chatgptModels
+    } else if (selectedProvider == "Claude") {
+        return claudeModels
+    }else if (selectedProvider == "DeepSeek") {
+        return deepseekModels
+    } else {
+        return geminiModels
+    }
+  }
 
   const handleModelSelection = (model: Model) => {
     setSelectedModel(model);
@@ -56,8 +70,8 @@ const ChooseModel = ({ modelProviders }: { modelProviders: any[] }) => {
                 <p className="text-blue-500 ps-3 w-fit flex items-center">
                     Choose a suitable model
                 </p>
-                <div className="flex flex-col gap-2 -ms-1 overflow-y-auto mx-1 pe-3 px-4 py-1.5 w-full">
-                    {Models.map((model) => (
+                <div className="flex flex-col gap-2 -ms-1 mt-3 overflow-y-auto mx-1 pe-3 px-4 py-1.5 w-full">
+                    {Models().map((model) => (
                         <p key={model.name} className={`text-sm group text-gray-400 w-full my-0.5 hover:text-white cursor-pointer flex items-center p-3 rounded-lg bg-[#2A2A2A] ${model.name === selectedModel.name ? "bg-blue-500 text-white" : ""}`} onClick={() => handleModelSelection(model)}>
                             {model.name}
                             <LuChevronRight className="ml-auto group-hover:translate-x-1 transition-all duration-150" size={16} />

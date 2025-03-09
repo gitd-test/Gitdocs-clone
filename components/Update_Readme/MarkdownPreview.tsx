@@ -6,9 +6,14 @@ const MarkdownPreview = ({ content }: { content: string }) => {
   const cleanContent = content.replace(/\\n/g, "\n");
 
   return (
-    <div className="h-[calc(100vh-10rem)] markdown bg-transparent text-[#e0e3e7] focus:outline-none w-full p-4 resize-none rounded-b-lg overflow-y-auto">
+    <>
+    {content ? <div className="h-[calc(100vh-10rem)] markdown bg-transparent text-[#e0e3e7] focus:outline-none w-full p-4 resize-none rounded-b-lg overflow-y-auto">
       <ReactMarkdown remarkPlugins={[remarkGfm]}>{cleanContent}</ReactMarkdown>
-    </div>
+    </div>  : 
+          <div className="h-[calc(100vh-15rem)] flex items-center justify-center">
+            <p>No Preview Available</p>
+        </div>}
+    </>
   );
 };
 

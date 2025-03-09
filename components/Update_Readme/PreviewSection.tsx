@@ -47,12 +47,6 @@ const PreviewSection = ({ isPreview, setIsPreview, content, setContent }: Previe
             {isPreview && previewType === "raw" && <RawPreview content={content} setContent={setContent} />}
             {isPreview && previewType === "markdown" && <MarkdownPreview content={content} />}
         </div>
-
-
-
-
-
-
     )
 }
 export default PreviewSection

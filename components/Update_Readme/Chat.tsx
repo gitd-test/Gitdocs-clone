@@ -3,7 +3,6 @@ import { UserButton } from "@clerk/nextjs";
 import { LuCheck, LuCopy } from "react-icons/lu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -33,13 +32,13 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
     };
 
     return (
-        <div className={`flex items-start mb-2 ${role === "user" ? "flex-row-reverse" : "flex-row"} ${isPreview ? "gap-2" : "gap-5"}`}>
+        <div className={`flex items-start mb-5 ${role === "user" ? "flex-row-reverse" : "flex-row"} ${isPreview ? "gap-2" : "gap-5"}`}>
             {role === "user" ? (
                 <UserButton />
             ) : (
                 <Image src="/gitdoc_ai.png" alt="logo" width={40} height={40} />
             )}
-            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
+            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview bg-[#131313] -ms-1"} py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
                 <div className="flex items-start justify-between">
                     <p className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</p>
                     <TooltipProvider delayDuration={0}>
@@ -64,8 +63,14 @@ const Chat = ({role, content, isPreview}: ChatProps) => {
                 {content === "" 
                 ?
                 <div className="flex items-center mt-3 gap-2">
-                    <Skeleton className="w-3 h-3 rounded-full bg-[#848c8e]"></Skeleton>
-                    <p className="text-gray-500 -my-2">Gitdocs AI is thinking...</p> 
+                    <p className="text-gray-500 -my-2 flex items-end space-x-2">
+                        <span>Gitdocs AI is thinking</span>
+                        <span className="flex items-end space-x-1 mb-1.5">
+                            <span className="dot bg-gray-500"></span>
+                            <span className="dot bg-gray-500"></span>
+                            <span className="dot bg-gray-500"></span>
+                        </span>
+                    </p>
                 </div>
                 : 
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.replace(/\\n/g, "\n")}</ReactMarkdown>}
