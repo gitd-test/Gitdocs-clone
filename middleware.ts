@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/auth/callback/clerk(.*)',
   '/api/webhook/clerk(.*)',
   '/api/webhook/razorpay(.*)',
+  '/update_readme(.*)',
 
 ])
 

@@ -2,25 +2,13 @@
 
 import { redirect } from "next/navigation";
 import NavBar from "@/components/Dashboard/NavBar";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { useContext, useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import ChatSection from "@/components/Update_Readme/ChatSection";
 import PreviewSection from "@/components/Update_Readme/PreviewSection";
 import ChooseModel from "@/components/Update_Readme/ChooseModel";
-
-interface User {
-  subscriptionType: string;
-  stepsCompleted: number;
-}
-
-interface AppContextType {
-  setNavbarTitle: (navbarTitle: string) => void;
-  setIsSidebarUsed: (isSidebarUsed: boolean) => void;
-  showModel: boolean;
-  storedUser: User;
-  setStopAllActions: (stopAllActions: boolean) => void;
-}
+import NotFound from "@/app/not-found";
 
 interface UpdateReadmePageProps {
   doc_name: string;
@@ -28,11 +16,27 @@ interface UpdateReadmePageProps {
 
 const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
   const { isSignedIn } = useAuth();
-
-  const [isPreview, setIsPreview] = useState(false);
+  const [verified, setVerified] = useState<boolean>(false)
+  const [isPreview, setIsPreview] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
-
   const { setNavbarTitle, setIsSidebarUsed, showModel, storedUser, setStopAllActions } = useContext(AppContext) as AppContextType;
+
+  useEffect(() => {
+    const allReposotories = JSON.parse(localStorage.getItem("repositories") as string);
+
+    if (!allReposotories) {
+      setVerified(false)
+    }
+
+    const value = allReposotories.some((repo : any) => repo.name === doc_name);
+
+    if (value) {
+      setVerified(true)
+    } else {
+      setVerified(false)
+    }
+
+  },[doc_name])
 
   useEffect(() => {
     setStopAllActions(false);
@@ -91,6 +95,10 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
       setIsSidebarUsed(false);
     }
   }, [doc_name, isSignedIn, setNavbarTitle, setIsSidebarUsed]);
+
+  if (!verified) {
+    return <NotFound />
+  }
 
   return (
     <div className="bg-[#0D0D0D] text-[#EDEDED]">

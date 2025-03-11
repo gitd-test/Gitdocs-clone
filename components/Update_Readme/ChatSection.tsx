@@ -4,7 +4,7 @@ import { LuBrain, LuChevronDown } from "react-icons/lu";
 import { HiArrowPath } from "react-icons/hi2";
 import { useState, useRef, useEffect, useContext } from "react";
 import Chat from "./Chat";
-import { fetchStreamedResponse } from "@/lib/fetchStreamedAiResponse";
+import { fetchAIResponse } from "@/lib/fetchStreamedAiResponse";
 import { useUser } from "@clerk/nextjs";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { CircleArrowUp } from "lucide-react";
@@ -17,11 +17,6 @@ interface ChatSectionProps {
   setContent: (content: string | ((prev: string) => string)) => void;
 }
 
-interface Model {
-  name: string;
-  value: string;
-}
-
 const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }: ChatSectionProps) => {
   const { user } = useUser();
 
@@ -30,9 +25,8 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   
-  let previewContent = false;
   const handleReset = () => {
     setMessage([]);
     setContent("");
@@ -67,87 +61,46 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
 
       // Fetch the streamed response
       setContent("");
-      await fetchStreamedResponse(user?.id || "", promptWithContext, selectedModel.value, doc_name, (chunk) => {
-        if (previewContent) {
-          setContent((prev: string) => {
-            if (prev.includes(chunk.trim())) {
-              return prev; // Return the existing content if the chunk is already included
-            }
-        
-            let updatedContent = prev;
-            for (const char of chunk.trim()) {
-              updatedContent += char;
-            }
-            return updatedContent; // Ensure a string is always returned
-          });
+      await fetchAIResponse(
+        user?.id || "",
+        promptWithContext,
+        doc_name,
+        selectedModel.value,
+        (msg) => {
+            // Append to the last message block instead of creating a new one
+            setMessage((prev) => {
+              const lastMessage = prev[prev.length - 1];
+  
+              if (lastMessage && lastMessage.role === msg.role) {
+                // Update content of the last message
+                const updatedMessages = [...prev];
+                updatedMessages[updatedMessages.length - 1] = {
+                  ...lastMessage,
+                  content: lastMessage.content + msg.content,
+                };
+                return updatedMessages;
+              } else {
+                // Add a new message block if roles are different
+                return [...prev, msg];
+              }
+            });
+        },
+        (chunk) => {
+          setIsPreview(true);
+          setContent((prev) => prev + chunk);
+        },
+        (isPreview) => {
+          console.log(isPreview);
         }
-        else {
-          setMessage((prev) => {
-            const updatedMessages = [...prev];
-            const lastMessageIndex = updatedMessages.length - 1;
-        
-            if (chunk.includes(`#`)) {
-              previewContent = true;
-              setIsPreview(true);
-        
-              const lastIdx = chunk.indexOf(`#`);
-        
-              // Update the last message content if needed
-              if (
-                updatedMessages[lastMessageIndex] &&
-                !updatedMessages[lastMessageIndex]?.content.includes(chunk.slice(0, lastIdx).trim())
-              ) {
-                for (const char of chunk.slice(0, lastIdx).trim()) {
-                  updatedMessages[lastMessageIndex].content += char;
-                }
-              }
-        
-              // Safely update content
-              setContent((prev: string) => {
-                if (prev.includes(chunk.slice(lastIdx).trim())) {
-                  return prev;
-                }
-                
-                let updatedContent = prev;
-                for (const char of chunk.slice(lastIdx).trim()) {
-                  updatedContent += char;
-                }
-                return updatedContent;
-              });
-            } else {
-              if (
-                updatedMessages[lastMessageIndex]?.role === "assistant" &&
-                updatedMessages[lastMessageIndex] &&
-                !updatedMessages[lastMessageIndex]?.content.includes(chunk.trim())
-              ) {
-                for (const char of chunk.trim()) {
-                  updatedMessages[lastMessageIndex].content += char;
-                }
-              }
-            }
-            return updatedMessages; // Ensure updatedMessages is always returned
-          });
-        }               
-      });
+      );
     } catch (error) {
       console.error("Error fetching response:", error);
-      setMessage((prev) => {
-        const updatedMessages = [...prev];
-        const lastMessageIndex = updatedMessages.length - 1;
-  
-        if (updatedMessages[lastMessageIndex]?.role === "assistant") {
-          updatedMessages[lastMessageIndex] = {
-            role: "assistant",
-            content: "Something went wrong. Please try again.",
-          };
-        }
-        return updatedMessages;
-      });
     } finally {
       setIsAiGenerating(false);
     }
   };
-  
+
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -165,11 +118,28 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
     }
   };
 
+  // Attach a scroll event listener to check if the user has scrolled up.
   useEffect(() => {
-    if (chatContainerRef.current) {
+    const chatContainer = chatContainerRef.current;
+    if (!chatContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainer;
+      // Consider the user at the bottom if within 50px of the bottom
+      const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+      setAutoScrollEnabled(isAtBottom);
+    };
+
+    chatContainer.addEventListener("scroll", handleScroll);
+    return () => chatContainer.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Auto scroll when message updates only if autoScrollEnabled is true.
+  useEffect(() => {
+    if (chatContainerRef.current && autoScrollEnabled) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [message]);
+  }, [message, autoScrollEnabled]);
 
   const handleFocus = () => {
     textareaRef.current?.focus();
@@ -216,11 +186,11 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
       <div
         ref={chatContainerRef}
         className={`chat-container flex flex-col gap-2 pt-4 pb-16 overflow-y-scroll h-[calc(100vh-9.5rem)] ${
-          isPreview ? "px-3" : "px-10"
+          isPreview ? "px-3" : "px-6"
         }`}
       >
         {message.map((msg, index) => (
-          <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} />
+          <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} isAiGenerating={isAiGenerating} />
         ))}
       </div>
 
@@ -237,8 +207,6 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
             ref={textareaRef}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             className="bg-transparent flex-1 ps-4 h-12 text-[#ece7e7] outline-none resize-none placeholder:truncate"
             rows={2}
             disabled={isAiGenerating}
