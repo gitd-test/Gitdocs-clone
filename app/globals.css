@@ -310,11 +310,18 @@ body {
   background-color: #1f2937; /* Darker background */
 }
 
+/* Base container for the preview with dark background */
+.raw-preview {
+  background-color: #0D0D0D;
+  color: #D1D1D1; /* Default text color */
+  padding: 1rem;
+}
+
 /* Styling for headings */
-.raw-preview h1, 
-.raw-preview h2, 
+.raw-preview h1,
+.raw-preview h2,
 .raw-preview h3 {
-  color: #63B3ED; /* Bright blue for headings */
+  color: #E0E0E0; /* Light gray for headings */
   margin-bottom: 1rem;
   font-weight: bold;
 }
@@ -348,41 +355,41 @@ body {
   margin-bottom: 0.8rem;
 }
 
-/* Bold and italic */
+/* Bold and italic text */
 .raw-preview strong {
   font-weight: bold;
-  color: #FFD700; /* Golden for emphasis */
+  color: #F0C674; /* Subtle gold for emphasis */
 }
 
 .raw-preview em {
   font-style: italic;
-  color: #A0AEC0; /* Muted light tone */
+  color: #A0A0A0; /* Muted light gray */
 }
 
 /* Blockquote */
 .raw-preview blockquote {
-  border-left: 4px solid #63B3ED; /* Bright blue border */
+  border-left: 4px solid #2980B9; /* Refined blue border */
   padding-left: 1rem;
   margin: 1.5rem 0;
   font-style: italic;
-  color: #CBD5E0; /* Softer tone for quotes */
-  background-color: #1E293B; /* Darker contrast */
+  color: #B0B0B0; /* Softer gray for quotes */
+  background-color: #1A1A1A; /* Darker contrast background */
   border-radius: 6px;
 }
 
 /* Inline code */
 .raw-preview code {
-  background-color: #2D3748; /* Darker background for inline code */
+  background-color: #2D2D2D; /* Dark background for inline code */
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
-  color: #F56565; /* Light red for visibility */
+  color: #F0F0F0; /* Light text for clarity */
 }
 
 /* Code blocks */
 .raw-preview pre {
-  background-color: #2D3748; /* Dark gray for code block */
-  color: #E2E8F0; /* Soft light text for readability */
+  background-color: #2D2D2D; /* Dark gray for code block */
+  color: #DCDCDC; /* Soft light text for readability */
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
@@ -393,19 +400,19 @@ body {
 
 /* Links */
 .raw-preview a {
-  color: #90CDF4; /* Bright blue for links */
+  color: #2980B9; /* Professional blue for links */
   text-decoration: underline;
   transition: color 0.3s ease;
 }
 
 .raw-preview a:hover {
-  color: #63B3ED; /* Slightly lighter on hover */
+  color: #3498DB; /* Slightly lighter blue on hover */
 }
 
 /* Horizontal Rule */
 .raw-preview hr {
   border: none;
-  border-top: 1px solid #333;
+  border-top: 1px solid #333333;
   margin: 2rem 0;
 }
 
@@ -414,24 +421,26 @@ body {
   width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
-  color: #EAEAEA;
+  color: #D1D1D1;
 }
 
-.raw-preview th, .raw-preview td {
-  border: 1px solid #333;
+.raw-preview th,
+.raw-preview td {
+  border: 1px solid #333333;
   padding: 0.75rem;
   text-align: left;
 }
 
 .raw-preview th {
-  background-color: #2D3748;
-  color: #E2E8F0;
+  background-color: #1A1A1A;
+  color: #E0E0E0;
   font-weight: bold;
 }
 
 .raw-preview tr:nth-child(even) {
-  background-color: #1E293B;
+  background-color: #151515;
 }
+
 
 
 @layer base {

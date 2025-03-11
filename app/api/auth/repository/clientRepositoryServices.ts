@@ -62,8 +62,6 @@ export const getRepositoryByNamePopulated = async (name: string): Promise<Reposi
         // Fetch repository by name
         const repository = await Repository.findOne({ name }).lean<Partial<RepositoryType>>().exec();
 
-        console.log(name);
-        console.log(repository);
         // Validate the object with the type guard
         return repository && isRepositoryType(repository) ? repository : null;
     } catch (error) {

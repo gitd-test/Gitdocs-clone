@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Bug } from "lucide-react"
+import { Bug, ThumbsUp, ThumbsDown } from "lucide-react"
 
 type ChatProps = {
     role: string;
@@ -34,17 +34,17 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
     };
 
     return (
-        <div className={`flex items-start ${role === "user" ? "flex-row-reverse  mb-5" : "flex-row mb-10"} ${isPreview ? "gap-2" : "gap-5"}`}>
+        <div className={`flex items-start ${role === "user" ? "flex-row-reverse  mb-5 -mt-10" : "flex-row mb-16"} ${isPreview ? "gap-2" : "gap-5"}`}>
             {role === "user" ? (
                 <UserButton />
             ) : (
                 <Image src="/gitdoc_ai.png" alt="logo" width={40} height={40} />
             )}
-            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview -ms-1"} relative py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
+            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview -ms-1 -mt-4"} relative py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
                 <div className="flex items-start justify-between">
                         <TooltipProvider delayDuration={0}>
-                    <p className="me-2">{role === "user" ? "You" : "Gitdocs AI"}</p>
-                    {role != "user" && !isAiGenerating && <div className="w-fit -bottom-3 absolute space-x-4">
+                    <p className={`me-2 ${role === "user" ? "" : "text-lg"}`}>{role === "user" ? "You" : "Gitdocs AI"}</p>
+                    {role != "user" && !isAiGenerating && <div className="w-fit -bottom-2 absolute space-x-4 bg-[#1b1b1b] rounded-lg py-2 px-4 flex items-center">
                             <Tooltip>
                                 <TooltipTrigger>
                                     {copied ? (
@@ -53,7 +53,7 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
                                         <LuCopy className="text-[#B4B4B4] hover:text-white cursor-pointer" size={18} onClick={handleCopy} />
                                     )}
                                 </TooltipTrigger>
-                                <TooltipContent className="bg-gray-800 text-white">
+                                <TooltipContent className="bg-[#ededed] text-black">
                                     {copied ? (
                                         <p className="text-xs">Copied to clipboard</p>
                                     ) : (
@@ -66,10 +66,29 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
                                 <TooltipTrigger>
                                     <Bug className="text-[#B4B4B4] hover:text-white cursor-pointer" size={18} />
                                 </TooltipTrigger>
-                                <TooltipContent className="bg-gray-800 text-white">
+                                <TooltipContent className="bg-[#ededed] text-black">
                                 <p className="text-xs">Report a Bug</p>
                                 </TooltipContent>
                             </Tooltip>
+
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <ThumbsUp className="text-[#B4B4B4] hover:text-white cursor-pointer" size={18} />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-[#ededed] text-black">
+                                    <p className="text-xs">Good response</p>
+                                </TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <ThumbsDown className="text-[#B4B4B4] hover:text-white cursor-pointer" size={18} />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-[#ededed] text-black">
+                                    <p className="text-xs">Bad response</p>
+                                </TooltipContent>
+                            </Tooltip>
+
                     </div>}
                         </TooltipProvider>
                 </div>

@@ -35,7 +35,7 @@ const ChooseModel = ({ modelProviders }: { modelProviders: any[] }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center" onClick={() => setShowModel(false)}>
+    <div className="fixed inset-0 z-20 bg-black bg-opacity-60 flex justify-center items-center" onClick={() => setShowModel(false)}>
         <div className="bg-[#141414] rounded-lg p-3 h-[27rem] w-[54rem] flex gap-3" onClick={(e) => e.stopPropagation()}>
             <div className="grid grid-cols-2 gap-3 w-[68%] h-full flex-0">
                 {modelProviders.map((model) => (

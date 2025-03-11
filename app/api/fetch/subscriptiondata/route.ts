@@ -30,7 +30,6 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (query === "billingAddress") {
-        console.log("billingAddress");
         const billingAddress = await getBillingAddress(id);
         return NextResponse.json({data: billingAddress});
     }

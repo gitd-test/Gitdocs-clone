@@ -7,23 +7,28 @@ import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 // Streaming helper function
 async function* streamResponse(stream: AsyncIterable<any>) {
-  let currentSection: "normal" | "readme" | "conclusion" = "normal";
-
   for await (const part of stream) {
-    const content = part.choices[0]?.delta?.content || "";
-
-    if (content.includes("Readme:")) {
-      currentSection = "readme";
-      yield "<<readme>>\n";
-    } else if (content.includes("Conclusion:")) {
-      currentSection = "conclusion";
-      yield "<<conclusion>>\n";
+    const rawContent = part.choices[0]?.delta?.content || "";
+    // Check if the chunk contains either marker
+    if (rawContent.includes("Readme:") || rawContent.includes("Conclusion:")) {
+      // Split on the markers, keeping the markers in the resulting array
+      const parts = rawContent.split(/(Readme:|Conclusion:)/);
+      for (let segment of parts) {
+        if (segment === "Readme:") {
+          yield "<<readme>>\n";
+        } else if (segment === "Conclusion:") {
+          yield "<<conclusion>>\n";
+        } else if (segment.trim() !== "") {
+          yield segment;
+        }
+      }
+    } else {
+      yield rawContent;
     }
-    yield content;
   }
-
   yield "<<end>>";
 }
+
 
 export async function POST(request: NextRequest) {
   const userId = request.headers.get("Authorization")?.split(" ")[1];
@@ -41,7 +46,7 @@ export async function POST(request: NextRequest) {
   }
 
   const repository = await getRepositoryByNamePopulated(doc_name);
-  console.log(repository);
+  
   if (!repository) {
     return new Response(JSON.stringify({ error: "Repository not found" }), { status: 404 });
   }
@@ -52,9 +57,10 @@ export async function POST(request: NextRequest) {
   const updatedPrompt = {
     systemPrompt: `
     Do not respond in JSON format, just respond in this block format. Format:
-    normal text response to the user's message in very detailed format dont write Response to user add double spacing always give a number list specifying the changes done or suggestions
+    normal text response to the user's message (dont write anything like there is no prior readme or context) in very detailed format dont write Response to user add double spacing always give a number list specifying the changes done or suggestions
     Readme: The updated README.md file (directly give the markdown syntax)
-    Conclusion: this block should start with Key Updates: `,
+    Conclusion: list of changes or suggestions made (Dont write this in a code block)
+    `,
     userPrompt: prompt,
     previousReadme: readme,
   };

@@ -44,35 +44,77 @@ export async function fetchAIResponse(
     while (!done) {
       const { value, done: readerDone } = await reader.read();
       done = readerDone;
-
+    
       if (value) {
         let chunk = decoder.decode(value);
-
+    
+        // Handle <<readme>> marker
         if (chunk.includes("<<readme>>")) {
+          const parts = chunk.split("<<readme>>");
+          // Process the text before the marker in the current section.
+          if (parts[0].trim().length > 0) {
+            if (currentSection === "normal" || currentSection === "conclusion") {
+              await updateTokenByToken(parts[0], (token: string) => {
+                onUpdateMessages({ role: "assistant", content: token });
+              });
+            } else if (currentSection === "readme") {
+              await updateTokenByToken(parts[0], onUpdateContent);
+            }
+          }
+          // Switch to readme mode.
           currentSection = "readme";
-          onUpdatePreviewContent(true); // Start previewing content
-          chunk = chunk.replace("<<readme>>", "");
-          if (chunk.trim().length > 0) {
-            await updateTokenByToken(chunk, onUpdateContent);
+          onUpdatePreviewContent(true);
+          // Process the text after the marker as readme content.
+          if (parts[1].trim().length > 0) {
+            await updateTokenByToken(parts[1], onUpdateContent);
           }
           continue;
-        } else if (chunk.includes("<<conclusion>>")) {
+        }
+        // Handle <<conclusion>> marker
+        else if (chunk.includes("<<conclusion>>")) {
+          const parts = chunk.split("<<conclusion>>");
+          // Process text before the marker in the current section.
+          if (parts[0].trim().length > 0) {
+            if (currentSection === "normal" || currentSection === "conclusion") {
+              await updateTokenByToken(parts[0], (token: string) => {
+                onUpdateMessages({ role: "assistant", content: token });
+              });
+            } else if (currentSection === "readme") {
+              await updateTokenByToken(parts[0], onUpdateContent);
+            }
+          }
+          // Switch to conclusion mode.
           currentSection = "conclusion";
-          onUpdatePreviewContent(false); // Stop previewing content
-          // Insert a separator for the conclusion block
+          onUpdatePreviewContent(false);
+          // Insert a separator for the conclusion block.
           onUpdateMessages({ role: "assistant", content: "\n\nConclusion:\n" });
-          chunk = chunk.replace("<<conclusion>>", "");
-          if (chunk.trim().length > 0) {
-            await updateTokenByToken(chunk, (token: string) => {
+          // Process text after the marker.
+          if (parts[1].trim().length > 0) {
+            await updateTokenByToken(parts[1], (token: string) => {
               onUpdateMessages({ role: "assistant", content: token });
             });
           }
           continue;
-        } else if (chunk.includes("<<end>>")) {
+        }
+        // Handle <<end>> marker
+        else if (chunk.includes("<<end>>")) {
+          const parts = chunk.split("<<end>>");
+          // Process any text before the <<end>> marker.
+          if (parts[0].trim().length > 0) {
+            if (currentSection === "normal" || currentSection === "conclusion") {
+              await updateTokenByToken(parts[0], (token: string) => {
+                onUpdateMessages({ role: "assistant", content: token });
+              });
+            } else if (currentSection === "readme") {
+              await updateTokenByToken(parts[0], onUpdateContent);
+            }
+          }
           currentSection = "end";
-          onUpdatePreviewContent(false); // Stop previewing at the end
+          onUpdatePreviewContent(false);
           break;
-        } else {
+        }
+        // No markers in the chunk; process as usual.
+        else {
           if (currentSection === "normal" || currentSection === "conclusion") {
             await updateTokenByToken(chunk, (token: string) => {
               onUpdateMessages({ role: "assistant", content: token });
@@ -83,6 +125,7 @@ export async function fetchAIResponse(
         }
       }
     }
+    
   } catch (error) {
     console.error("Error fetching AI response:", error);
     throw error;

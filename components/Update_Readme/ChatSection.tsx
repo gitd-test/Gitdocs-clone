@@ -7,7 +7,7 @@ import Chat from "./Chat";
 import { fetchAIResponse } from "@/lib/fetchStreamedAiResponse";
 import { useUser } from "@clerk/nextjs";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
-import { CircleArrowUp } from "lucide-react";
+import { CircleArrowUp, ChevronRight } from "lucide-react";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -152,22 +152,23 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
       }`}
       onClick={handleFocus}
     >
-      <div className="flex justify-between px-5 py-2 items-center">
-        <div className="text-white rounded-t-lg flex gap-5 items-center justify-between h-12">
-          <div className="flex items-center gap-2 text-sm bg-[#1f1f1f] cursor-pointer rounded-full p-2 ps-2.5 pe-3.5">
+      <div className={`absolute top-0 z-10 left-0 flex justify-between ps-5 pe-6 py-2 items-center overflow-hidden w-16 transition-all duration-150 whitespace-nowrap rounded-full bg-[#1f1f1f] ${isPreview ? "hover:w-[35rem]" : "hover:w-[40rem]"}`}>
+        <ChevronRight className="text-white ms-1 me-5 flex-shrink-0" size={20} />
+        <div className="text-white rounded-t-lg mx-auto flex gap-5 items-center justify-between h-12">
+          <div className="flex items-center gap-2 text-sm border border-[#bbbbbb] cursor-pointer rounded-full p-2 ps-2.5 pe-3.5">
             <div className={`rounded-full flex-shrink-0 bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${isPreview ? "w-8 h-8" : "w-9 h-9 text-lg"}`}>
               {doc_name.charAt(0).toUpperCase() + doc_name.charAt(1).toUpperCase()}
             </div>
             <p className={`hover:underline truncate w-[82%] ${isPreview ? "text-xs max-w-[150px]" : "text-sm"}`}>{doc_name}</p>
           </div>
 
-          <button className={`flex items-center gap-3 bg-[#1f1f1f] cursor-pointer rounded-full p-4 transition-all duration-150 ${isPreview ? "text-xs max-w-[175px]" : "text-sm"}`} onClick={() => setShowModel(true)}>
+          <button className={`flex items-center gap-3 border border-[#bbbbbb] cursor-pointer rounded-full p-4 transition-all duration-150 ${isPreview ? "text-xs max-w-[175px]" : "text-sm"}`} onClick={() => setShowModel(true)}>
             <LuBrain className="text-white flex-shrink-0" size={isPreview ? 16 : 20} />
             <p className="truncate w-[75%]">{selectedModel.name}</p>
             <LuChevronDown className={`text-white transition-all duration-150 ${showModel ? "-rotate-180" : ""}`} size={isPreview ? 16 : 20} />
           </button>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ms-5">
           {message.length > 0 && (
             <button
               className={`group flex items-center gap-2 group cursor-pointer border hover:bg-[#F2BD57] hover:text-black transition-all duration-150 text-[#F2BD57] border-[#F2BD57] rounded-full p-3.5 ${isPreview ? "text-xs" : "text-sm"}`}
@@ -185,9 +186,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
 
       <div
         ref={chatContainerRef}
-        className={`chat-container flex flex-col gap-2 pt-4 pb-16 overflow-y-scroll h-[calc(100vh-9.5rem)] ${
-          isPreview ? "px-3" : "px-6"
-        }`}
+        className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-28 overflow-y-scroll h-[calc(100vh-5rem)]`}
       >
         {message.map((msg, index) => (
           <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} isAiGenerating={isAiGenerating} />
@@ -200,21 +199,22 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
         }`}
       >
         <div
-          className={`flex items-end h-full border py-3 -mb-2 bg-[#141415] border-[#383737] transition-all duration-300 w-[81%] mx-auto rounded-2xl`}
+          className={`flex items-end relative h-full border py-3 -mb-2 bg-[#141415] border-[#383737] transition-all duration-300 w-[90%] mx-auto rounded-2xl`}
         >
           <textarea
             placeholder={isAiGenerating ? "Generating..." : !(content.length > 0) ? "Share project highlights..." : "what you'd like to improve in your README..."}
             ref={textareaRef}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            className="bg-transparent flex-1 ps-4 h-12 text-[#ece7e7] outline-none resize-none placeholder:truncate"
-            rows={2}
+            className="bg-transparent flex-1 ps-4 h-18 text-[#ece7e7] outline-none resize-none placeholder:truncate"
+            rows={3}
             disabled={isAiGenerating}
           />
-          <CircleArrowUp
-            className="text-[#B4B4B4] hover:text-white cursor-pointer w-14"
-            onClick={handleSend}
-          />
+
+            <CircleArrowUp
+              className="text-[#B4B4B4] hover:text-white cursor-pointer w-14"
+              onClick={handleSend}
+            />
         </div>
       </div>
     </div>
