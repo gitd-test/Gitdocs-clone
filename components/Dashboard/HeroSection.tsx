@@ -105,6 +105,9 @@ const HeroSection = () => {
   }, [user, searchParams, repositoriesUpdated, isSignedIn, storedUser, router, setNumRepositories]);
 
   const handleAddRepository = () => {
+    if (stopAllActions) {
+      return;
+    }
     setRepositoriesUpdated(true);
   };
 
@@ -163,7 +166,7 @@ const HeroSection = () => {
                   </button>
                 </div>
                 <a
-                  href={ stopAllActions ? "#" : `https://github.com/apps/gitdocs-ai/installations/new` }
+                  href="https://github.com/apps/gitdocs-ai/installations/new"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm bg-[#0791F9] hover:bg-[#3196e3] text-white rounded-md px-4 py-2 flex items-center gap-2"

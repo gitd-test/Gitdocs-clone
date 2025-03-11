@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   const updatedPrompt = {
     systemPrompt: `
     Do not respons in JSON format, just respond in this block format. In format :
-    <response>Your response to the user's message just the text not markdown or update or reason, in this section dont include #</response>
+    <response>Your response to the user's message in very detailed format, in this section dont include #</response>
     <update>true or false</update>
     <readme>The updated README.md file, start this section with # (project_name) replace this with the actual name of the project</readme>
     <conclusion>Reason for the update</conclusion>

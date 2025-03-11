@@ -6,6 +6,8 @@ import { NextRequest } from "next/server";
 import User from "@/app/api/lib/models/User";
 import UsageOverview from "@/app/api/lib/models/UsageOverview";
 import Subscription from "@/app/api/lib/models/Subscription";
+import Repository from "@/app/api/lib/models/Repository";
+import Readme from "@/app/api/lib/models/Readme";
 
 export async function POST(req: NextRequest) {
     const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -76,7 +78,44 @@ export async function POST(req: NextRequest) {
             updatedAt: new Date(),
         });
   
+        return new Response("User created", { status: 200 });
     }
-    
-    return new Response("User created", { status: 200 });
+
+    if (evt.type === "user.deleted") {
+        await connectMongoWithRetry();
+
+        const user = await User.findOne({ clerkUid: id });
+
+        if (!user) {
+            return new Response("User not found", { status: 404 });
+        }
+
+        const githubUId = user.githubUId || "";
+
+        if (githubUId) {
+            await Repository.deleteMany({ owner: githubUId });
+
+            await Readme.deleteMany({ owner: githubUId });
+        }
+
+        await Subscription.deleteOne({ userId: id });
+
+        await UsageOverview.deleteOne({ userId: id });
+
+        return new Response("User deleted", { status: 200 });
+    }
+
+    if (evt.type === "user.updated") {
+        await connectMongoWithRetry();
+
+        const user = await User.findOne({ clerkUid: id });
+
+        if (!user) {
+            return new Response("User not found", { status: 404 });
+        }
+
+        const { email_addresses, first_name, last_name } = evt.data as UserJSON;
+        
+        
+    }
 }
