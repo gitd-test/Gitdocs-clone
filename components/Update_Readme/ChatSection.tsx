@@ -87,7 +87,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
         },
         (chunk) => {
           setIsPreview(true);
-          setContent((prev) => prev + chunk);
+          setContent((prev) => prev + chunk.replace(/```markdown/g, ""));
         },
         (isPreview) => {
           console.log(isPreview);
@@ -186,7 +186,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
 
       <div
         ref={chatContainerRef}
-        className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-28 overflow-y-scroll h-[calc(100vh-5rem)]`}
+        className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-16 overflow-y-scroll h-[calc(100vh-5rem)]`}
       >
         {message.map((msg, index) => (
           <Chat key={index} role={msg.role} content={msg.content} isPreview={isPreview} isAiGenerating={isAiGenerating} />
