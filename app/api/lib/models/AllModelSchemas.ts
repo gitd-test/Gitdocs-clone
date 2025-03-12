@@ -9,6 +9,14 @@ export interface RepositoryUserType extends Document {
     githubUid: string;
 }
 
+export interface ProjectMetadataType {
+    type: string;
+    technologies?: string;
+    features?: string;
+    license?: string;
+    additionalInfo?: string;
+}
+
 export interface RepositoryType extends Document {
     name: string;
     repositoryId: string;
@@ -23,4 +31,5 @@ export interface RepositoryType extends Document {
     visibility: string;
     starred: boolean;
     score?: number;
+    projectMetadata: ProjectMetadataType;
 }

@@ -42,7 +42,7 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
             )}
             <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview -ms-1 -mt-4"} relative py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
                 <div className="flex items-start justify-between">
-                        <TooltipProvider delayDuration={0}>
+                    <TooltipProvider delayDuration={0}>
                     <p className={`me-2 ${role === "user" ? "" : "text-lg"}`}>{role === "user" ? "You" : "Gitdocs AI"}</p>
                     {role != "user" && !isAiGenerating && <div className="w-fit -bottom-2 absolute space-x-4 bg-[#1b1b1b] rounded-lg py-2 px-4 flex items-center">
                             <Tooltip>

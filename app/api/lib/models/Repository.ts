@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+const metadataSchema = new mongoose.Schema({
+    type: { type: String, enum: ['personal', 'professional'], required: true },
+    technologies: { type: String },
+    features: { type: String },
+    license: { type: String },
+    additionalInfo: { type: String },
+    }
+);
+
 const repositorySchema = new mongoose.Schema(
     {
         name:
@@ -54,6 +63,10 @@ const repositorySchema = new mongoose.Schema(
         { 
             type: Number, default: 0, index: true 
         }, // Indexed for sorting or filtering by score
+        projectMetadata:
+        {
+            type: metadataSchema, default: {}
+        },
     });
 
 const Repository = mongoose.models.Repository || mongoose.model('Repository', repositorySchema);

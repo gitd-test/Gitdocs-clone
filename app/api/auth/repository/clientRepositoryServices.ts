@@ -1,7 +1,7 @@
 import { isValidObjectId } from "mongoose";
 import Repository from "@/app/api/lib/models/Repository";
 import User from "@/app/api/lib/models/User";
-import { RepositoryType, RepositoryUserType } from "@/app/api/lib/models/AllModelSchemas";
+import { RepositoryType, RepositoryUserType, ProjectMetadataType } from "@/app/api/lib/models/AllModelSchemas";
 
 // Type guard for RepositoryType
 const isRepositoryType = (obj: any): obj is RepositoryType => {
@@ -105,3 +105,36 @@ export const getRepositoryByOwnerAndRepositoryId = async (
         throw new Error("Failed to fetch repository by owner and repository ID.");
     }
 };
+
+// Function to fetch repository metadata
+export const fetchRepositoryMetadata = async (repositoryName: string): Promise<ProjectMetadataType | null> => {
+    try {
+        // Fetch repository by name
+        const repository = await Repository.findOne({ name: repositoryName }, { projectMetadata: 1 }).lean<Partial<RepositoryType>>().exec();
+
+        // Validate the object with the type guard
+        return repository?.projectMetadata || null;
+    } catch (error) {
+        console.error("Error fetching repository metadata:", error);
+        throw new Error("Failed to fetch repository metadata.");
+    }
+}
+
+// Function to update repository metadata
+export const updateRepositoryMetadata = async (repositoryName: string, metadata: ProjectMetadataType): Promise<void> => {
+    try {
+        // Fetch repository by name
+        const repository = await Repository.findOne({ name: repositoryName }).exec();
+
+        if (!repository) {
+            throw new Error("Repository not found.");
+        }
+
+        // Update the repository metadata
+        repository.projectMetadata = metadata;
+        await repository.save();
+    } catch (error) {
+        console.error("Error updating repository metadata:", error);
+        throw new Error("Failed to update repository metadata.");
+    }
+}
