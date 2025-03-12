@@ -214,7 +214,7 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
                 <div className={`rounded-full flex-shrink-0 bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${isPreview ? "w-6 h-6 text-xs" : "w-7 h-7 text-sm"}`}>
                 <p className="truncate w-[75%]">{doc_name.charAt(0).toUpperCase() + doc_name.charAt(1).toUpperCase()}</p>
                 </div>
-                <p className={`hover:underline truncate w-[82%] ${isPreview ? "text-xs max-w-[150px]" : "text-sm"}`}>{doc_name}</p>
+                <p className={`hover:underline truncate w-[55%] ${isPreview ? "text-xs max-w-[150px]" : "text-sm"}`}>{doc_name}</p>
                 <LuChevronDown className={`text-white transition-all duration-150 ${showModel ? "-rotate-180" : ""}`} size={isPreview ? 16 : 20} />
                 {projectMetadata?.type === "" && <TooltipProvider delayDuration={0}>
                     <Tooltip>
@@ -230,9 +230,9 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
                 </TooltipProvider>}
                 </div>
 
-                <button className={`flex items-center gap-3 border border-[#bbbbbb] cursor-pointer rounded-full transition-all duration-150 max-w-[50%] ${isPreview ? "text-xs max-w-[175px] p-2.5" : "text-sm p-3"}`} onClick={() => setShowModel(true)}>
+                <button className={`flex items-center gap-3 border border-[#bbbbbb] cursor-pointer rounded-full transition-all duration-150 max-w-[50%] ${isPreview ? "text-xs max-w-[175px] p-3" : "text-sm p-3"}`} onClick={() => setShowModel(true)}>
                 <LuBrain className="text-white flex-shrink-0" size={isPreview ? 16 : 20} />
-                <p className="truncate w-[75%]">{selectedModel.name}</p>
+                <p className={`truncate w-[75%] ${isPreview ? "text-xs" : "text-sm"}`}>{selectedModel.name}</p>
                 <LuChevronDown className={`text-white transition-all duration-150 ${showModel ? "-rotate-180" : ""}`} size={isPreview ? 16 : 20} />
                 </button>
             </div>
