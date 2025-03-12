@@ -45,10 +45,6 @@ export async function GET(req: NextRequest) {
     const githubUserId = userData.id;
     const githubUsername = userData.login;
 
-    // Update user database asynchronously
-    if (userId) {
-      await updateUserDb(userId, githubUserId);
-    }
 
     // Step 3: Validate or fetch `installationId`
     if (!installationId) {
@@ -64,6 +60,11 @@ export async function GET(req: NextRequest) {
       }
 
       installationId = await installations.installations[0].id.toString();
+    }
+
+    // Update user database asynchronously
+    if (userId) {
+      await updateUserDb(userId, githubUserId, installationId, githubUsername);
     }
 
     try {

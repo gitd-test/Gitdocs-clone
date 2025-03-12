@@ -12,6 +12,16 @@ const UserSchema = new mongoose.Schema(
             unique: true,
             sparse: true, // Allows multiple null or undefined values
         },
+        installationId: {
+            type: String,
+            unique: true,
+            sparse: true, // Allows multiple null or undefined values
+        },
+        githubUsername: {
+            type: String,
+            unique: true,
+            sparse: true, // Allows multiple null or undefined values
+        },
         firstName: {
             type: String,
         },

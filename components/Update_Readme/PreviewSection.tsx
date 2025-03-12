@@ -1,20 +1,28 @@
 "use client"
 
-import { LuGitPullRequestArrow, LuArrowLeft, LuArrowRight } from "react-icons/lu"
+import { LuArrowLeft, LuArrowRight } from "react-icons/lu"
 import RawPreview from "./RawPreview";
 import { useState } from "react";
 import MarkdownPreview from "./MarkdownPreview";
+import { AlertDialogDemo } from "./AlertDialog";
 
 interface PreviewSectionProps {
+    doc_name: string;
     isPreview: boolean;
     setIsPreview: (isPreview: boolean) => void;
     content: string;
     setContent: (content: string | ((prev: string) => string)) => void;
 }
 
-const PreviewSection = ({ isPreview, setIsPreview, content, setContent }: PreviewSectionProps) => {
+const PreviewSection = ({ doc_name, isPreview, setIsPreview, content, setContent }: PreviewSectionProps) => {
 
-    const [previewType, setPreviewType] = useState<"raw" | "markdown">("raw");    
+    const [previewType, setPreviewType] = useState<"raw" | "markdown">("raw");   
+    const [commitData, setCommitData] = useState({
+        doc_name: doc_name,
+        message: "",
+        content: "",
+        branch: "",
+    }); 
 
     return (
         <div className={`bg-[#171717] rounded-lg relative ${isPreview ? 'translate-x-0 w-1/2' : 'translate-x-[104%] w-0'} transition-all duration-300`}>
@@ -37,10 +45,7 @@ const PreviewSection = ({ isPreview, setIsPreview, content, setContent }: Previe
 
                     </div>
                 </div>
-                <button className="text-white text-sm flex items-center gap-2 cursor-pointer bg-[#3196E3] rounded-lg py-1 px-3">
-                    <LuGitPullRequestArrow size={16} />
-                    <span>Commit Changes</span>
-                </button>
+                <AlertDialogDemo commitData={commitData} setCommitData={setCommitData} content={content} />
             </div>
             <hr className='border-[#383737]' />
 

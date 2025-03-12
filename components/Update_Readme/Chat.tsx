@@ -40,7 +40,7 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
             ) : (
                 <Image src="/gitdoc_ai.png" alt="logo" width={40} height={40} />
             )}
-            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview -ms-1 -mt-4"} relative py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[85%]" : role === "user" ? "max-w-[60%]" : "max-w-[86.4%]"}`}>
+            <div className={`${role === "user" ? "bg-[#1b1b1b]" : "raw-preview -ms-1 -mt-4"} relative py-2 px-4 min-w-[12%] rounded-lg ${isPreview ? "max-w-[89.5%]" : role === "user" ? "max-w-[60%]" : "max-w-[89.5%]"}`}>
                 <div className="flex items-start justify-between">
                     <TooltipProvider delayDuration={0}>
                     <p className={`me-2 ${role === "user" ? "" : "text-lg"}`}>{role === "user" ? "You" : "Gitdocs AI"}</p>
