@@ -15,21 +15,24 @@ import {
   } from "@/components/ui/alert-dialog"
 import { LuGitPullRequestArrow } from "react-icons/lu"
 import { toast } from "sonner"
+import { useUser } from "@clerk/nextjs"
+
   export function AlertDialogDemo({commitData, setCommitData, content}: {commitData: any, setCommitData: any, content: string}) {
+
+    const { user } = useUser();
 
     const handleCommit = async () => {
 
-        setCommitData((prev: any) => ({ ...prev, content: content }));
-
-        if (!commitData.doc_name || !commitData.message || !commitData.content || !commitData.branch) {
+        if (!commitData.doc_name || !commitData.message || !content || !commitData.branch) {
             toast.error("Please fill all the fields");
             return;
         }
 
         const response = await axios.post("/api/fetch/repositorydata", {
+            user_id: user?.id,
             doc_name: commitData.doc_name,
             message: commitData.message,
-            content: commitData.content,
+            content: content,
             branch: commitData.branch,
         });
 

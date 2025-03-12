@@ -55,27 +55,19 @@ export async function POST(request: NextRequest) {
 
     await connectMongoWithRetry();
 
-    const { userId } = await auth();
+    const { user_id, doc_name, message, content, branch } = await request.json();
 
-    if (!userId) {
+    if (!user_id) {
         return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
-    console.log("User ID received");
-
-    const user = await User.findOne({ clerkUid: userId }, { installationId: 1, githubUsername: 1 });
+    const user = await User.findOne({ clerkUid: user_id }, { installationId: 1, githubUsername: 1 });
 
     if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 400 });
     }
 
-    console.log("User found");
-
-    const { doc_name, message, content, branch } = await request.json();
-
-    console.log("Request JSON received");
-
-    await commitChanges(user.githubUsername, doc_name, user.installationId, message, content, branch); 
+    await commitChanges(user.githubUsername, doc_name, Number(user.installationId), message, content, branch); 
 
     console.log("Changes committed");
 
