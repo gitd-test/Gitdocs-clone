@@ -3,7 +3,10 @@ import remarkGfm from "remark-gfm";
 
 const MarkdownPreview = ({ content }: { content: string }) => {
   // Clean and preprocess content
-  const cleanContent = content.replace(/\\n/g, "\n");
+  const cleanContent = content
+  .replace(/\\n/g, "\n") // Replace escaped newlines with actual newlines
+  .trim();
+
 
   return (
     <>

@@ -47,16 +47,24 @@ const ChatSection = ({ doc_name, isPreview, content, setContent, setIsPreview }:
       { role: "user", content: inputValue },
       { role: "assistant", content: "" },
     ]);
+
+    // Get the last two messages, assuming messages alternate (user then assistant)
+    const previousContext = (() => {
+      if (message.length >= 2) {
+        const lastPair = message.slice(-2);
+        if (lastPair[0].role === "user" && lastPair[1].role === "assistant") {
+          return `The previous messages are:\nUser: ${lastPair[0].content}\n To modify the Readme: ${content.trim()}`;
+        }
+      }
+      return "";
+    })();
   
     try {
       setIsAiGenerating(true);
       const promptWithContext = `
         The project is ${doc_name}.
         The user's message is: ${inputValue}.
-        The previous messages are: ${message
-          .map((msg) => `${msg.role}: ${msg.content}`)
-          .join("\n")}.
-        The previous readme file is: ${content}.
+        ${previousContext}
       `;
 
       // Fetch the streamed response

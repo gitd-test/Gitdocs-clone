@@ -1,6 +1,5 @@
 import { connectAI } from "@/app/api/lib/ai/connectAI";
 import { NextRequest } from "next/server";
-import { systemPrompt } from "@/app/api/lib/ai/systemPrompt";
 import { getRepositoryByNamePopulated } from "@/app/api/auth/repository/clientRepositoryServices";
 import { fetchReadmeDb } from "../../../auth/repository/updateReadmeDb";
 import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
@@ -57,13 +56,14 @@ export async function POST(request: NextRequest) {
   const updatedPrompt = {
     systemPrompt: `
     Do not respond in JSON format, just respond in this block format. Format:
-    normal text response to the user's message (dont write anything like there is no prior readme or context) in very detailed format dont write Response to user add double spacing always give a number list specifying the changes done or suggestions
+    normal text response to the user's message (dont write anything like there is no prior readme or context) in very detailed format dont write Response to user
     Readme: The updated README.md file (directly give the markdown syntax)
     Conclusion: list of changes or suggestions made (Dont write this in a code block)
     `,
     userPrompt: prompt,
-    previousReadme: readme,
+    ...(prompt.includes("The previous messages are:") ? {} : { previousReadme: readme }),
   };
+  
 
   try {
     const stream = await connectAI(JSON.stringify(updatedPrompt), model || "gemini-2.0-flash");

@@ -35,8 +35,8 @@ export async function fetchAIResponse(
       if (tokens) {
         for (const token of tokens) {
           callback(token);
-          // Wait 10ms between tokens; adjust delay as needed.
-          await new Promise((resolve) => setTimeout(resolve, 10));
+          // Wait 1ms between tokens; adjust delay as needed.
+          await new Promise((resolve) => setTimeout(resolve, 1));
         }
       }
     }

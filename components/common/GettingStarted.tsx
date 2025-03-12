@@ -2,10 +2,10 @@
 
 import { useContext, SetStateAction, Dispatch } from "react";
 import {
-  HelpCircle,
-  BookOpen,
   CreditCard,
   MessageSquareText,
+  Package,
+  ScanSearch,
 } from "lucide-react";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
@@ -102,9 +102,9 @@ const GettingStarted = () => {
 
   const buttonItems = [
     {
-      icon: BookOpen,
-      label: "Read the docs",
-      href: "#",
+      icon: ScanSearch,
+      label: "Docs Review",
+      href: "/review",
       show: true,
     },
     {
@@ -120,9 +120,9 @@ const GettingStarted = () => {
       show: true,
     },
     {
-      icon: HelpCircle,
-      label: "Help & Support",
-      href: "#",
+      icon: Package,
+      label: "AI Models",
+      href: "/ai-models",
       show: true,
     },
   ];

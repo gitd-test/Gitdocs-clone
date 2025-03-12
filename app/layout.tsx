@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta charSet="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta name="description" content="Improve your GitHub repositories with AI-driven insights and code quality analysis." />
-            <meta name="keywords" content="GitHub, code analysis, AI, repository analysis, code quality, code review, readme generator, AI tools for developers, Git automation" />
+            <meta name="keywords" content="GitHub, code analysis, AI, repository analysis, code quality, code review, readme generator, AI tools for developers, Git automation, readme, code documentation, code improvement, code documentation generator, README.md" />
             <meta name="rating" content="General" />
             <meta name="revisit-after" content="7 days" />
             <meta name="distribution" content="Global" />

@@ -12,7 +12,7 @@ import { LuUser } from "react-icons/lu";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { AppContext } from "@/contexts/AppContext";
-import { LayoutDashboard, Settings, HelpCircle, BookOpen, FolderOpen, Package, CreditCard } from "lucide-react";
+import { LayoutDashboard, ScanSearch, FolderOpen, Package, CreditCard } from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
@@ -49,10 +49,10 @@ export default function Sidebar() {
         isActive: pathname === "/dashboard",
         },
         {
-        icon: BookOpen,
-        label: "Documentation",
-        href: "#",
-        isActive: pathname === "/documentation",
+        icon: ScanSearch,
+        label: "Docs Review",
+        href: "/review",
+        isActive: pathname === "/review",
         },
         {
         icon: Package,
