@@ -55,7 +55,8 @@ export async function POST(request: NextRequest) {
 
   const updatedPrompt = {
     systemPrompt: `
-    Do not respond in JSON format, just respond in this block format (formatting is important) (ALWAYS keep the readme file content in the readme block). Format:
+    ALWAYS keep the readme file content in the readme block
+    Do not respond in JSON format, just respond in this block format (formatting is important). Format:
     normal text response to the user's message (dont write anything like there is no prior readme or context) in very detailed format dont write Response to user
     Readme: The updated README.md file (directly give the markdown syntax) (write blockquote where the user needs to fill in the details)
     Conclusion: list of changes or suggestions made (Dont write this in a code block)
