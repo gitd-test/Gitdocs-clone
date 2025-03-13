@@ -60,7 +60,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [repositoriesUpdated, setRepositoriesUpdated] = useState(false);
   const [showModel, setShowModel] = useState<boolean>(false);
   const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
-  const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash Thinking", value: "gemini-2.0-flash-thinking-exp-01-21"});
+  const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
   const [stopAllActions, setStopAllActions] = useState<boolean>(false);
   const [numRepositories, setNumRepositories] = useState<number>(0);
 

@@ -56,14 +56,6 @@ export async function fetchAIResponse(
         // Return only the content after ```markdown
         return parts.length > 1 ? parts[1] : "";
       }
-      // Check if we're exiting a markdown block
-      else if (inMarkdownBlock && text.includes("```")) {
-        inMarkdownBlock = false;
-        // Get content before the closing ```
-        const parts = text.split("```");
-        // Return only the content before ```
-        return parts.length > 0 ? parts[0] : "";
-      }
       // If we're inside a markdown block, return the content as is
       else if (inMarkdownBlock) {
         return text;
