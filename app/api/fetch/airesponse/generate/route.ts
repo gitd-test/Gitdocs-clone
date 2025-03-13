@@ -5,7 +5,7 @@ import { fetchReadmeDb } from "../../../auth/repository/updateReadmeDb";
 import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 // Streaming helper function
-async function* streamResponse(stream: AsyncIterable<any>) {
+export async function* streamResponse(stream: AsyncIterable<any>) {
   for await (const part of stream) {
     const rawContent = part.choices[0]?.delta?.content || "";
     // Check if the chunk contains either marker
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
   
 
   try {
-    const stream = await connectAI(JSON.stringify(updatedPrompt), model || "gemini-2.0-flash");
+    const stream = await connectAI(userId, JSON.stringify(updatedPrompt), model || "gemini-2.0-flash");
 
     const responseStream = new ReadableStream({
       async start(controller) {

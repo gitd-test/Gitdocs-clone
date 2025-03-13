@@ -38,7 +38,7 @@ const ChatSection = ({
 }: ChatSectionProps) => {
   const { user } = useUser();
   const router = useRouter();
-  const { setShowModel, selectedModel, showModel } = useContext(AppContext) as AppContextType;
+  const { setShowModel, selectedModel, showModel, storedUser, setStoredUser } = useContext(AppContext) as AppContextType;
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
@@ -53,6 +53,37 @@ const ChatSection = ({
     additionalInfo: "",
   });
   const [backupContent, setBackupContent] = useState("");
+  const [usageOverviewtrigger, setUsageOverviewtrigger] = useState(0);
+
+  useEffect(() => {
+    const fetchUsageOverview = async () => {
+      const response = await axios.get("/api/fetch/usageoverviewdata", {
+        headers: {
+          Authorization: `Bearer ${user?.id}`,
+        },
+      });
+      const newUsageOverview = response.data;
+      
+      // Only update if new tokensUsed is greater
+      if (newUsageOverview.data.tokensUsed > (storedUser?.usageOverview.tokensUsed || 0)) {
+        setStoredUser((prev) => {
+          if (!prev) return null; // or handle the missing user appropriately
+          
+          return {
+            ...prev,
+            usageOverview: newUsageOverview.data,
+            // Ensure required fields are always set (fallback to previous value or a default)
+            subscriptionType: prev.subscriptionType || "",
+            stepsCompleted: prev.stepsCompleted !== undefined ? prev.stepsCompleted : 0,
+          };
+        });
+      }
+    };
+    
+    fetchUsageOverview();
+  }, [usageOverviewtrigger, user?.id, storedUser, setStoredUser]);
+  
+  
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -170,6 +201,7 @@ const ChatSection = ({
       console.error("Error fetching response:", error);
     } finally {
       setIsAiGenerating(false);
+      setUsageOverviewtrigger((prev) => prev + 1);
     }
   };
 
