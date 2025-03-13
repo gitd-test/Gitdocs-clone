@@ -44,14 +44,20 @@ export async function POST(request: NextRequest) {
     return new Response(JSON.stringify({ error: "Prompt, doc_name, and model are required" }), { status: 400 });
   }
 
-  const repository = await getRepositoryByNamePopulated(doc_name);
-  
-  if (!repository) {
-    return new Response(JSON.stringify({ error: "Repository not found" }), { status: 404 });
-  }
+  let readme = "";
 
-  const repositoryId = repository.repositoryId;
-  const readme = await fetchReadmeDb(repositoryId);
+  if (!prompt.includes("This is a general chat with the user.")) {
+        
+    const repository = await getRepositoryByNamePopulated(doc_name);
+    
+    if (!repository) {
+      return new Response(JSON.stringify({ error: "Repository not found" }), { status: 404 });
+    }
+    
+    const repositoryId = repository.repositoryId;
+    readme = await fetchReadmeDb(repositoryId);
+
+  }
 
   const updatedPrompt = {
     systemPrompt: `
@@ -83,7 +89,7 @@ export async function POST(request: NextRequest) {
     - Any code snippets or configuration examples that complement the README
     `,
     userPrompt: prompt,
-    ...(prompt.includes("The previous messages are:") ? {} : { previousReadme: readme }),
+    ...(prompt.includes("The previous messages are:") || !readme ? {} : { previousReadme: readme }),
   };
   
 
