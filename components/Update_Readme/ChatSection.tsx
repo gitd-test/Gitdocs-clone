@@ -68,16 +68,17 @@ const ChatSection = ({
       // Only update if new tokensUsed is greater
       if (newUsageOverview.data.tokensUsed > (storedUser?.usageOverview.tokensUsed || 0)) {
         setStoredUser((prev) => {
-          if (!prev) return null; // or handle the missing user appropriately
           
           return {
             ...prev,
             usageOverview: newUsageOverview.data,
             // Ensure required fields are always set (fallback to previous value or a default)
-            subscriptionType: prev.subscriptionType || "",
-            stepsCompleted: prev.stepsCompleted !== undefined ? prev.stepsCompleted : 0,
+            subscriptionType: prev?.subscriptionType || "",
+            stepsCompleted: prev?.stepsCompleted !== undefined ? prev?.stepsCompleted : 0,
+
           };
         });
+        localStorage.setItem("storedUser", JSON.stringify(storedUser));
       }
     };
     
