@@ -25,7 +25,7 @@ const PreviewSection = ({ doc_name, isPreview, setIsPreview, content, setContent
     }); 
 
     return (
-        <div className={`bg-[#171717] -mt-4 rounded-lg relative ${isPreview ? 'translate-x-0 w-1/2' : 'translate-x-[104%] w-0'} transition-all duration-300`}>
+        <div className={`bg-[#171717] h-[calc(100vh-5rem)] -mt-4 rounded-lg relative ${isPreview ? 'translate-x-0 w-1/2' : 'translate-x-[104%] w-0'} transition-all duration-300`}>
             <button className={`absolute top-1/2 -translate-y-1/2 h-12 w-5 bg-[#171717] ps-0.5 rounded-l-lg flex items-center justify-start text-slate-400 z-10 transition-all duration-300 ${isPreview ? '-left-5' : 'left-1.5'}`} onClick={() => setIsPreview(!isPreview)} > 
                 {isPreview ? <LuArrowRight size={16} /> : <LuArrowLeft size={16} />}
 

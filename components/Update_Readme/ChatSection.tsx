@@ -1,8 +1,10 @@
 "use client";
 
-import { LuBrain, LuChevronDown } from "react-icons/lu";
+import { LuPlus, LuBrain, LuChevronDown, LuFile } from "react-icons/lu";
 import { HiArrowPath } from "react-icons/hi2";
+import { FaSyncAlt, FaFileAlt, FaBriefcase } from "react-icons/fa";
 import { useState, useRef, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
 import Chat from "./Chat";
 import { fetchAIResponse } from "@/lib/fetchStreamedAiResponse";
 import { useUser } from "@clerk/nextjs";
@@ -16,6 +18,7 @@ import {
 } from "../ui/tooltip";
 import ProjectMetadataForm from "./ProjectMetadataForm";
 import axios from "axios";
+import ShinyButton from "../common/ShinyButton";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -33,6 +36,7 @@ const ChatSection = ({
   setIsPreview,
 }: ChatSectionProps) => {
   const { user } = useUser();
+  const router = useRouter();
   const { setShowModel, selectedModel, showModel } = useContext(
     AppContext
   ) as AppContextType;
@@ -54,6 +58,7 @@ const ChatSection = ({
 
   useEffect(() => {
     const fetchMetadata = async () => {
+      if (doc_name === "#Chat-with-GitDocs-AI-Assistant#") return;
       try {
         const response = await axios.patch(
           "/api/fetch/repositorydata",
@@ -113,12 +118,20 @@ const ChatSection = ({
 
     try {
       setIsAiGenerating(true);
-      const promptWithContext = `
+      let promptWithContext = `
             The project is ${doc_name}.
             The user's message is: ${inputValue}.
             ${previousContext}
             The project metadata is: ${JSON.stringify(projectMetadata)}.
         `;
+
+      if (doc_name === "#Chat-with-GitDocs-AI-Assistant#") {
+        promptWithContext = `
+          This is a general chat with the user.
+          The user's message is: ${inputValue}.
+          ${previousContext}
+        `;
+      }
 
       // Fetch the streamed response
       setContent("");
@@ -173,10 +186,49 @@ const ChatSection = ({
       textareaRef.current.style.height = "auto"; // Reset the height
       textareaRef.current.style.height = `${Math.min(
         textareaRef.current.scrollHeight,
-        3 * parseFloat(getComputedStyle(textareaRef.current).lineHeight || "20")
+        5 * parseFloat(getComputedStyle(textareaRef.current).lineHeight || "40")
       )}px`;
     }
   };
+
+  const defaultOptions = [
+    {
+      icon: <LuFile />,
+      label: "Generate Example Readme",
+      value: "example",
+      disabled: doc_name !== "#Chat-with-GitDocs-AI-Assistant#",
+    },
+    {
+      icon: <LuFile />,
+      label: "Generate Contribution Guidelines",
+      value: "contribution",
+      disabled: doc_name !== "#Chat-with-GitDocs-AI-Assistant#",
+    },
+    {
+      icon: <LuFile />,
+      label: "Improve Code Examples",
+      value: "code",
+      disabled: doc_name !== "#Chat-with-GitDocs-AI-Assistant#",
+    },
+    {
+      icon: <FaSyncAlt />,
+      label: "Improve my Readme",
+      value: "improve",
+      disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
+    },
+    {
+      icon: <FaFileAlt />,
+      label: "Make a new Readme",
+      value: "generate",
+      disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
+    },
+    {
+      icon: <FaBriefcase />,
+      label: "Professional Readme",
+      value: "professional",
+      disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
+    },
+  ];
 
   // Attach a scroll event listener to check if the user has scrolled up.
   useEffect(() => {
@@ -225,7 +277,14 @@ const ChatSection = ({
         <div className="group">
           <div className="z-20 rounded-full group-hover:hidden absolute top-1 left-11 text-xs">
             {projectMetadata?.type === "" && (
-              <Info size={16} className="text-[#DF737D]" />
+              <Info
+                size={16}
+                className={`${
+                  doc_name === "#Chat-with-GitDocs-AI-Assistant#"
+                    ? "text-[#F2BD57]"
+                    : "text-[#DF737D]"
+                }`}
+              />
             )}
           </div>
           <div
@@ -242,27 +301,41 @@ const ChatSection = ({
             <ChevronRight className="text-white me-6 flex-shrink-0" size={20} />
             <div className="text-white rounded-t-lg mx-auto flex gap-2 items-center justify-between h-12">
               <div
-                className={`flex relative items-center gap-2 text-sm border border-[#bbbbbb] cursor-pointer rounded-full p-2 ps-3 pe-2 ${
+                className={`flex relative items-center gap-2 text-sm border border-[#bbbbbb] cursor-pointer rounded-full ${
                   isPreview ? "max-w-[9rem]" : "max-w-[11rem]"
+                } ${
+                  doc_name === "#Chat-with-GitDocs-AI-Assistant#"
+                    ? "py-2.5 ps-3 pe-2"
+                    : "py-2 ps-3 pe-2"
                 }`}
-                onClick={() => setShowProjectMetadataForm(true)}
+                onClick={() => {
+                  if (doc_name === "#Chat-with-GitDocs-AI-Assistant#")
+                    return router.push("/dashboard?tab=projects");
+                  setShowProjectMetadataForm(true);
+                }}
               >
-                <div
-                  className={`rounded-full flex-shrink-0 bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${
-                    isPreview ? "w-6 h-6 text-xs" : "w-7 h-7 text-sm"
-                  }`}
-                >
-                  <p className="truncate w-[75%]">
-                    {doc_name.charAt(0).toUpperCase() +
-                      doc_name.charAt(1).toUpperCase()}
-                  </p>
-                </div>
+                {doc_name !== "#Chat-with-GitDocs-AI-Assistant#" ? (
+                  <div
+                    className={`rounded-full flex-shrink-0 bg-[#8bd375] text-black font-bold flex items-center justify-center transition-all duration-150 ${
+                      isPreview ? "w-6 h-6 text-xs" : "w-7 h-7 text-sm"
+                    }`}
+                  >
+                    <p className="truncate w-[75%]">
+                      {doc_name.charAt(0).toUpperCase() +
+                        doc_name.charAt(1).toUpperCase()}
+                    </p>
+                  </div>
+                ) : (
+                  <LuPlus size={isPreview ? 20 : 23} className="text-white" />
+                )}
                 <p
                   className={`hover:underline truncate w-[55%] ${
                     isPreview ? "text-xs max-w-[150px]" : "text-sm"
                   }`}
                 >
-                  {doc_name}
+                  {doc_name === "#Chat-with-GitDocs-AI-Assistant#"
+                    ? "Choose a project"
+                    : doc_name}
                 </p>
                 <LuChevronDown
                   className={`text-white transition-all duration-150 ${
@@ -270,20 +343,27 @@ const ChatSection = ({
                   }`}
                   size={isPreview ? 16 : 20}
                 />
-                {projectMetadata?.type === "" && (
+                {(projectMetadata?.type === "" ||
+                  doc_name === "#Chat-with-GitDocs-AI-Assistant#") && (
                   <TooltipProvider delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger>
                         <div className="z-20 rounded-full absolute top-0 right-0 text-xs">
                           <Info
                             size={16}
-                            className="text-[#DF737D] bg-[#1F1F1F] rounded-full"
+                            className={`${
+                              doc_name === "#Chat-with-GitDocs-AI-Assistant#"
+                                ? "text-[#F2BD57]"
+                                : "text-[#DF737D]"
+                            } bg-[#1F1F1F] rounded-full`}
                           />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="top" sideOffset={28}>
                         <p className="text-xs">
-                          Update project metadata for better results
+                          {doc_name === "#Chat-with-GitDocs-AI-Assistant#"
+                            ? "Choose a project to create a Readme"
+                            : "Update project metadata for better results"}
                         </p>
                       </TooltipContent>
                     </Tooltip>
@@ -317,47 +397,77 @@ const ChatSection = ({
               </button>
             </div>
             <div className="flex items-center gap-2 ms-0.5">
-              {message.length > 0 && (
-                <button
-                  className={`group flex items-center gap-2 cursor-pointer border hover:bg-[#F2BD57] hover:text-black transition-all duration-150 text-[#F2BD57] border-[#F2BD57] rounded-full p-3 ${
-                    isPreview ? "text-xs" : "text-sm"
-                  }`}
-                  onClick={handleReset}
-                >
-                  <HiArrowPath
-                    className="focus:animate-spin transition-all duration-100"
-                    size={16}
-                  />
-                  <span>Restart Chat</span>
-                </button>
-              )}
+              {message.length > 0 &&
+                doc_name !== "#Chat-with-GitDocs-AI-Assistant#" && (
+                  <button
+                    className={`group flex items-center gap-2 cursor-pointer border hover:bg-[#F2BD57] hover:text-black transition-all duration-150 text-[#F2BD57] border-[#F2BD57] rounded-full p-3 ${
+                      isPreview ? "text-xs" : "text-sm"
+                    }`}
+                    onClick={handleReset}
+                  >
+                    <HiArrowPath
+                      className="focus:animate-spin transition-all duration-100"
+                      size={16}
+                    />
+                    <span>Restart Chat</span>
+                  </button>
+                )}
             </div>
           </div>
         </div>
 
-        <div
-          ref={chatContainerRef}
-          className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-16 overflow-y-scroll h-[calc(100vh-5rem)]`}
-        >
-          {message.map((msg, index) => (
-            <Chat
-              key={index}
-              role={msg.role}
-              content={msg.content}
-              isPreview={isPreview}
-              isAiGenerating={isAiGenerating}
-            />
-          ))}
-        </div>
+        {message.length > 0 && (
+          <div
+            ref={chatContainerRef}
+            className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-16 overflow-y-scroll h-[calc(100vh-5rem)]`}
+          >
+            {message.map((msg, index) => (
+              <Chat
+                key={index}
+                role={msg.role}
+                content={msg.content}
+                isPreview={isPreview}
+                isAiGenerating={isAiGenerating}
+              />
+            ))}
+          </div>
+        )}
 
         <div
-          className={`absolute bottom-0 left-1/2 -translate-x-1/2 min-h-14 rounded-b-lg transition-all duration-300 w-full ${
+          className={`absolute left-1/2 -translate-x-1/2 min-h-14 rounded-b-lg transition-all duration-300 w-full ${
             isPreview ? "" : " px-56"
-          }`}
+          } ${message.length === 0 ? "top-1/2 -translate-y-1/2" : "bottom-0"}`}
         >
           <div
-            className={`flex items-end relative h-full border py-3 -mb-2 bg-[#141415] border-[#383737] transition-all duration-300 w-[90%] mx-auto rounded-2xl`}
+            className={`flex items-end relative h-full border py-3 border-[#383737] transition-all duration-300 w-[90%] mx-auto rounded-2xl ${
+              message.length === 0 ? "bg-transparent" : "-mb-2 bg-[#141415]"
+            }`}
           >
+            {message.length === 0 && (
+              <>
+                <div className="absolute -z-10 bottom-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-50 rounded-2xl"></div>
+                <h1 className="absolute -top-16 left-1/2 -translate-x-1/2 text-center text-4xl bg-gradient-to-b from-white to-[#a7a4a4] text-transparent bg-clip-text w-full font-bold">
+                  What can i help you with ?
+                </h1>
+                {
+                  <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full justify-center text-center text-white flex gap-3">
+                    {defaultOptions.map((option, index) => (
+                      <>
+                        {!option.disabled && (
+                          <ShinyButton
+                            key={index}
+                            label={option.label}
+                            icon={option.icon}
+                            isPreview={isPreview}
+                            onClick={() => {}}
+                          />
+                        )}
+                      </>
+                    ))}
+                  </div>
+                }
+              </>
+            )}
             <textarea
               placeholder={
                 isAiGenerating

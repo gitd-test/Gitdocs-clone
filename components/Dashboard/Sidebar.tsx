@@ -8,7 +8,7 @@ import {
     SetStateAction,
 } from "react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { LuUser } from "react-icons/lu";
+import { LuUser, LuBrain } from "react-icons/lu";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { AppContext } from "@/contexts/AppContext";
@@ -132,6 +132,36 @@ export default function Sidebar() {
                     </TooltipContent>
                     </Tooltip>
                 ))}
+                </TooltipProvider>
+            </ul>
+            <ul>
+                <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <li>
+                            <a
+                                onClick={() => {
+                                    router.push("/update_readme");
+                                }}
+                                className={cn(
+                                "w-full flex px-1.5 py-1.5 -mt-2 rounded-md group cursor-pointer",
+                                pathname === "/update_readme"
+                                    ? "bg-white text-black"
+                                    : "hover:bg-[#232A34] text-[#cfcfd1]"
+                                )}
+                            >
+                                <Image src={"/gitdoc_ai.png"} width={30} height={30} alt="logo" />
+                            </a>
+                            </li>
+                        </TooltipTrigger>
+                        <TooltipContent
+                            className="bg-white text-black text-xs"
+                            side="right"
+                            sideOffset={8}
+                        >
+                            <p>Gitdocs AI</p>
+                        </TooltipContent>
+                    </Tooltip>
                 </TooltipProvider>
             </ul>
             <ul className="mt-auto">

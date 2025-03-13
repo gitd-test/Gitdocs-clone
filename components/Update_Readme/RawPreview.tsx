@@ -9,7 +9,7 @@ const RawPreview = ({
   setContent: (content: string | ((prev: string) => string)) => void;
 }) => {
   return (
-    <div className="h-full bg-[#1e1e1e]">
+    <>
       {content ? (
         <Editor
           height="calc(100vh - 8rem)"
@@ -28,11 +28,11 @@ const RawPreview = ({
           }}
         />
       ) : (
-        <div className="h-[calc(100vh-15rem)] flex items-center justify-center text-gray-300">
+        <div className="h-[calc(100vh-11rem)] flex items-center justify-center text-gray-300">
           <p>No Preview Available</p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

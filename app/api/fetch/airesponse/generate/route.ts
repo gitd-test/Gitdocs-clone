@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
     - Include visual elements like badges, diagrams, and charts where appropriate
     - Ensure all critical project information is documented
     - Make documentation visually scannable and easy to navigate
+    - Brief explanation of any charts, diagrams, or badges included and how they enhance the documentation.
     
     This is the format you MUST follow in ALL responses:
     
@@ -75,9 +76,6 @@ export async function POST(request: NextRequest) {
     <!-- Include relevant badges, flowcharts, etc. -->
     <!-- Use blockquote (>) for sections where user needs to fill in details -->
     \`\`\`
-    
-    ### (DON'T include this in the response anywhere) Visualization Guide (these are just instructions for you to enhance the readme)
-    Brief explanation of any charts, diagrams, or badges included and how they enhance the documentation.
     
     Conclusion:
     - List of changes or improvements made

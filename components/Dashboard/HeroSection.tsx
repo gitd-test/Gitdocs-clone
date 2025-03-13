@@ -8,11 +8,12 @@ import RepoCards from "../common/RepoCards";
 import LoadingAnimation from "../common/LoadingAnimation";
 import axios from "axios";
 import RepoList from "../common/RepoList";
-import { PiWarning } from "react-icons/pi";
+import { PiInfo, PiWarning } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import GettingStarted from "../common/GettingStarted";
 import LoadingSkeleton from "./LoadingSkeleton";
+import { TfiWrite } from "react-icons/tfi";
 
 interface Repository {
   name: string;
@@ -33,6 +34,16 @@ const HeroSection = () => {
   const { gridView, setGridView, repositoriesUpdated, setRepositoriesUpdated, storedUser, setStoredUser, stopAllActions, setStopAllActions, setNumRepositories } = useContext(AppContext) as AppContextType;
   const [repositoriesLoading, setRepositoriesLoading] = useState(false);
   const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [showProjects, setShowProjects] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("tab")) {
+      if (searchParams.get("tab") === "projects") {
+        setShowProjects(true);
+      }
+      router.push("/dashboard");
+    }
+  }, [searchParams, router]);
 
   useEffect(() => {
     if (user && isSignedIn && !storedUser) {
@@ -192,6 +203,26 @@ const HeroSection = () => {
                 refresh
               </button>
             </div>
+          )}
+
+          {showProjects && (
+            <div className="flex items-center justify-between border py-1.5 px-3 rounded-md border-[#0791F9] gap-4 h-full w-full">
+              <div className="flex items-center gap-2 text-[#0791F9]">
+                  <PiInfo size={18} />
+                  <h3 className="text-sm text-[#0791F9] flex items-center gap-4">Add Repositories here, and click on the 
+                    <button className={`text-sm border-[#383737] flex gap-2 items-center hover:bg-[#1f1f1f] border px-2 py-[7px] text-[#ededed] cursor-pointer my-1`}
+                      disabled={true}>
+
+                      <TfiWrite size={16} />
+                      <span className="text-xs">Update Readme</span>
+                      </button>
+                      button to start generating Readme with Gitdocs AI
+                  </h3>
+                </div>
+                <button className="text-sm p-1 flex items-center gap-2 text-[#0791F9] hover:underline" onClick={() => setShowProjects(false)}>
+                  close
+                </button>
+              </div>
           )}
 
           <div

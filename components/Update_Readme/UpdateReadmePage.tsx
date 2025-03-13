@@ -30,7 +30,7 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
 
     const value = allReposotories.some((repo : any) => repo.name === doc_name);
 
-    if (value) {
+    if (value || doc_name === "#Chat-with-GitDocs-AI-Assistant#") {
       setVerified(true)
     } else {
       setVerified(false)
@@ -91,8 +91,8 @@ const UpdateReadmePage: React.FC<UpdateReadmePageProps> = ({ doc_name }) => {
 
     if (doc_name) {
       const docNameStr = Array.isArray(doc_name) ? doc_name[0] : doc_name.toString();
-      setNavbarTitle(docNameStr);
-      setIsSidebarUsed(false);
+      setNavbarTitle(doc_name === "#Chat-with-GitDocs-AI-Assistant#" ? "Chat with GitDocs AI" : docNameStr);
+      setIsSidebarUsed(doc_name === "#Chat-with-GitDocs-AI-Assistant#" ? true : false);
     }
   }, [doc_name, isSignedIn, setNavbarTitle, setIsSidebarUsed]);
 
