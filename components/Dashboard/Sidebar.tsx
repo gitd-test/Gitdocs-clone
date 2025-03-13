@@ -60,12 +60,6 @@ export default function Sidebar() {
         href: "/ai-models",
         isActive: pathname === "/ai-models",
         },
-        {
-        icon: FolderOpen,
-        label: "Projects",
-        href: "#",
-        isActive: pathname === "/projects",
-        },
     ];
 
     const downMenuItems = [

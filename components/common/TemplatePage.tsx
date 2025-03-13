@@ -6,6 +6,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
 import SubscriptionHero from "../Subscription/SubscriptionHero";
 import AiModelsHero from "../AiModels/AiModelsHero";
+import ProjectHero from "../Projects/ProjectHero";
 import { usePathname } from "next/navigation";
 
 interface AppContextType {
@@ -32,6 +33,7 @@ const TemplatePage = () => {
           <div className="max-w-[1600px] mx-auto">
             {pathname === "/subscription" && <SubscriptionHero />}
             {pathname === "/ai-models" && <AiModelsHero />}
+            {pathname === "/projects" && <ProjectHero />}
           </div>
         </div>
       </div>
