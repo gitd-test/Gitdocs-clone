@@ -20,6 +20,7 @@ import ProjectMetadataForm from "./ProjectMetadataForm";
 import axios from "axios";
 import ShinyButton from "../common/ShinyButton";
 import LoadingAnimation from "../common/LoadingAnimation";
+import { toast } from "sonner";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -117,6 +118,11 @@ const ChatSection = ({
   };
 
   const handleSend = async () => {
+
+    if ((storedUser?.usageOverview.totalTokens || 0 ) - (storedUser?.usageOverview.tokensUsed || 0) < 500) {
+      toast.error("Insufficient tokens.");
+      return;
+    }
     const inputValue = textareaRef.current?.value.trim();
 
     if (!inputValue || isAiGenerating) return;

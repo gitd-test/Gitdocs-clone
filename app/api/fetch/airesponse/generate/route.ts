@@ -5,7 +5,7 @@ import { fetchReadmeDb } from "../../../auth/repository/updateReadmeDb";
 import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 // Streaming helper function
-export async function* streamResponse(stream: AsyncIterable<any>) {
+async function* streamResponse(stream: AsyncIterable<any>) {
   for await (const part of stream) {
     const rawContent = part.choices[0]?.delta?.content || "";
     // Check if the chunk contains either marker

@@ -109,7 +109,7 @@ const NavBar = () => {
                     </div>
                 </div>
             </div>
-            {(storedUser?.usageOverview.totalTokens || 0 - (storedUser?.usageOverview.tokensUsed || 0)) === 0 && <div className="sticky top-0 z-50 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
+            {(storedUser?.usageOverview.totalTokens || 0 - (storedUser?.usageOverview.tokensUsed || 0)) < 500 && <div className="sticky top-0 z-50 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
                 Please add tokens in your account in order to generate README files with GitDocs AI.
             </div>}
         </>
