@@ -1,7 +1,7 @@
 "use client"
 
 import { LuArrowLeft, LuBell, LuCreditCard, LuPlus } from "react-icons/lu";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { useContext, useEffect, useState } from "react";
 import { Tooltip, TooltipTrigger, TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
 import Link from "next/link";
@@ -10,13 +10,6 @@ import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import LoadingBar from "react-top-loading-bar";
 
-interface AppContextType {
-    navbarTitle: string;
-    isSidebarUsed: boolean;
-    setRepositoriesUpdated: (repositoriesUpdated: boolean) => void;
-    stopAllActions: boolean;
-}
-
 
 const NavBar = () => {
 
@@ -24,7 +17,7 @@ const NavBar = () => {
     const pathname = usePathname();
     const [notifications, setNotifications] = useState(true);
     const [backHomeLoading, setBackHomeLoading] = useState(false);
-    const { navbarTitle, isSidebarUsed, setRepositoriesUpdated, stopAllActions } = useContext(AppContext) as AppContextType;
+    const { navbarTitle, storedUser, setRepositoriesUpdated, stopAllActions } = useContext(AppContext) as AppContextType;
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -116,8 +109,8 @@ const NavBar = () => {
                     </div>
                 </div>
             </div>
-            {(user && isSidebarUsed && "") && <div className="sticky top-0 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
-                Please add credits to your team in order to make API requests.
+            {(storedUser?.usageOverview.totalTokens || 0 - (storedUser?.usageOverview.tokensUsed || 0)) === 0 && <div className="sticky top-0 z-50 flex items-center justify-center text-[0.9rem] gap-4 px-6 py-4 h-11 bg-[#483C16] text-[#FFC106] tracking-wide">
+                Please add tokens in your account in order to generate README files with GitDocs AI.
             </div>}
         </>
     )

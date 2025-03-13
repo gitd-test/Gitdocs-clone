@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
   let readme = "";
 
-  if (!prompt.includes("This is a general chat with the user.")) {
+  if (!prompt.includes("This is a general chat with the user.") && !prompt.slice(prompt.length - 3, prompt.length).includes("999")) {
         
     const repository = await getRepositoryByNamePopulated(doc_name);
     

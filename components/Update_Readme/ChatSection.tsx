@@ -19,6 +19,7 @@ import {
 import ProjectMetadataForm from "./ProjectMetadataForm";
 import axios from "axios";
 import ShinyButton from "../common/ShinyButton";
+import LoadingAnimation from "../common/LoadingAnimation";
 
 interface ChatSectionProps {
   doc_name: string;
@@ -129,7 +130,7 @@ const ChatSection = ({
         promptWithContext = `
           This is a general chat with the user.
           The user's message is: ${inputValue}.
-          ${previousContext}
+          ${previousContext}999
         `;
       }
 
@@ -150,7 +151,7 @@ const ChatSection = ({
               const updatedMessages = [...prev];
               updatedMessages[updatedMessages.length - 1] = {
                 ...lastMessage,
-                content: lastMessage.content + msg.content,
+                content: lastMessage.content + msg.content.replace("Detailed answer to the user's request with explanations of what was included in the README and why", ""),
               };
               return updatedMessages;
             } else {
@@ -484,10 +485,16 @@ const ChatSection = ({
               disabled={isAiGenerating}
             />
 
-            <CircleArrowUp
-              className="text-[#B4B4B4] hover:text-white cursor-pointer w-14"
-              onClick={handleSend}
-            />
+            {!isAiGenerating ? (
+              <CircleArrowUp
+                className="text-[#B4B4B4] hover:text-white cursor-pointer w-14"
+                onClick={handleSend}
+              />
+            ) : (
+              <div className="me-5 mb-1 scale-150">
+                <LoadingAnimation />
+              </div>
+            )}
           </div>
         </div>
       </div>

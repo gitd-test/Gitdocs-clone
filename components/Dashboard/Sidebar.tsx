@@ -51,7 +51,7 @@ export default function Sidebar() {
         {
         icon: ScanSearch,
         label: "Docs Review",
-        href: "/review",
+        href: "#",
         isActive: pathname === "/review",
         },
         {
@@ -128,7 +128,7 @@ export default function Sidebar() {
                         side="right"
                         sideOffset={8}
                     >
-                        <p>{item.label}</p>
+                        <p>{item.icon === ScanSearch ? `${item.label} (To be added soon)` : item.label}</p>
                     </TooltipContent>
                     </Tooltip>
                 ))}

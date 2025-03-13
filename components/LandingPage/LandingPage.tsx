@@ -11,7 +11,7 @@ import Testimonials from "@/components/LandingPage/Testimonials";
 import FAQ from "@/components/LandingPage/FAQ";
 import CTA from "@/components/LandingPage/CTA";
 import Footer from "@/components/LandingPage/Footer";
-
+import ScaleSection from "./ScaleSection";
 const Index = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -43,6 +43,7 @@ const Index = () => {
       <main>
         <Hero />
         <Features />
+        <ScaleSection />
         <HowItWorks />
         <SupportedTechnologies />
         <Testimonials />
