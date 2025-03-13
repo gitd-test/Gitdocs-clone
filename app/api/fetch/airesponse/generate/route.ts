@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
   
 
   try {
-    const stream = await connectAI(JSON.stringify(updatedPrompt), model || "gemini-2.0-flash");
+    const stream = await connectAI(JSON.stringify(updatedPrompt), model || "gemini-2.0-flash-thinking-exp-01-21");
 
     const responseStream = new ReadableStream({
       async start(controller) {

@@ -9,7 +9,7 @@ import LoadingAnimation from "../common/LoadingAnimation";
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import LoadingBar from "react-top-loading-bar";
-
+import { tokenParser } from "@/lib/tokenParser";
 
 const NavBar = () => {
 
@@ -77,7 +77,7 @@ const NavBar = () => {
                                 <TooltipTrigger>
                                     <Link href="/subscription" className="flex items-center gap-2 border border-[#3D444D] rounded-md px-2 py-1.5 hover:bg-gray-800">
                                         <LuCreditCard size={18} />
-                                        <p className="text-xs">Tokens</p>
+                                        <p className="text-xs">Tokens: {tokenParser(storedUser?.usageOverview.totalTokens || 0 - (storedUser?.usageOverview.tokensUsed || 0))}</p>
                                     </Link>
 
                                 </TooltipTrigger>

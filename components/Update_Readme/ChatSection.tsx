@@ -38,14 +38,10 @@ const ChatSection = ({
 }: ChatSectionProps) => {
   const { user } = useUser();
   const router = useRouter();
-  const { setShowModel, selectedModel, showModel } = useContext(
-    AppContext
-  ) as AppContextType;
+  const { setShowModel, selectedModel, showModel } = useContext(AppContext) as AppContextType;
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const [message, setMessage] = useState<{ role: string; content: string }[]>(
-    []
-  );
+  const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const [showProjectMetadataForm, setShowProjectMetadataForm] = useState(false);
@@ -56,6 +52,7 @@ const ChatSection = ({
     license: "",
     additionalInfo: "",
   });
+  const [backupContent, setBackupContent] = useState("");
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -111,7 +108,7 @@ const ChatSection = ({
         if (lastPair[0].role === "user" && lastPair[1].role === "assistant") {
           return `The previous messages are:\nUser: ${
             lastPair[0].content
-          }\n To modify the Readme: ${content.trim()}`;
+          }\n To modify the Readme: ${content.trim() ? content.trim() : backupContent.trim()}`;
         }
       }
       return "";
@@ -135,6 +132,7 @@ const ChatSection = ({
       }
 
       // Fetch the streamed response
+      setBackupContent(content);
       setContent("");
       await fetchAIResponse(
         user?.id || "",
@@ -151,7 +149,7 @@ const ChatSection = ({
               const updatedMessages = [...prev];
               updatedMessages[updatedMessages.length - 1] = {
                 ...lastMessage,
-                content: lastMessage.content + msg.content.replace("Detailed answer to the user's request with explanations of what was included in the README and why", ""),
+                content: lastMessage.content + msg.content,
               };
               return updatedMessages;
             } else {
@@ -162,7 +160,7 @@ const ChatSection = ({
         },
         (chunk) => {
           setIsPreview(true);
-          setContent((prev) => prev + chunk.replace(/```markdown/g, ""));
+          setContent((prev) => prev + chunk);
         },
         (isPreview) => {
           console.log(isPreview);
