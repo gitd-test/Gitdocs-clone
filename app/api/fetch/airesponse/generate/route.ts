@@ -74,14 +74,14 @@ export async function POST(request: NextRequest) {
     
     This is the format you MUST follow in ALL responses:
     
-    Detailed answer to the user's request with explanations of what was included in the README and why.
+    consise answer to the user's request of what improvements can be made to the README.
     
     Readme:
     \`\`\`markdown
     <!-- Complete README.md content with proper markdown syntax -->
     <!-- Include relevant badges, flowcharts, etc. -->
     <!-- Use blockquote (>) for sections where user needs to fill in details -->
-    \`\`\`
+    markdown\`\`\`
     
     Conclusion:
     - List of changes or improvements made
