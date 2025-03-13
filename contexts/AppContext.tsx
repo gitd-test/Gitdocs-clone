@@ -71,6 +71,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setGridView(true);
     }
 
+    if (localStorage.getItem("numRepositories")) {
+      setNumRepositories(parseInt(localStorage.getItem("numRepositories") || "0"));
+    }
+
     if (localStorage.getItem("storedUser")) {
       setStoredUser(JSON.parse(localStorage.getItem("storedUser") || "{}"));
     }
