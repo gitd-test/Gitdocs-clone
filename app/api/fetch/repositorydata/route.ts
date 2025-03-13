@@ -69,8 +69,6 @@ export async function POST(request: NextRequest) {
 
     await commitChanges(user.githubUsername, doc_name, Number(user.installationId), message, content, branch); 
 
-    console.log("Changes committed");
-
     return NextResponse.json({ message: "Repository updated successfully" }, { status: 200 });
 
 }

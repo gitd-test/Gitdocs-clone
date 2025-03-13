@@ -1,26 +1,39 @@
+import React from "react";
+import Editor from "@monaco-editor/react";
+
 const RawPreview = ({
-    content,
-    setContent,
+  content,
+  setContent,
 }: {
-    content: string;
-    setContent: (content: string | ((prev: string) => string)) => void;
+  content: string;
+  setContent: (content: string | ((prev: string) => string)) => void;
 }) => {
-    return (
-        <>
-
-        {content ? <textarea
-            className="h-[calc(100vh-10rem)] bg-transparent text-[#e0e3e7] focus:outline-none w-full p-4 resize-none rounded-b-lg overflow-y-auto whitespace-pre-wrap"
-            value={content.replace(/\\n/g, "\n").trim()}
-            onChange={(e) => {
-                setContent(e.target.value);
-            }}
-        /> : 
-        <div className="h-[calc(100vh-15rem)] flex items-center justify-center">
-            <p>No Preview Available</p>
-        </div>}
-
-        </>
-    );
+  return (
+    <div className="h-full bg-[#1e1e1e]">
+      {content ? (
+        <Editor
+          height="calc(100vh - 8rem)"
+          defaultLanguage="markdown"
+          value={content.replace(/\\n/g, "\n").trim()} // Fixed missing parenthesis here
+          onChange={(value) => {
+            setContent(value || ""); 
+          }}
+          options={{
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            lineNumbers: "on",
+            roundedSelection: false,
+            wordWrap: "on",
+            theme: "vs-dark",
+          }}
+        />
+      ) : (
+        <div className="h-[calc(100vh-15rem)] flex items-center justify-center text-gray-300">
+          <p>No Preview Available</p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default RawPreview;

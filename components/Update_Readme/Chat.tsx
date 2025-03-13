@@ -64,7 +64,9 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
 
                             <Tooltip>
                                 <TooltipTrigger>
-                                    <Bug className="text-[#B4B4B4] hover:text-white cursor-pointer" size={18} />
+                                    <a target="_blank" rel="noopener noreferrer" href="https://docs.google.com/forms/d/e/1FAIpQLSfhb7jq5653iPXupiCsMp7FuhO2OmkeSNTpQq-fZa9ULMwgDw/viewform?usp=dialog">
+                                        <Bug className="text-[#B4B4B4] hover:text-white cursor-pointer" size={18} />
+                                    </a>
                                 </TooltipTrigger>
                                 <TooltipContent className="bg-[#ededed] text-black">
                                 <p className="text-xs">Report a Bug</p>
