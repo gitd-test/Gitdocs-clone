@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import OpenAI from "openai";
 import { tokenize } from "../geminiTokenizer";
 import { updateTokensUsedOverview } from "../../auth/overview/clientOverviewServices";
@@ -13,30 +16,47 @@ export async function connectAI(userId: string, prompt: string, model: string, b
     const previousReadme = parsedPrompt.previousReadme || "";
 
     let apiKey = "";
-    const API_KEYS_LIST = [process.env.GEMINI_API_KEY, process.env.KLUSTER_API_KEY];
+    let openai: OpenAI;
 
-    if (base_url === "https://generativelanguage.googleapis.com/v1beta/openai/") {
-        apiKey = API_KEYS_LIST[0] || "";
-    } else if (base_url === "https://api.kluster.ai/v1") {
-        apiKey = API_KEYS_LIST[1] || "";
+    if (base_url === "not_required") {
+        // Use the OPENAI_API_KEY from .env and default OpenAI endpoint/logic
+        apiKey = process.env.OPENAI_API_KEY || "";
+        if (!apiKey) {
+            throw new Error("Missing OPENAI_API_KEY in environment variables");
+        }
+        openai = new OpenAI({ apiKey });
+    } else {
+        // Use custom base_url and select API key accordingly
+        const API_KEYS_LIST = [process.env.GEMINI_API_KEY, process.env.KLUSTER_API_KEY];
+        if (base_url === "https://generativelanguage.googleapis.com/v1beta/openai/") {
+            apiKey = API_KEYS_LIST[0] || "";
+        } else if (base_url === "https://api.kluster.ai/v1") {
+            apiKey = API_KEYS_LIST[1] || "";
+        }
+        if (!apiKey) {
+            throw new Error(`Missing API key for base URL ${base_url} in environment variables`);
+        }
+        openai = new OpenAI({
+            apiKey: apiKey,
+            baseURL: base_url
+        });
     }
 
-    const openai = new OpenAI({
-        apiKey: apiKey,
-        baseURL: base_url
-    });
-    
     const response = await openai.chat.completions.create({
         model: model,
         messages: [
-            { role: "system", content: `You are an expert README generator that creates comprehensive, visually appealing documentation with proper markdown formatting. Goals: Create professional README files with consistent structure, Include visual elements like badges, diagrams, and charts where appropriate, Ensure all critical project information is documented, Make documentation visually scannable and easy to navigate, Brief explanation of any charts, diagrams, or badges included and how they enhance the documentation.` },
+            {
+                role: "system",
+                content:
+                    "You are an expert README generator that creates comprehensive, visually appealing documentation with proper markdown formatting. Goals: Create professional README files with consistent structure, Include visual elements like badges, diagrams, and charts where appropriate, Ensure all critical project information is documented, Make documentation visually scannable and easy to navigate, Brief explanation of any charts, diagrams, or badges included and how they enhance the documentation."
+            },
             { role: "system", content: systemPrompt },
             {
                 role: "user",
-                content: userPrompt + (previousReadme ? `\n\nPrevious README: ${previousReadme}` : ""),
-            },
+                content: userPrompt + (previousReadme ? `\n\nPrevious README: ${previousReadme}` : "")
+            }
         ],
-        stream: true,
+        stream: true
     });
 
     // Create two identical streams using tee()
@@ -53,7 +73,6 @@ export async function connectAI(userId: string, prompt: string, model: string, b
 
 async function updateTokensUsed(userId: string, prompt: string, response: any, model: string) {
     try {
-        
         let responseAccumulator = "";
         
         // Process the stream to accumulate the full response text
@@ -65,8 +84,7 @@ async function updateTokensUsed(userId: string, prompt: string, response: any, m
         let responseTokens = 0;
         let promptTokens = 0;
 
-
-        if (model.includes("deepseek") || model.includes("klusterai")) {
+        if (model.includes("deepseek") || model.includes("klusterai") || model.includes("gpt") || model.includes("o3-mini")) {
             responseTokens = await tokenize(responseAccumulator);
             promptTokens = await tokenize(prompt);
         } else {
