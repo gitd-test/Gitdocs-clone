@@ -2,17 +2,14 @@
 
 import Sidebar from "../Dashboard/Sidebar";
 import NavBar from "../Dashboard/NavBar";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
 import SubscriptionHero from "../Subscription/SubscriptionHero";
 import AiModelsHero from "../AiModels/AiModelsHero";
 import ProjectHero from "../Projects/ProjectHero";
 import { usePathname } from "next/navigation";
-
-interface AppContextType {
-    setIsSidebarUsed: (isSidebarUsed: boolean) => void;
-    setNavbarTitle: (navbarTitle: string) => void;
-}
+import { checkMobile } from "@/lib/MobileRestrict";
+import MobileNotification from "./MobileNotification";
 
 const TemplatePage = () => {
 
@@ -24,6 +21,10 @@ const TemplatePage = () => {
         setIsSidebarUsed(true);
         setNavbarTitle("Subscription");
     }, [setIsSidebarUsed, setNavbarTitle]);
+
+    if (checkMobile()) {
+      return <MobileNotification />;
+  }
 
     return (
         <div className="flex relative z-30 bg-[#0D0D0D] text-[#EDEDED]">

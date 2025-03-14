@@ -3,15 +3,13 @@
 import Sidebar from "@/components/Dashboard/Sidebar";
 import HeroSection from "@/components/Dashboard/HeroSection";
 import NavBar from "@/components/Dashboard/NavBar";
-import { AppContext } from "@/contexts/AppContext";
+import { AppContext, AppContextType } from "@/contexts/AppContext";
 import { useContext, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-interface AppContextType {
-  setNavbarTitle: (navbarTitle: string) => void;
-  setIsSidebarUsed: (isSidebarUsed: boolean) => void;
-}
-
+import { checkMobile } from "@/lib/MobileRestrict";
+import MobileNotification from "@/components/common/MobileNotification";
 const DashboardPage = () => {
+
   const { setNavbarTitle, setIsSidebarUsed } = useContext(AppContext) as AppContextType;
 
   const { user } = useUser();
@@ -25,6 +23,10 @@ const DashboardPage = () => {
     }
     setIsSidebarUsed(true);
   }, [setNavbarTitle, setIsSidebarUsed, user]);
+
+  if (checkMobile()) {
+    return <MobileNotification />;
+  }
 
   return (
     <div className="flex relative z-30 bg-[#0D0D0D] text-[#EDEDED]">

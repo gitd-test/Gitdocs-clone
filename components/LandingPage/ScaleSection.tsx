@@ -129,7 +129,7 @@ const ScaleSection = () => {
             <button
               key={index}
               onClick={() => handleTabChange(button.label)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 shadow-sm
+              className={`flex items-center gap-2 md:px-6 md:py-3 rounded-full text-sm px-3 py-2 transition-all duration-300 shadow-sm
                 ${button.label === activeTab ? 
                   'bg-gradient-to-r from-gitdocs-blue to-gitdocs-purple text-white font-medium shadow-lg shadow-gitdocs-blue/20 scale-105' : 
                   'bg-white/80 text-gray-600 border border-gray-200 hover:border-gitdocs-blue/20 hover:text-gitdocs-blue'}`}
