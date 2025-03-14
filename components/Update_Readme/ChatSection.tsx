@@ -233,40 +233,47 @@ const ChatSection = ({
     {
       icon: <LuFile />,
       label: "Generate Example Readme",
-      value: "example",
+      value:
+        "Create a sample README with 10-12 distinct sections using placeholder text. Include sections like Introduction, Installation, Usage, Features, Examples, License, and Contact Information to showcase a well-structured document.",
       disabled: doc_name !== "#Chat-with-GitDocs-AI-Assistant#",
     },
     {
       icon: <LuFile />,
       label: "Generate Contribution Guidelines",
-      value: "contribution",
+      value:
+        "Draft a CONTRIBUTING.md file that outlines clear guidelines for project contributions. Include placeholder sections such as Code of Conduct, How to Contribute, Issue Reporting, and Pull Request Process.",
       disabled: doc_name !== "#Chat-with-GitDocs-AI-Assistant#",
     },
     {
       icon: <LuFile />,
       label: "Improve Code Examples",
-      value: "code",
+      value:
+        "Enhance the existing code examples within the README by refining the code syntax, adding explanatory comments, and incorporating best practices for clarity and readability.",
       disabled: doc_name !== "#Chat-with-GitDocs-AI-Assistant#",
     },
     {
       icon: <FaSyncAlt />,
       label: "Improve my Readme",
-      value: "improve",
+      value:
+        "Revise and optimize the current README based on user feedback. Focus on improving clarity, structure, and detail to elevate the documentation’s professionalism and usability.",
       disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
     },
     {
       icon: <FaFileAlt />,
       label: "Make a new Readme",
-      value: "generate",
+      value:
+        "Generate a comprehensive new README for the project. Ensure it covers essential areas such as Overview, Installation, Usage, API Documentation, and Troubleshooting with detailed instructions.",
       disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
     },
     {
       icon: <FaBriefcase />,
       label: "Professional Readme",
-      value: "professional",
+      value:
+        "Craft a polished and professional README aimed at both developers and stakeholders. Include sections for project overview, installation, usage guidelines, contribution instructions, and contact details, all written in a refined tone.",
       disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
     },
   ];
+  
 
   // Attach a scroll event listener to check if the user has scrolled up.
   useEffect(() => {
@@ -434,9 +441,8 @@ const ChatSection = ({
                 />
               </button>
             </div>
-            <div className="flex items-center gap-2 ms-0.5">
-              {message.length > 0 &&
-                doc_name !== "#Chat-with-GitDocs-AI-Assistant#" && (
+            <div className="flex items-center gap-2 ms-1">
+              {message.length > 0 && (
                   <button
                     className={`group flex items-center gap-2 cursor-pointer border hover:bg-[#F2BD57] hover:text-black transition-all duration-150 text-[#F2BD57] border-[#F2BD57] rounded-full p-3 ${
                       isPreview ? "text-xs" : "text-sm"
@@ -457,7 +463,7 @@ const ChatSection = ({
         {message.length > 0 && (
           <div
             ref={chatContainerRef}
-            className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-16 overflow-y-scroll h-[calc(100vh-5rem)]`}
+            className={`chat-container flex px-3 flex-col gap-2 pt-12 pb-20 overflow-y-scroll h-[calc(100vh-5rem)]`}
           >
             {message.map((msg, index) => (
               <Chat
@@ -474,13 +480,21 @@ const ChatSection = ({
         <div
           className={`absolute left-1/2 -translate-x-1/2 min-h-14 rounded-b-lg transition-all duration-300 w-full ${
             isPreview ? "" : " px-56"
-          } ${message.length === 0 ? "top-1/2 -translate-y-1/2" : "bottom-0"}`}
+          } ${message.length === 0 ? "top-1/2 -translate-y-1/2" : "bottom-3"}`}
         >
           <div
             className={`flex items-end relative h-full border py-3 border-[#383737] transition-all duration-300 w-[90%] mx-auto rounded-2xl ${
               message.length === 0 ? "bg-transparent" : "-mb-2 bg-[#141415]"
             }`}
           >
+
+            {message.length > 0 && (
+              <div className="absolute -z-10 -bottom-[6.4rem] left-1/2 -translate-x-1/2 w-fit whitespace-nowrap text-center h-full bg-gradient-to-b from-transparent to-black opacity-50 rounded-2xl">
+                <p className="text-white text-xs">
+                  GitDocs AI can make mistakes. Please review the changes before saving.
+                </p>
+              </div>
+            )}
             {message.length === 0 && (
               <>
                 <div className="absolute -z-10 bottom-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-50 rounded-2xl"></div>
@@ -497,7 +511,10 @@ const ChatSection = ({
                             label={option.label}
                             icon={option.icon}
                             isPreview={isPreview}
-                            onClick={() => {}}
+                            onClick={() => {
+                              textareaRef.current!.value = option.value;
+                              handleSend();
+                            }}
                           />
                         )}
                       </>

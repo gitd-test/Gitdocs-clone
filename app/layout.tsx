@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { Toaster } from "@/components/ui/sonner";
+import { ScrollPositionProvider } from '@/contexts/ScrollContextProvider'; 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -107,7 +108,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <GoogleAnalytics />
             <Theme>
               <AppProvider>
-                {children}
+                <ScrollPositionProvider>
+                  {children}
+                </ScrollPositionProvider>
                 <Analytics />
                 <SpeedInsights />
                 <Toaster />

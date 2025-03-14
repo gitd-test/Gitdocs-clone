@@ -110,7 +110,7 @@ const Chat = ({role, content, isPreview, isAiGenerating}: ChatProps) => {
                 role === "user" ?
                 <p className="">{content.replace(/\\n/g, "\n")}</p>
                 :
-                <ReactMarkdown className="mt-2" remarkPlugins={[remarkGfm]}>{content.replace(/\\n/g, "\n")}</ReactMarkdown>
+                <ReactMarkdown className="mt-2" remarkPlugins={[remarkGfm]}>{content.replace(/\\n/g, "\n").replace(/```markdown/g, "").replace(/markdown```/g, "")}</ReactMarkdown>
                 }
             </div>
         </div>
