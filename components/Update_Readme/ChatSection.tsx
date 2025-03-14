@@ -119,26 +119,39 @@ const ChatSection = ({
   };
 
   const handleSend = async () => {
-
-    if ((storedUser?.usageOverview.totalTokens || 0 ) - (storedUser?.usageOverview.tokensUsed || 0) < 500) {
-      toast.error("Insufficient tokens.");
+    // Check for token availability with a more informative message
+    if ((storedUser?.usageOverview.totalTokens || 0) - (storedUser?.usageOverview.tokensUsed || 0) < 500) {
+      toast.error("Insufficient tokens. You need at least 500 tokens to generate a README.");
       return;
     }
+  
     const inputValue = textareaRef.current?.value.trim();
-
-    if (!inputValue || isAiGenerating) return;
-
+  
+    // Better validation handling
+    if (!inputValue) {
+      toast.warning("Please enter a message before sending.");
+      return;
+    }
+  
+    if (isAiGenerating) {
+      toast.info("AI is still generating a response. Please wait.");
+      return;
+    }
+  
     // Clear the textarea and reset its height
     textareaRef.current!.value = "";
     handleInput();
-
+  
+    // Keep track of the current message length for error recovery
+    const currentMessageLength = message.length;
+  
     // Add the user's message and prepare an empty assistant response in the state
     setMessage((prev) => [
       ...prev,
       { role: "user", content: inputValue },
       { role: "assistant", content: "" },
     ]);
-
+  
     // Get the last two messages, assuming messages alternate (user then assistant)
     const previousContext = (() => {
       if (message.length >= 2) {
@@ -151,61 +164,112 @@ const ChatSection = ({
       }
       return "";
     })();
-
+  
+    // Add error handling with recovery
     try {
       setIsAiGenerating(true);
       let promptWithContext = `
-            The project is ${doc_name}.
-            The user's message is: ${inputValue}.
-            ${previousContext}
-            The project metadata is: ${JSON.stringify(projectMetadata)}.
-        `;
-
+        The project is ${doc_name}.
+        The user's message is: ${inputValue}.
+        ${previousContext}
+        The project metadata is: ${JSON.stringify(projectMetadata)}.
+      `;
+  
       if (doc_name === "#Chat-with-GitDocs-AI-Assistant#") {
         promptWithContext = `
           This is a general chat with the user.
           The user's message is: ${inputValue}.
-          ${previousContext}999
+          ${previousContext}999888777666555444333222111000999888777666555444333222111000
         `;
       }
-
-      // Fetch the streamed response
+  
+      // Save the current content before starting new generation
       setBackupContent(content);
       setContent("");
-      await fetchAIResponse(
-        user?.id || "",
-        promptWithContext,
-        doc_name,
-        selectedModel.value,
-        (msg) => {
-          // Append to the last message block instead of creating a new one
-          setMessage((prev) => {
-            const lastMessage = prev[prev.length - 1];
-
-            if (lastMessage && lastMessage.role === msg.role) {
-              // Update content of the last message
-              const updatedMessages = [...prev];
-              updatedMessages[updatedMessages.length - 1] = {
-                ...lastMessage,
-                content: lastMessage.content + msg.content,
-              };
-              return updatedMessages;
-            } else {
-              // Add a new message block if roles are different
-              return [...prev, msg];
-            }
-          });
-        },
-        (chunk) => {
-          setIsPreview(true);
-          setContent((prev) => prev + chunk);
-        },
-        (isPreview) => {
-          console.log(isPreview);
-        }
-      );
+      
+      // Track starting time for timeout detection
+      const startTime = Date.now();
+      const timeoutDuration = 180000; // 180 seconds timeout
+      let timeoutId: NodeJS.Timeout;
+      
+      // Create a timeout detection mechanism
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error("Response generation timed out"));
+        }, timeoutDuration);
+      });
+      
+      // Use Promise.race to handle potential timeouts
+      await Promise.race([
+        fetchAIResponse(
+          user?.id || "",
+          promptWithContext,
+          doc_name,
+          selectedModel.value,
+          selectedModel.base_url,
+          (msg) => {
+            // Append to the last message block instead of creating a new one
+            setMessage((prev) => {
+              const lastMessage = prev[prev.length - 1];
+  
+              if (lastMessage && lastMessage.role === msg.role) {
+                // Update content of the last message
+                const updatedMessages = [...prev];
+                updatedMessages[updatedMessages.length - 1] = {
+                  ...lastMessage,
+                  content: lastMessage.content + msg.content,
+                };
+                return updatedMessages;
+              } else {
+                // Add a new message block if roles are different
+                return [...prev, msg];
+              }
+            });
+          },
+          (chunk) => {
+            setIsPreview(true);
+            setContent((prev) => prev + chunk);
+          },
+          (isPreview) => {
+            setIsPreview(isPreview);
+          }
+        ),
+        timeoutPromise
+      ]).finally(() => {
+        clearTimeout(timeoutId);
+      });
+      
+      // Check if the operation took too long but didn't time out
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime > timeoutDuration * 0.8) { // 80% of timeout duration
+        console.warn("Response generation was slow but completed");
+      }
+      
     } catch (error) {
       console.error("Error fetching response:", error);
+      
+      // Determine if it's a timeout error or other error
+      const errorMessage = error instanceof Error && error.message === "Response generation timed out" 
+        ? "Request timed out. Please try again with a shorter prompt." 
+        : "Error generating response. Please try again.";
+      
+      toast.error(errorMessage);
+      
+      // Recovery: restore the previous state if we have a new assistant message that's empty
+      setMessage((prev) => {
+        if (prev.length > currentMessageLength && 
+            prev[prev.length - 1].role === "assistant" && 
+            prev[prev.length - 1].content === "") {
+          return prev.slice(0, -2); // Remove the empty assistant message and the user's message
+        }
+        return prev;
+      });
+      
+      // Restore the previous content if generation failed
+      if (!content.trim()) {
+        setContent(backupContent);
+      }
+      
     } finally {
       setIsAiGenerating(false);
       setUsageOverviewtrigger((prev) => prev + 1);
@@ -273,31 +337,56 @@ const ChatSection = ({
       disabled: doc_name === "#Chat-with-GitDocs-AI-Assistant#",
     },
   ];
-  
-
-  // Attach a scroll event listener to check if the user has scrolled up.
+  // Handle scroll events to detect user's position
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     if (!chatContainer) return;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = chatContainer;
-      // Consider the user at the bottom if within 50px of the bottom
-      const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
-      setAutoScrollEnabled(isAtBottom);
+      // Update threshold to 100px for better UX
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setAutoScrollEnabled(isNearBottom);
     };
 
     chatContainer.addEventListener("scroll", handleScroll);
     return () => chatContainer.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Auto scroll when message updates only if autoScrollEnabled is true.
+// Scroll handler with tighter threshold
+useEffect(() => {
+  const chatContainer = chatContainerRef.current;
+  if (!chatContainer) return;
+
+  const handleScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = chatContainer;
+    // Use 1px threshold to disable auto-scroll on any manual upward scroll
+    const isAtBottom = scrollHeight - scrollTop - clientHeight <= 1;
+    setAutoScrollEnabled(isAtBottom);
+  };
+
+  chatContainer.addEventListener("scroll", handleScroll);
+  return () => chatContainer.removeEventListener("scroll", handleScroll);
+}, []);
+
+  // Auto-scroll only when at bottom
   useEffect(() => {
-    if (chatContainerRef.current && autoScrollEnabled) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+    const chatContainer = chatContainerRef.current;
+    if (!chatContainer || !autoScrollEnabled) return;
+
+    // Smooth scroll to bottom with timing fix
+    requestAnimationFrame(() => {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    });
+  }, [message]); // Only trigger on messages change
+
+  // Initial scroll to bottom
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-  }, [message, autoScrollEnabled]);
+  }, []);
 
   const handleFocus = () => {
     textareaRef.current?.focus();
@@ -489,8 +578,8 @@ const ChatSection = ({
           >
 
             {message.length > 0 && (
-              <div className="absolute -z-10 -bottom-[6.4rem] left-1/2 -translate-x-1/2 w-fit whitespace-nowrap text-center h-full bg-gradient-to-b from-transparent to-black opacity-50 rounded-2xl">
-                <p className="text-white text-xs">
+              <div className="absolute -z-10 -bottom-[6.4rem] bg-[#141415] left-1/2 -translate-x-1/2 w-fit whitespace-nowrap h-full text-[#F2BD57]">
+                <p className="text-[#bbbbbb] text-xs">
                   GitDocs AI can make mistakes. Please review the changes before saving.
                 </p>
               </div>

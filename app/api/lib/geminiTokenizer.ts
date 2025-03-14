@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export const tokenize = async (prompt: string, modelValue: string) => {
+export const tokenize = async (prompt: string, modelValue: string = "gemini-2.0-flash") => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
   const model = genAI.getGenerativeModel({
     model: modelValue,

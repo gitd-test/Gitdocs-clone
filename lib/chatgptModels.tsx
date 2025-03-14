@@ -15,7 +15,8 @@ export const chatgptModels = [
         ctaText: "Visit",
         content: <p>
           GPT-4 is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://api.openai.com/v1"
     },
     {
         name: "GPT-4o",
@@ -33,7 +34,8 @@ export const chatgptModels = [
         ctaText: "Visit",
         content: <p>
           GPT-4o is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://api.openai.com/v1"
     },
     {
         name: "GPT-4o mini",
@@ -51,7 +53,8 @@ export const chatgptModels = [
         ctaText: "Visit",
         content: <p>
           GPT-4o mini is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://api.openai.com/v1"
     },
     {
         name: "GPT-3.5 turbo",
@@ -69,6 +72,7 @@ export const chatgptModels = [
         ctaText: "Visit",
         content: <p>
           GPT-3.5 turbo is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://api.openai.com/v1"
     },
 ];

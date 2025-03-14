@@ -3,6 +3,7 @@ export async function fetchAIResponse(
   prompt: string,
   docName: string,
   model: string,
+  base_url: string,
   onUpdateMessages: (message: { role: string; content: string }) => void,
   onUpdateContent: (chunk: string) => void,
   onUpdatePreviewContent: (isPreviewing: boolean) => void
@@ -16,8 +17,12 @@ export async function fetchAIResponse(
         "Content-Type": "application/json",
         Authorization: `Bearer ${userId}`,
       },
-      body: JSON.stringify({ prompt, doc_name: docName, model }),
+      body: JSON.stringify({ prompt, doc_name: docName, model, base_url }),
     });
+
+    if (!response.ok) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
 
     if (!response.body) {
       throw new Error("Response body is empty");
@@ -40,36 +45,79 @@ export async function fetchAIResponse(
       if (tokens) {
         for (const token of tokens) {
           callback(token);
-          // Wait 10ms between tokens; adjust delay as needed.
-          await new Promise((resolve) => setTimeout(resolve, 10));
+          // Wait 5ms between tokens; adjust delay as needed.
+          await new Promise((resolve) => setTimeout(resolve, 5));
         }
       }
     }
 
-    // Helper function to parse markdown code blocks
+    // Enhanced function to handle markdown code blocks
     function parseMarkdownContent(text: string): string {
-      // Check if we're entering a markdown block
-      if (!inMarkdownBlock && text.includes("```markdown")) {
-        inMarkdownBlock = true;
-        // Get content after ```markdown
-        const parts = text.split("```markdown");
-        // Return only the content after ```markdown
-        return parts.length > 1 ? parts[1] : "";
-      }
-      // Check if we're exiting a markdown block
-      else if (inMarkdownBlock && text.includes("markdown```")) {
-        inMarkdownBlock = false;
-        // Get content before the closing ```
-        const parts = text.split("markdown```");
-        // Return only the content before ```
-        return parts.length > 0 ? parts[0] : "";
-      }
-      // If we're inside a markdown block, return the content as is
-      else if (inMarkdownBlock) {
+      // If we're not in a markdown block, check if we're entering one
+      if (!inMarkdownBlock) {
+        if (text.includes("```markdown")) {
+          inMarkdownBlock = true;
+          // Get content after ```markdown
+          const parts = text.split("```markdown");
+          markdownBuffer = parts.length > 1 ? parts[1] : "";
+          return markdownBuffer;
+        }
+        // Additional check for markdown code blocks without the "markdown" specifier
+        else if (text.includes("```")) {
+          inMarkdownBlock = true;
+          // Get content after ```
+          const parts = text.split("```");
+          // If there's content after the first ```, use it
+          if (parts.length > 1) {
+            // Check if the part right after ``` is a language specifier
+            const firstPart = parts[1].trim();
+            if (firstPart.startsWith("markdown") || firstPart.startsWith("\nmarkdown")) {
+              markdownBuffer = parts[1].replace(/^markdown\s*/, "");
+            } else {
+              markdownBuffer = parts[1];
+            }
+            return markdownBuffer;
+          }
+          return "";
+        }
         return text;
       }
-      // If we're not in a markdown block and there's no markers, return as is
+      // If we're in a markdown block, check if we're exiting
       else {
+        // Check for various ways the markdown block might end
+        if (text.includes("```") || text.includes("markdown```") || text.includes("```markdown")) {
+          let content = "";
+          // Handle different closing patterns
+          if (text.includes("markdown```")) {
+            const parts = text.split("markdown```");
+            content = parts[0];
+            // Handle any content after the closing ```
+            if (parts.length > 1 && parts[1].trim()) {
+              inMarkdownBlock = false;
+              return content;
+            }
+          } else if (text.includes("```markdown")) {
+            // This is a case where one ``` block ends and another begins
+            const parts = text.split("```markdown");
+            content = parts[0].split("```")[0];
+            // Set up for the next markdown block
+            if (parts.length > 1) {
+              markdownBuffer = parts[1];
+            }
+          } else if (text.includes("```")) {
+            const parts = text.split("```");
+            content = parts[0];
+            // Handle any content after the closing ```
+            if (parts.length > 1 && parts[1].trim()) {
+              inMarkdownBlock = false;
+              return content;
+            }
+          }
+          
+          inMarkdownBlock = false;
+          return content;
+        }
+        // If we're inside a markdown block and there's no closing tag, return the content as is
         return text;
       }
     }
@@ -207,6 +255,22 @@ export async function fetchAIResponse(
             await updateTokenByToken(chunk, (token: string) => {
               onUpdateMessages({ role: "assistant", content: token });
             });
+            
+            // Handle case where the conclusion was sent but no explicit end marker was received
+            if (chunk.trim().endsWith(".") && conclusionContent.split("\n").length > 3) {
+              // If we have a substantial conclusion that ends with a period, we might be done
+              const timerId = setTimeout(() => {
+                // Only trigger this if we don't receive more content within a short time
+                if (currentSection === "conclusion") {
+                  currentSection = "end";
+                  onUpdatePreviewContent(false);
+                  inMarkdownBlock = false;
+                }
+              }, 2000); // 2 second timeout
+              
+              // Clear the timeout if we get more content
+              return () => clearTimeout(timerId);
+            }
           }
         }
       }
@@ -214,6 +278,10 @@ export async function fetchAIResponse(
     
   } catch (error) {
     console.error("Error fetching AI response:", error);
+    onUpdateMessages({ 
+      role: "assistant", 
+      content: "\n\nSorry, there was an error processing your request. Please try again." 
+    });
     throw error;
   }
 }

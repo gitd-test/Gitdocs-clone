@@ -8,7 +8,8 @@ export const geminiModels = [
         ctaText: "Visit",
         content: <p>
           Gemini 2.0 Flash is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://generativelanguage.googleapis.com/v1beta/openai/"
     },
     {
         name: "Gemini 2.0 Flash-Lite",
@@ -19,7 +20,8 @@ export const geminiModels = [
         ctaText: "Visit",
         content: <p>
           Gemini 2.0 Flash-Lite is a lightweight version of Gemini 2.0 Flash that can handle basic language tasks.
-        </p>
+        </p>,
+        base_url: "https://generativelanguage.googleapis.com/v1beta/openai/"
     },
     {
         name: "Gemini 2.0 Pro Exp.",
@@ -30,7 +32,8 @@ export const geminiModels = [
         ctaText: "Visit",
         content: <p>
           Gemini 2.0 Pro Exp. is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://generativelanguage.googleapis.com/v1beta/openai/"
     },
     {
         name: "Gemini 2.0 Flash Thinking",
@@ -41,6 +44,7 @@ export const geminiModels = [
         ctaText: "Visit",
         content: <p>
           Gemini 2.0 Flash Thinking is a powerful language model that can understand and generate text in a wide range of languages.
-        </p>
+        </p>,
+        base_url: "https://generativelanguage.googleapis.com/v1beta/openai/"
     },
 ];

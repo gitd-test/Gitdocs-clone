@@ -3,13 +3,14 @@ import { useContext } from "react";
 import { RxArrowTopRight } from "react-icons/rx";
 import { geminiModels } from "@/lib/geminiModels";
 import { chatgptModels } from "@/lib/chatgptModels";
-import { claudeModels } from "@/lib/claudeModels";
+import { metaLlamaModels } from "@/lib/metaLlamaModels";
 import { deepseekModels } from "@/lib/deepseekModels";
 import { LuChevronRight } from "react-icons/lu";
 
 interface Model {
   name: string;
   value: string;
+  base_url: string;
 }
 
 const ChooseModel = ({ modelProviders }: { modelProviders: any[] }) => {
@@ -20,9 +21,9 @@ const ChooseModel = ({ modelProviders }: { modelProviders: any[] }) => {
         return geminiModels
     } else if (selectedProvider == "ChatGPT") {
         return chatgptModels
-    } else if (selectedProvider == "Claude") {
-        return claudeModels
-    }else if (selectedProvider == "DeepSeek") {
+    } else if (selectedProvider == "Meta Llama") {
+        return metaLlamaModels
+    } else if (selectedProvider == "DeepSeek") {
         return deepseekModels
     } else {
         return geminiModels

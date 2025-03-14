@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { tokenize } from "../geminiTokenizer";
 import { updateTokensUsedOverview } from "../../auth/overview/clientOverviewServices";
 
-export async function connectAI(userId: string, prompt: string, model: string) {
+export async function connectAI(userId: string, prompt: string, model: string, base_url: string) {
     if (!userId) {
         throw new Error("User not found");
     }
@@ -12,15 +12,25 @@ export async function connectAI(userId: string, prompt: string, model: string) {
     const userPrompt = parsedPrompt.userPrompt;
     const previousReadme = parsedPrompt.previousReadme || "";
 
+    let apiKey = "";
+    const API_KEYS_LIST = [process.env.GEMINI_API_KEY, process.env.KLUSTER_API_KEY];
+
+    if (base_url === "https://generativelanguage.googleapis.com/v1beta/openai/") {
+        apiKey = API_KEYS_LIST[0] || "";
+    } else if (base_url === "https://api.kluster.ai/v1") {
+        apiKey = API_KEYS_LIST[1] || "";
+    }
+
     const openai = new OpenAI({
-        apiKey: process.env.GEMINI_API_KEY,
-        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+        apiKey: apiKey,
+        baseURL: base_url
     });
     
     const response = await openai.chat.completions.create({
         model: model,
         messages: [
-            { role: "system", content: `You are a helpful assistant. ${systemPrompt}` },
+            { role: "system", content: `You are an expert README generator that creates comprehensive, visually appealing documentation with proper markdown formatting. Goals: Create professional README files with consistent structure, Include visual elements like badges, diagrams, and charts where appropriate, Ensure all critical project information is documented, Make documentation visually scannable and easy to navigate, Brief explanation of any charts, diagrams, or badges included and how they enhance the documentation.` },
+            { role: "system", content: systemPrompt },
             {
                 role: "user",
                 content: userPrompt + (previousReadme ? `\n\nPrevious README: ${previousReadme}` : ""),
@@ -43,7 +53,7 @@ export async function connectAI(userId: string, prompt: string, model: string) {
 
 async function updateTokensUsed(userId: string, prompt: string, response: any, model: string) {
     try {
-        const promptTokens = await tokenize(prompt, model);
+        
         let responseAccumulator = "";
         
         // Process the stream to accumulate the full response text
@@ -51,8 +61,18 @@ async function updateTokensUsed(userId: string, prompt: string, response: any, m
             const content = chunk.choices[0]?.delta?.content || "";
             responseAccumulator += content;
         }
-        
-        const responseTokens = await tokenize(responseAccumulator, model);
+
+        let responseTokens = 0;
+        let promptTokens = 0;
+
+
+        if (model.includes("deepseek") || model.includes("klusterai")) {
+            responseTokens = await tokenize(responseAccumulator);
+            promptTokens = await tokenize(prompt);
+        } else {
+            responseTokens = await tokenize(responseAccumulator, model);
+            promptTokens = await tokenize(prompt, model);
+        }
         
         if (responseTokens > 20000) {
             console.warn("Response exceeds token limit");

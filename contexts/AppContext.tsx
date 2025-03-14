@@ -48,6 +48,7 @@ export interface AppContextType {
 interface Model {
   name: string;
   value: string;
+  base_url: string;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -60,7 +61,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [repositoriesUpdated, setRepositoriesUpdated] = useState(false);
   const [showModel, setShowModel] = useState<boolean>(false);
   const [selectedProvider, setSelectedProvider] = useState<string>("Gemini");
-  const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash"});
+  const [selectedModel, setSelectedModel] = useState<Model>({name: "Gemini 2.0 Flash", value: "gemini-2.0-flash", base_url: "https://generativelanguage.googleapis.com/v1beta/openai/"});
   const [stopAllActions, setStopAllActions] = useState<boolean>(false);
   const [numRepositories, setNumRepositories] = useState<number>(0);
 
