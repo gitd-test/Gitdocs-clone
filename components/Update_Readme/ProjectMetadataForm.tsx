@@ -56,10 +56,10 @@ const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, se
 
                     <div className="flex flex-col gap-2 mt-4">
                         <label htmlFor="technologies" className="text-sm font-semibold">Technologies Used <span className="text-xs text-[#999]">(separated by commas)</span></label>
-                        <input onChange={(e) => setProjectMetadata({...projectMetadata, technologies: e.target.value})} type="text" id="technologies" name="technologies" value={projectMetadata?.technologies} placeholder="Next.js, Tailwind CSS, TypeScript" className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
+                        <textarea onChange={(e) => setProjectMetadata({...projectMetadata, technologies: e.target.value})} id="technologies" name="technologies" value={projectMetadata?.technologies} placeholder="Next.js, Tailwind CSS, TypeScript" className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
 
                         <label htmlFor="features" className="text-sm font-semibold">Main Features <span className="text-xs text-[#999]">(separated by commas)</span></label>
-                        <input onChange={(e) => setProjectMetadata({...projectMetadata, features: e.target.value})} type="text" id="features" name="features" value={projectMetadata?.features} placeholder="User Authentication, Payment Gateway, etc." className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
+                        <textarea onChange={(e) => setProjectMetadata({...projectMetadata, features: e.target.value})} id="features" name="features" value={projectMetadata?.features} placeholder="User Authentication, Payment Gateway, etc." className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
                     </div>
 
                     <p className="text-[#999] border-b-2 border-[#353535] pb-1 mt-5 text-sm">Additional Information</p>

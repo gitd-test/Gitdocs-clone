@@ -27,7 +27,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a
-                href="https://www.linkedin.com"
+                href="https://www.linkedin.com/company/gitdocs-ai/?viewAsMember=true"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-gitdocs-blue"

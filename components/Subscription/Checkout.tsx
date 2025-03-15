@@ -100,13 +100,13 @@ export default function Checkout({ plan, activePlanId, isLoading, handleCreateOr
                     </div>
                 </div>
                 <label htmlFor="email" className="text-sm font-semibold">Email</label>
-                <input disabled type="text" id="email" name="email" placeholder="abc@gmail.com" value={address.contact} className={`w-full text-[#ededed]/60 text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535] cursor-not-allowed`} />
+                <input disabled type="text" id="email" name="email" value={address.contact} className={`w-full text-[#ededed]/60 text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535] cursor-not-allowed`} />
 
                 <label htmlFor="contact" className="text-sm font-semibold">Phone Number</label>
-                <input type="text" id="contact" name="contact" maxLength={10} placeholder="9876543210" value={phoneNumber} onChange={(e) => handlePhoneNumberChange(e)} className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`}/>
+                <input type="text" id="contact" name="contact" minLength={10} maxLength={10} value={phoneNumber} onChange={(e) => handlePhoneNumberChange(e)} className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`}/>
 
                 <label htmlFor="address" className="text-sm font-semibold">Address</label>
-                <textarea disabled id="address" name="address" placeholder="123 Main St, Anytown, USA" value={address.address1 ? address.address1+", "+address.address2+"\n"+address.city+","+address.state+"\n"+address.zip+"\n"+address.country : ""} className={`w-full text-sm text-[#ededed]/60 cursor-not-allowed py-1.5 resize-none h-24 px-4 bg-transparent rounded-md border border-[#353535]`} />
+                <textarea disabled id="address" name="address" value={address.address1 ? address.address1+", "+address.address2+"\n"+address.city+","+address.state+"\n"+address.zip+"\n"+address.country : ""} className={`w-full text-sm text-[#ededed]/60 cursor-not-allowed py-1.5 resize-none h-24 px-4 bg-transparent rounded-md border border-[#353535]`} />
             </div>
           
         <SheetClose asChild>

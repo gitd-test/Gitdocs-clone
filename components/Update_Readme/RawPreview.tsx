@@ -13,22 +13,57 @@ const RawPreview = ({
 }) => {
   const { rawScrollPosition, setRawScrollPosition } = useScrollPosition();
   const editorRef = useRef<any>(null);
+  const hasRestoredRef = useRef(false);
+  const scrollListenerRef = useRef<any>(null);
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
     
-    // Restore scroll position when component mounts
-    if (rawScrollPosition > 0) {
+    // Restore scroll position when editor is fully mounted and ready
+    if (rawScrollPosition > 0 && !hasRestoredRef.current) {
+      // Use a more substantial delay to ensure the editor is fully ready
       setTimeout(() => {
-        editor.setScrollTop(rawScrollPosition);
-      }, 0);
+        if (editorRef.current) {
+          console.log("Restoring raw editor scroll position:", rawScrollPosition);
+          editorRef.current.setScrollTop(rawScrollPosition);
+          hasRestoredRef.current = true;
+        }
+      }, 100);
     }
 
-    // Add scroll listener to save position
-    editor.onDidScrollChange((e: any) => {
-      setRawScrollPosition(e.scrollTop);
+    // Add scroll listener with throttling to save position
+    scrollListenerRef.current = editor.onDidScrollChange((e: any) => {
+      // Only update on significant scroll changes
+      const newPosition = e.scrollTop;
+      const difference = Math.abs(newPosition - rawScrollPosition);
+      
+      if (difference > 20 || newPosition === 0) {
+        console.log("Updating raw editor scroll position:", newPosition);
+        setRawScrollPosition(newPosition);
+      }
     });
   };
+
+  // Save scroll position when component unmounts
+  useEffect(() => {
+    return () => {
+      if (editorRef.current) {
+        const currentPos = editorRef.current.getScrollTop();
+        if (currentPos > 0) {
+          console.log("Saving raw editor scroll position at unmount:", currentPos);
+          setRawScrollPosition(currentPos);
+        }
+      }
+      
+      // Clean up scroll listener
+      if (scrollListenerRef.current) {
+        scrollListenerRef.current.dispose();
+      }
+      
+      // Reset restoration flag
+      hasRestoredRef.current = false;
+    };
+  }, [setRawScrollPosition]);
 
   return (
     <>

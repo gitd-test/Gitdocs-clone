@@ -8,22 +8,62 @@ import { useScrollPosition } from "@/contexts/ScrollContextProvider";
 const MarkdownPreview = ({ content }: { content: string }) => {
   const { markdownScrollPosition, setMarkdownScrollPosition } = useScrollPosition();
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const hasRestoredRef = useRef(false);
+  
   // Clean and preprocess content
   const cleanContent = content
     .replace(/\\n/g, "\n")
     .replace(/\\`\\`\\`/g, "```")
     .trim();
 
+  // Explicitly save scroll position when component unmounts
   useEffect(() => {
-    // Restore scroll position when component mounts
-    if (containerRef.current && markdownScrollPosition > 0) {
-      containerRef.current.scrollTop = markdownScrollPosition;
+    return () => {
+      if (containerRef.current) {
+        const currentPos = containerRef.current.scrollTop;
+        if (currentPos > 0) {
+          // Ensure we capture the final scroll position
+          console.log("Saving scroll position:", currentPos);
+          setMarkdownScrollPosition(currentPos);
+        }
+      }
+    };
+  }, [setMarkdownScrollPosition]);
+
+  // Restore scroll position after content has rendered
+  useEffect(() => {
+    // Make sure content is available and we have a scroll position to restore
+    if (content && containerRef.current && markdownScrollPosition > 0 && !hasRestoredRef.current) {
+      // Use a more substantial delay to ensure markdown has fully rendered
+      const timer = setTimeout(() => {
+        if (containerRef.current) {
+          console.log("Restoring scroll position:", markdownScrollPosition);
+          containerRef.current.scrollTop = markdownScrollPosition;
+          hasRestoredRef.current = true;
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  }, [markdownScrollPosition]);
+  }, [content, markdownScrollPosition]);
+
+  // Reset restoration flag when component unmounts
+  useEffect(() => {
+    return () => {
+      hasRestoredRef.current = false;
+    };
+  }, []);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    setMarkdownScrollPosition(e.currentTarget.scrollTop);
+    // Only update on significant scroll changes to reduce state updates
+    const newPosition = e.currentTarget.scrollTop;
+    const difference = Math.abs(newPosition - markdownScrollPosition);
+    
+    // Only update if scrolled more than 20px to reduce unnecessary state updates
+    if (difference > 20) {
+      console.log("Updating scroll position:", newPosition);
+      setMarkdownScrollPosition(newPosition);
+    }
   };
 
   return (
