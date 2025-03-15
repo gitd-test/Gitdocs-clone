@@ -392,6 +392,16 @@ useEffect(() => {
     textareaRef.current?.focus();
   };
 
+  useEffect(() => {
+    if (doc_name === "#Chat-with-GitDocs-AI-Assistant#") {
+      setShowProjectMetadataForm(false);
+      return;
+    }
+    if (projectMetadata?.type === "") {
+      setShowProjectMetadataForm(true);
+    }
+  }, [doc_name]);
+
   return (
     <>
       {showProjectMetadataForm && (

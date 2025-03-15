@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchRepositoryMetadata, getClientRepositories, updateRepositoryMetadata } from "@/app/api/auth/repository/clientRepositoryServices";
 import { commitChanges } from "@/app/api/auth/repository/commitChanges";
 import connectMongoWithRetry from "../../lib/db/connectMongo";
-import { auth } from "@clerk/nextjs/server";
 import User from "@/app/api/lib/models/User";
 
 export async function GET(request: NextRequest) {

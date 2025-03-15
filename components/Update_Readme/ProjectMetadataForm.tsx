@@ -1,12 +1,71 @@
 "use client"
 
 import { X, AlertCircle, UserRoundPen, Building2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import FileTree from "./FileTree";
+import { useUser } from "@clerk/nextjs";
 
 const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, setShowProjectMetadataForm}: { doc_name: string, projectMetadata: any, setProjectMetadata: (projectMetadata: any) => void, setShowProjectMetadataForm: (show: boolean) => void }) => {
 
+    const { user } = useUser();
     const [error, setError] = useState("");
+    const [fileTreeError, setFileTreeError] = useState("");
+    const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+    const [initialTree, setInitialTree] = useState<any[]>([]);
+
+    // Initial tree structure displayed when the page loads
+
+    useEffect(() => {
+        (async () => {
+          try {
+            const response = await axios.get("/api/fetch/filetreedata", {
+              params: {
+                userId: user?.id,
+                doc_name: doc_name,
+                path: ""
+              }
+            });
+            
+            console.log(response);
+      
+            // This block may never be reached for non-200 status since axios rejects such responses
+            if (response.status === 200) {
+              setInitialTree(response.data);
+            } else {
+              setFileTreeError("Failed to fetch initial tree");
+            }
+          } catch (error: any) {
+            console.error("Error fetching initial tree:", error);
+            setFileTreeError("Error fetching initial tree");
+          }
+        })();
+      }, []);
+      
+        
+    const fetchChildren = async (path: string[]): Promise<any[]> => {
+        
+        // Example API call
+        try {
+            // Replace with your actual API endpoint
+            const response = await axios.get("/api/fetch/filetreedata", {
+                params: {
+                    userId: user?.id,
+                    doc_name: doc_name,
+                    path: path.join('/')
+                }
+            });
+            
+            if (response.status !== 200) {
+            throw new Error('Failed to fetch children');
+            }
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching children:', error);
+            return [];
+        }
+    };
 
     const handleClose = () => {
         setShowProjectMetadataForm(false);
@@ -55,19 +114,11 @@ const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, se
                     </div>
 
                     <div className="flex flex-col gap-2 mt-4">
-                        <label htmlFor="technologies" className="text-sm font-semibold">Technologies Used <span className="text-xs text-[#999]">(separated by commas)</span></label>
-                        <textarea onChange={(e) => setProjectMetadata({...projectMetadata, technologies: e.target.value})} id="technologies" name="technologies" value={projectMetadata?.technologies} placeholder="Next.js, Tailwind CSS, TypeScript" className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
+                        <FileTree initialTree={initialTree} fetchChildren={fetchChildren} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} error={fileTreeError} setError={setFileTreeError} />
 
-                        <label htmlFor="features" className="text-sm font-semibold">Main Features <span className="text-xs text-[#999]">(separated by commas)</span></label>
-                        <textarea onChange={(e) => setProjectMetadata({...projectMetadata, features: e.target.value})} id="features" name="features" value={projectMetadata?.features} placeholder="User Authentication, Payment Gateway, etc." className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
                     </div>
 
-                    <p className="text-[#999] border-b-2 border-[#353535] pb-1 mt-5 text-sm">Additional Information</p>
-
-                    <div className="flex flex-col gap-2 mt-4">
-                        <label htmlFor="additional-info" className="text-sm font-semibold">Any other information you want to add <span className="text-xs text-[#999]">(separated by commas)</span></label>
-                        <textarea onChange={(e) => setProjectMetadata({...projectMetadata, additionalInfo: e.target.value})} id="additional-info" name="additional-info" value={projectMetadata?.additionalInfo} placeholder="Additional Information" className={`w-full text-sm py-1.5 px-4 bg-transparent rounded-md border border-[#353535]`} />
-                    </div>
+                    <p className="text-[#999] border-b-2 border-[#353535] pb-1 mt-8 text-sm">Additional Information</p>
 
                     <div className="flex flex-col gap-2 mt-4">
                         <label htmlFor="license" className="text-sm font-semibold">License <span className="text-xs text-[#999]">(separated by commas)</span></label>
@@ -81,7 +132,6 @@ const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, se
                     </div>
 
                 </form>
-                
             </div>
         </div>
     )
