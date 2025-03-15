@@ -88,6 +88,8 @@ javascript
 ### Code Examples (API Usage)
 
 > *This assumes you expose your AI functionality via an API endpoint.*
+  
+  try{
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -99,7 +101,6 @@ javascript
     console.error("Error fetching README:", error);
     return null;
   }
-}
 
 
 
@@ -178,7 +179,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 For questions, bug reports, or feature requests, please contact us at:
 
-*   **Email:** support@gitdocs.ai
+*   **Email:** abhas.kumar@gitdocs.space
 *   **GitHub Issues:** [https://github.com/YOUR_GITHUB_USERNAME/Gitdocs.ai/issues](https://github.com/YOUR_GITHUB_USERNAME/Gitdocs.ai/issues)
 
 > *Replace `YOUR_GITHUB_USERNAME` with your GitHub username.*
