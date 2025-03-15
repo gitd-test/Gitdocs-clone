@@ -101,11 +101,11 @@ const TreeNodeComponent = ({ item, depth = 0, fetchChildren, path = [], selected
           <span className="w-4"></span>
           <File size={16} className="text-gray-500" />
           <label htmlFor={name} className="ml-1 text-sm flex-1 h-full py-1 cursor-pointer">{name}</label>
-          <input type="checkbox" className="w-3.5 h-3.5 text-[#ededed] bg-[#1F1F1F] border-[#353535] rounded focus:ring-[#ededed] focus:ring-1" id={name} checked={selectedFiles.includes(name)} onChange={(e) => {
+          <input type="checkbox" className="w-3.5 h-3.5 text-[#ededed] bg-[#1F1F1F] border-[#353535] rounded focus:ring-[#ededed] focus:ring-1" id={name} checked={selectedFiles.includes(path.join('/')+name)} onChange={(e) => {
             if (e.target.checked) {
-              setSelectedFiles([...selectedFiles, name]);
+              setSelectedFiles([...selectedFiles, path.join('/')+name]);
             } else {
-              setSelectedFiles(selectedFiles.filter((file) => file !== name));
+              setSelectedFiles(selectedFiles.filter((file) => file !== path.join('/')+name));
             }
           }} />
         </div>
@@ -131,7 +131,7 @@ const FileTree = ({ initialTree, fetchChildren, selectedFiles, setSelectedFiles,
       <h2 className="font-semibold mb-3 text-sm text-red-400">{error}</h2>
     </div> 
     : 
-    <div className="p-2 max-h-96 h-44 border border-[#353535] rounded-md overflow-y-auto shadow-sm bg-transparent w-full">
+    <div className="p-2 max-h-96 min-h-44 border border-[#353535] rounded-md overflow-y-auto shadow-sm bg-transparent w-full">
       {initialTree.length > 0 && <h2 className="font-semibold mb-3 text-sm">Choose the files for context</h2>}
       {initialTree.length > 0 ? initialTree.map((item, index) => (
         <>
@@ -144,13 +144,10 @@ const FileTree = ({ initialTree, fetchChildren, selectedFiles, setSelectedFiles,
           />
         </>
       )) :
-      <>
-      <h2 className="font-semibold mb-3 text-sm">Fetching File Tree...</h2>
-       <div className="flex items-center gap-2 py-2 w-fit mx-auto">
+       <div className="flex gap-2 py-2 w-fit h-fit mt-14 mx-auto">
             <LoadingAnimation />
             <span className="text-sm text-gray-500">Loading...</span>
         </div>
-        </>
         }
     </div>}
     </>
