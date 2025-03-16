@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { getRepositoryByNamePopulated } from "@/app/api/auth/repository/clientRepositoryServices";
 import { fetchReadmeDb } from "../../../auth/repository/updateReadmeDb";
 import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
-import axios from "axios";
+import { FetchAllFilesData } from "@/app/api/lib/filesFetcher";
 
 async function* streamResponse(stream: AsyncIterable<any>) {
   let buffer = "";
@@ -149,27 +149,3 @@ export async function POST(request: NextRequest) {
     return new Response(JSON.stringify({ message: "Error generating response" }), { status: 500 });
   }
 }
-
-export async function FetchAllFilesData (userId: string, files: string[], doc_name: string) {
-  try {
-  const response = await axios.post(
-    `http://localhost:3000/api/fetch/filetreedata`,
-    {
-      files,
-      doc_name,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${userId}`,
-      },
-    }
-  );
-
-  return response.data;
-
-} catch (error) {
-
-  return [{name: "error", content: "error"}];
-}
-};
