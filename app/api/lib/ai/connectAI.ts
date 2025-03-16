@@ -42,7 +42,7 @@ export async function connectAI(userId: string, prompt: string, model: string, b
         });
     }
 
-    console.log(contextFilesData, "contextFilesData1", contextFilesData.length);
+    console.log(contextFilesData.length);
 
     const response = await openai.chat.completions.create({
         model: model,
