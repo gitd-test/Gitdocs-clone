@@ -5,7 +5,7 @@ import OpenAI from "openai";
 import { tokenize } from "../geminiTokenizer";
 import { updateTokensUsedOverview } from "../../auth/overview/clientOverviewServices";
 
-export async function connectAI(userId: string, prompt: string, model: string, base_url: string) {
+export async function connectAI(userId: string, prompt: string, model: string, base_url: string, contextFilesData: {name: string, content: string}[]) {
     if (!userId) {
         throw new Error("User not found");
     }
@@ -50,10 +50,14 @@ export async function connectAI(userId: string, prompt: string, model: string, b
                 content:
                     "You are an expert README generator that creates comprehensive, visually appealing documentation with proper markdown formatting. Goals: Create professional README files with consistent structure, Include visual elements like badges, diagrams, and charts where appropriate, Ensure all critical project information is documented, Make documentation visually scannable and easy to navigate, Brief explanation of any charts, diagrams, or badges included and how they enhance the documentation."
             },
-            { role: "system", content: systemPrompt },
+            {   role: "system", content: systemPrompt },
             {
                 role: "user",
                 content: userPrompt + (previousReadme ? `\n\nPrevious README: ${previousReadme}` : "")
+            },
+            {
+                role: "user",
+                content: contextFilesData.length > 0 ? `The files with content are: ${contextFilesData.map((file) => `${file.name}: ${file.content}`).join("\n")}` : ""
             }
         ],
         stream: true

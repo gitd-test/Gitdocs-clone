@@ -4,6 +4,7 @@ export async function fetchAIResponse(
   docName: string,
   model: string,
   base_url: string,
+  selectedFiles: string[],
   onUpdateMessages: (message: { role: string; content: string }) => void,
   onUpdateContent: (chunk: string) => void,
   onUpdatePreviewContent: (isPreviewing: boolean) => void
@@ -17,7 +18,7 @@ export async function fetchAIResponse(
         "Content-Type": "application/json",
         Authorization: `Bearer ${userId}`,
       },
-      body: JSON.stringify({ prompt, doc_name: docName, model, base_url }),
+      body: JSON.stringify({ prompt, doc_name: docName, model, base_url, selectedFiles }),
     });
 
     if (!response.ok) {

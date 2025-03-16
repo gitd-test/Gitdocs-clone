@@ -46,6 +46,7 @@ const ChatSection = ({
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const [showProjectMetadataForm, setShowProjectMetadataForm] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [projectMetadata, setProjectMetadata] = useState({
     type: "",
     technologies: "",
@@ -207,6 +208,7 @@ const ChatSection = ({
           doc_name,
           selectedModel.value,
           selectedModel.base_url,
+          selectedFiles,
           (msg) => {
             // Append to the last message block instead of creating a new one
             setMessage((prev) => {
@@ -410,6 +412,8 @@ useEffect(() => {
           projectMetadata={projectMetadata}
           setProjectMetadata={setProjectMetadata}
           setShowProjectMetadataForm={setShowProjectMetadataForm}
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
         />
       )}
       <div

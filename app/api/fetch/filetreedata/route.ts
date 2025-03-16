@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFileTree } from "@/app/api/auth/filetree/clientFileTreeServices";
+import { getFileTree, getFileData } from "@/app/api/auth/filetree/clientFileTreeServices";
 
 export async function GET(request: NextRequest) {
 
@@ -19,3 +19,34 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(fileTree);
 }
+
+export async function POST(request: NextRequest) {
+    // Access files and doc_name from the request body
+    const { files, doc_name } = await request.json();
+    
+    // Optionally, you can also check the Authorization header:
+    const userId = request.headers.get("Authorization")?.split(" ")[1];
+
+    if (!userId) {
+        return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+    }
+
+    if (files.length === 0) {
+        return NextResponse.json({ error: "No files to fetch" }, { status: 400 });
+    }
+
+    try {
+        const allFileData = await getFileData(userId as string, files, doc_name as string);
+
+        if (!allFileData) {
+            return NextResponse.json({ error: "No file data found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: 'Data received', allFileData }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: "Error fetching file data" }, { status: 500 });
+    }
+
+
+}
+

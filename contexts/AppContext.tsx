@@ -65,6 +65,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [stopAllActions, setStopAllActions] = useState<boolean>(false);
   const [numRepositories, setNumRepositories] = useState<number>(0);
 
+
   useEffect(() => {
     if (localStorage.getItem("gridView")) {
       setGridView(localStorage.getItem("gridView") === "true");

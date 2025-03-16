@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Folder, File, ChevronRight, ChevronDown } from "lucide-react";
 import {
   Collapsible,
@@ -101,11 +101,11 @@ const TreeNodeComponent = ({ item, depth = 0, fetchChildren, path = [], selected
           <span className="w-4"></span>
           <File size={16} className="text-gray-500" />
           <label htmlFor={name} className="ml-1 text-sm flex-1 h-full py-1 cursor-pointer">{name}</label>
-          <input type="checkbox" className="w-3.5 h-3.5 text-[#ededed] bg-[#1F1F1F] border-[#353535] rounded focus:ring-[#ededed] focus:ring-1" id={name} checked={selectedFiles.includes(path.join('/')+name)} onChange={(e) => {
+          <input type="checkbox" className="w-3.5 h-3.5 text-[#ededed] bg-[#1F1F1F] border-[#353535] rounded focus:ring-[#ededed] focus:ring-1" id={name} checked={selectedFiles.includes((path+","+name).split(",").join("/"))} onChange={(e) => {
             if (e.target.checked) {
-              setSelectedFiles([...selectedFiles, path.join('/')+name]);
+              setSelectedFiles([...selectedFiles, (path+","+name).split(",").join("/")]);
             } else {
-              setSelectedFiles(selectedFiles.filter((file) => file !== path.join('/')+name));
+              setSelectedFiles(selectedFiles.filter((file) => file !== (path+","+name).split(",").join("/")));
             }
           }} />
         </div>
@@ -124,6 +124,8 @@ interface FileTreeProps {
 }
 
 const FileTree = ({ initialTree, fetchChildren, selectedFiles, setSelectedFiles, error, setError }: FileTreeProps) => {
+  useEffect(() => {
+  }, [selectedFiles]);
   return (
     <>
     {error ? 
@@ -132,7 +134,8 @@ const FileTree = ({ initialTree, fetchChildren, selectedFiles, setSelectedFiles,
     </div> 
     : 
     <div className="p-2 max-h-96 min-h-44 border border-[#353535] rounded-md overflow-y-auto shadow-sm bg-transparent w-full">
-      {initialTree.length > 0 && <h2 className="font-semibold mb-3 text-sm">Choose the files for context</h2>}
+
+      {initialTree.length > 0 && <h2 className="font-semibold mb-3 text-sm">Add files<span className="text-xs text-gray-500"> (Readme.md, package.json are added by default)</span></h2>}
       {initialTree.length > 0 ? initialTree.map((item, index) => (
         <>
         <TreeNodeComponent 

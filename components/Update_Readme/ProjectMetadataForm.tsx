@@ -6,12 +6,11 @@ import axios from "axios";
 import FileTree from "./FileTree";
 import { useUser } from "@clerk/nextjs";
 
-const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, setShowProjectMetadataForm}: { doc_name: string, projectMetadata: any, setProjectMetadata: (projectMetadata: any) => void, setShowProjectMetadataForm: (show: boolean) => void }) => {
+const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, setShowProjectMetadataForm, selectedFiles, setSelectedFiles }: { doc_name: string, projectMetadata: any, setProjectMetadata: (projectMetadata: any) => void, setShowProjectMetadataForm: (show: boolean) => void, selectedFiles: string[], setSelectedFiles: (selectedFiles: string[]) => void }) => {
 
     const { user } = useUser();
     const [error, setError] = useState("");
     const [fileTreeError, setFileTreeError] = useState("");
-    const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
     const [initialTree, setInitialTree] = useState<any[]>([]);
 
     // Initial tree structure displayed when the page loads
@@ -21,26 +20,19 @@ const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, se
           try {
             const response = await axios.get("/api/fetch/filetreedata", {
               params: {
-                userId: user?.id,
+                userId: user?.id || "",
                 doc_name: doc_name,
                 path: ""
               }
             });
-            
-            console.log(response);
-      
-            // This block may never be reached for non-200 status since axios rejects such responses
-            if (response.status === 200) {
-              setInitialTree(response.data);
-            } else {
-              setFileTreeError("Failed to fetch initial tree");
-            }
+                  
+            setInitialTree(response.data);
           } catch (error: any) {
             console.error("Error fetching initial tree:", error);
             setFileTreeError("Error fetching initial tree");
           }
         })();
-      }, []);
+    }, []);
       
         
     const fetchChildren = async (path: string[]): Promise<any[]> => {
@@ -50,7 +42,7 @@ const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, se
             // Replace with your actual API endpoint
             const response = await axios.get("/api/fetch/filetreedata", {
                 params: {
-                    userId: user?.id,
+                    userId: user?.id || "",
                     doc_name: doc_name,
                     path: path.join('/')
                 }
