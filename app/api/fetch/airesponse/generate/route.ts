@@ -126,6 +126,8 @@ export async function POST(request: NextRequest) {
 
     const contextFilesData = await FetchAllFilesData(userId, selectedFiles, doc_name);
 
+    console.log(contextFilesData, "contextFilesData");
+
     const stream = await connectAI(userId, JSON.stringify(updatedPrompt), model || "gemini-2.0-flash", base_url, contextFilesData);
 
     const responseStream = new ReadableStream({
