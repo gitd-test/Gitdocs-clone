@@ -317,28 +317,7 @@ const Hero = () => {
             </div>
           </MacbookScreen>
         </div>
-        
-        {/* Stats section */}
-        <div className="max-w-4xl mx-auto mt-16 text-center">
-          <div className="inline-block px-6 py-3 border border-gray-200 rounded-full bg-white shadow-sm mb-2">
-            <p className="text-gray-700 text-sm">Trusted by developers worldwide</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-            <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-              <p className="text-3xl font-bold text-gitdocs-blue mb-2">200+</p>
-              <p className="text-gray-600">Teams worldwide</p>
-            </div>
-            <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-              <p className="text-3xl font-bold text-gitdocs-purple mb-2">40k+</p>
-              <p className="text-gray-600">Documents generated</p>
-            </div>
-            <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-              <p className="text-3xl font-bold text-gitdocs-orange mb-2">96%</p>
-              <p className="text-gray-600">Satisfaction rate</p>
-            </div>
-          </div>
-        </div>
+
       </div>
     </section>
   );
