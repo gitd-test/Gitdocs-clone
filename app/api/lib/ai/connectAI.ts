@@ -42,7 +42,7 @@ export async function connectAI(userId: string, prompt: string, model: string, b
         });
     }
 
-    console.log(contextFilesData.length);
+    console.log(contextFilesData ? contextFilesData.length : 0);
 
     const response = await openai.chat.completions.create({
         model: model,
@@ -59,7 +59,7 @@ export async function connectAI(userId: string, prompt: string, model: string, b
             },
             {
                 role: "user",
-                content: contextFilesData.length > 0 ? `The files with content are: ${contextFilesData.map((file) => `${file.name}: ${file.content}`).join("\n")}` : ""
+                content: contextFilesData ? contextFilesData.length > 0 ? `The files with content are: ${contextFilesData.map((file) => `${file.name}: ${file.content}`).join("\n")}` : "" : ""
             }
         ],
         stream: true
