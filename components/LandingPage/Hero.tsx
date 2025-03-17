@@ -1,10 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { FileText, MessageSquare, Copy, Sparkles, Zap, BrainCircuit, ChevronRight, CaseSensitive, Smile, Star, Rocket, Gift, Heart, Trophy, Lightbulb, Code, Palette } from "lucide-react";
 import MacbookScreen from "./MacbookScreen";
 import { useState } from "react";
 import { SignUpButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 const Hero = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -21,7 +22,7 @@ const Hero = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[600px] h-[300px] bg-gradient-to-r from-gitdocs-blue/30 via-gitdocs-purple/25 to-gitdocs-orange/20 rounded-full blur-[80px] opacity-60" />
         
         {/* Noise texture overlay for glittering effect */}
-        <div className="absolute inset-0 mix-blend-overlay opacity-[0.15] pointer-events-none" 
+        <div className="absolute inset-0 mix-blend-overlay opacity-[0.55] pointer-events-none" 
              style={{ 
                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                backgroundRepeat: 'repeat',
@@ -81,7 +82,7 @@ const Hero = () => {
       </div>
       
       {/* Element 2: Star */}
-      <div className="absolute hidden md:block top-[10%] left-[10%] w-14 h-14 animate-float" style={{ animationDelay: "2.2s", animationDuration: "5.5s" }}>
+      <div className="absolute hidden md:block top-[20%] left-[10%] w-14 h-14 animate-float" style={{ animationDelay: "2.2s", animationDuration: "5.5s" }}>
         <div className="relative w-full h-full">
           <div className="absolute inset-0 rounded-full bg-gitdocs-orange/15 animate-pulse-subtle"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -91,7 +92,7 @@ const Hero = () => {
       </div>
       
       {/* Element 3: Gift */}
-      <div className="absolute top-[30%] left-[15%] w-12 h-12 animate-float" style={{ animationDelay: "0.9s", animationDuration: "7.2s" }}>
+      <div className="absolute top-[45%] left-[5%] w-12 h-12 animate-float" style={{ animationDelay: "0.9s", animationDuration: "7.2s" }}>
         <div className="relative w-full h-full">
           <div className="absolute inset-0 rounded-full bg-gitdocs-light-purple/15 animate-pulse-subtle"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -141,7 +142,7 @@ const Hero = () => {
       </div>
       
       {/* Element 8: Code */}
-      <div className="absolute top-[5%] left-[35%] w-10 h-10 animate-float" style={{ animationDelay: "2.1s", animationDuration: "5.9s" }}>
+      <div className="absolute top-[7%] left-[20%] w-10 h-10 animate-float" style={{ animationDelay: "2.1s", animationDuration: "5.9s" }}>
         <div className="relative w-full h-full">
           <div className="absolute inset-0 rounded-full bg-gitdocs-blue/10 animate-pulse-subtle"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -190,24 +191,16 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-wrap justify-center gap-4">
-            <Button 
-              size="lg" 
-              className="bg-gitdocs-blue hover:bg-gitdocs-blue/90 text-white rounded-full px-8 py-6 text-base"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
               <SignUpButton >
-              <span>Get Started Free</span>
+              <span className={`cursor-pointer flex group items-center ${buttonVariants({ variant: "gradient", size: "lg" })} pe-6 hover:bg-opacity-0 `}>Get Started Free
+
+              <ChevronRight className={`ml-2 w-5 h-5 group-hover:translate-x-1.5 transform transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
+              </span>
               </SignUpButton>
-              <ChevronRight className={`ml-2 w-5 h-5 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-gitdocs-blue/30 bg-transparent text-gitdocs-blue hover:bg-gitdocs-blue/5 rounded-full px-8 py-6 text-base"
-            >
-              View Documentation
-            </Button>
+
+              <Link href="#how-it-works" className={`cursor-pointer ${buttonVariants({ variant: "outline-gradient", size:"lg" })} `}>
+                How it works
+              </Link>
           </div>
         </div>
         

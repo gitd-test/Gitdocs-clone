@@ -196,16 +196,7 @@ const Features = () => {
             </div>
           ))}
         </div>
-        
-        <div className="mt-16 text-center">
-          <a 
-            href="#" 
-            className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-gitdocs-blue to-gitdocs-purple text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            <span>View All Features</span>
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
-        </div>
+
       </div>
     </section>
   );
