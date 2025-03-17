@@ -44,7 +44,7 @@ const Hero = () => {
       </div>
       
       {/* Floating elements */}
-      <div className="absolute top-20 right-[10%] w-16 h-16 animate-float" style={{ animationDelay: "0.7s" }}>
+      <div className="absolute top-20 right-[10%] w-16 h-16 animate-float hidden md:block" style={{ animationDelay: "0.7s" }}>
         <div className="relative w-full h-full">
           <div className="absolute inset-0 rounded-full bg-gitdocs-blue/10 animate-pulse-subtle"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -53,7 +53,7 @@ const Hero = () => {
         </div>
       </div>
       
-      <div className="absolute bottom-32 left-[8%] w-14 h-14 animate-float" style={{ animationDelay: "1.2s", animationDuration: "7s" }}>
+      <div className="absolute bottom-32 left-[8%] w-14 h-14 animate-float hidden md:block" style={{ animationDelay: "1.2s", animationDuration: "7s" }}>
         <div className="relative w-full h-full">
           <div className="absolute inset-0 rounded-full bg-gitdocs-purple/10 animate-pulse-subtle"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -62,7 +62,7 @@ const Hero = () => {
         </div>
       </div>
       
-      <div className="absolute top-44 right-[28%] w-10 h-10 animate-float" style={{ animationDelay: "1.8s", animationDuration: "6s" }}>
+      <div className="absolute top-44 right-[28%] w-10 h-10 animate-float hidden md:block" style={{ animationDelay: "1.8s", animationDuration: "6s" }}>
         <div className="relative w-full h-full">
           <div className="absolute inset-0 rounded-full bg-gitdocs-orange/10 animate-pulse-subtle"></div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -71,6 +71,7 @@ const Hero = () => {
         </div>
       </div>
 
+      <div className="hidden md:block">
       {/* Element 1: Rocket */}
       <div className="absolute top-96 right-[15%] w-12 h-12 animate-float" style={{ animationDelay: "1.5s", animationDuration: "6.5s" }}>
         <div className="relative w-full h-full">
@@ -169,6 +170,7 @@ const Hero = () => {
             <CaseSensitive className="h-4.5 w-4.5 text-gitdocs-blue/75" />
           </div>
         </div>
+      </div>
       </div>
       
       <div className="container mx-auto px-4 md:px-6">
