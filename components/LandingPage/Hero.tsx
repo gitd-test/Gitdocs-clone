@@ -22,7 +22,7 @@ const Hero = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[600px] h-[300px] bg-gradient-to-r from-gitdocs-blue/30 via-gitdocs-purple/25 to-gitdocs-orange/20 rounded-full blur-[80px] opacity-60" />
         
         {/* Noise texture overlay for glittering effect */}
-        <div className="absolute inset-0 mix-blend-overlay opacity-[0.55] pointer-events-none" 
+        <div className="absolute inset-0 mix-blend-overlay opacity-[0.25] pointer-events-none" 
              style={{ 
                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                backgroundRepeat: 'repeat',
