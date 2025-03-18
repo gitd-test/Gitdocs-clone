@@ -65,14 +65,14 @@ export async function POST(req: NextRequest) {
             subscriptionStartDate: new Date(),
             subscriptionEndDate: new Date(),
             subscriptionPrice: 0,
-            leftOverTokens: 10000,
+            leftOverTokens: 100000,
             bonusTokens: 0,
         });
 
         await UsageOverview.create({
             userId: id,
             tokensUsed: 0,
-            totalTokens: 10000,
+            totalTokens: 100000,
             maxRepositories: 3,
             createdAt: new Date(),
             updatedAt: new Date(),

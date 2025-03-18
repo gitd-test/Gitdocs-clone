@@ -8,7 +8,6 @@ import { SignUpButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 const Hero = () => {
-  const [isHovered, setIsHovered] = useState(false);
   
   return (
     <section className="relative overflow-hidden pt-24 pb-16 md:pt-28 md:pb-24">
@@ -196,7 +195,7 @@ const Hero = () => {
               <SignUpButton >
               <span className={`cursor-pointer flex group items-center ${buttonVariants({ variant: "gradient", size: "lg" })} pe-6 hover:bg-opacity-0 `}>Get Started Free
 
-              <ChevronRight className={`ml-2 w-5 h-5 group-hover:translate-x-1.5 transform transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
+              <ChevronRight className={`ml-2 w-5 h-5 group-hover:translate-x-1.5 transform transition-transform duration-300 `} />
               </span>
               </SignUpButton>
 
