@@ -115,6 +115,8 @@ export async function POST(req: NextRequest) {
         }
 
         const { email_addresses, first_name, last_name } = evt.data as UserJSON;
+
+        return new Response("User updated", { status: 200 })
         
         
     }

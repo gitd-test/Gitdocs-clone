@@ -98,7 +98,7 @@ const Features = () => {
   };
 
   return (
-    <section ref={sectionRef} id="features" className="section-padding relative overflow-hidden px-10">
+    <section ref={sectionRef} id="features" className="section-padding relative overflow-hidden md:px-10">
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-gitdocs-blue/5 to-transparent"></div>
       <div className="absolute bottom-0 right-0 w-full h-64 bg-gradient-to-t from-gitdocs-purple/5 to-transparent"></div>

@@ -89,7 +89,7 @@ const ScaleSection = () => {
   return (
     <section 
       ref={sectionRef} 
-      className="section-padding relative overflow-hidden bg-gradient-to-br from-white to-gray-50 py-24 px-10"
+      className="section-padding relative overflow-hidden bg-gradient-to-br from-white to-gray-50 py-24 md:px-10"
     >
       {/* Playful background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -150,7 +150,7 @@ const ScaleSection = () => {
               <p className="text-sm font-medium bg-gradient-to-r from-gitdocs-blue to-gitdocs-purple bg-clip-text text-transparent">Documentation Excellence</p>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-gray-900 tracking-tight">
               {currentContent.title} with Confidence
             </h2>
             

@@ -42,11 +42,11 @@ const MacbookScreen = ({ children, title, className = "", placeholderText = "Vid
 
   return (
     <div 
-      className={`relative perspective-1000 ${className} ${isVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000 group`}
+      className={`relative perspective-1000 -mb-14 ${className} ${isVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000 group`}
       onMouseMove={handleMouseMove}
     >
       {/* Macbook Frame */}
-      <div className="relative mx-auto w-full max-w-4xl transform transition-transform duration-300 scale-110">
+      <div className="relative mx-auto md:w-full max-w-4xl transform transition-transform duration-300 w-[200%] -translate-x-1/2 left-1/2 md:translate-x-0 md:left-0 md:scale-110 sm:scale-75 scale-50">
         {/* Top Lid with Screen */}
         <div className="relative bg-gradient-to-b from-[#1A1F2C] to-[#272d3b] rounded-t-lg pt-3 pb-1 px-3 shadow-xl border-t border-l border-r border-gray-700">
           {/* Camera */}

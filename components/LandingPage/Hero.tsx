@@ -3,14 +3,13 @@
 import { buttonVariants } from "@/components/ui/button-variants";
 import { FileText, MessageSquare, Copy, Sparkles, Zap, BrainCircuit, ChevronRight, CaseSensitive, Smile, Star, Rocket, Gift, Heart, Trophy, Lightbulb, Code, Palette } from "lucide-react";
 import MacbookScreen from "./MacbookScreen";
-import { useState } from "react";
 import { SignUpButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 const Hero = () => {
   
   return (
-    <section className="relative overflow-hidden pt-24 pb-16 md:pt-28 md:pb-24">
+    <section className="relative overflow-hidden pt-24 md:pt-28 md:pb-24">
       {/* Updated background gradient to match the reference image */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-gitdocs-purple/20 via-gitdocs-blue/15 to-white" />
@@ -172,15 +171,15 @@ const Hero = () => {
       </div>
       </div>
       
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-4 md:px-6 relative">
         {/* Main Hero Content */}
-        <div className="max-w-5xl mx-auto text-center mb-12 md:mb-16">
+        <div className="max-w-5xl mx-auto text-center -mb-10 md:mb-16 px-3">
           <div className="inline-flex items-center px-3 py-1 mb-6 border border-gitdocs-blue/30 rounded-full bg-gitdocs-blue/5 text-gitdocs-blue text-xs font-medium">
             <Sparkles className="h-3.5 w-3.5 mr-2" />
             <span>Documentation Reimagined with AI</span>
           </div>
           
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 relative z-10">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl mt-5 md:mt-0 font-bold tracking-tight mb-6 relative z-10">
             <span className="text-gitdocs-blue">The fastest</span> <span className="text-gray-900">— way to build</span>
             <br />
             <span className="text-gray-900">perfect documentation</span>
@@ -191,7 +190,7 @@ const Hero = () => {
             Let AI handle your documentation while you focus on coding.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4 md:flex-row flex-col w-fit mx-auto">
               <SignUpButton >
               <span className={`cursor-pointer flex group items-center ${buttonVariants({ variant: "gradient", size: "lg" })} pe-6 hover:bg-opacity-0 `}>Get Started Free
 
@@ -206,7 +205,7 @@ const Hero = () => {
         </div>
         
         {/* Macbook Display with AI Interface and Markdown Preview */}
-        <div className="lg:max-w-6xl w-[95%] hidden md:block mx-auto">
+        <div className="lg:max-w-6xl sm:w-[95%] md:relative block mx-auto">
           <MacbookScreen>
             <div className="flex h-full">
               {/* AI Chat Interface (Left Side) */}
