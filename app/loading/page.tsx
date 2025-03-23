@@ -1,46 +1,81 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { FileTreeContext, FileTreeContextType } from "@/contexts/FileTreeContext";
+import { useContext } from "react";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 
 const messages = [
-  { text: "Brewing code magic...", emoji: "✨" },
-  { text: "Wrangling bits and bytes...", emoji: "🤖" },
-  { text: "Connecting neural pathways...", emoji: "🧠" },
-  { text: "Summoning digital minions...", emoji: "👾" },
-  { text: "Generating documentation...", emoji: "📚" },
-  { text: "Polishing pixels...", emoji: "💎" },
-  { text: "Tuning the flux capacitor...", emoji: "⚡" },
-  { text: "Teaching AI new tricks...", emoji: "🐕" },
-  { text: "Bending reality...", emoji: "🌀" },
+  { text: "Enhancing code insights...", emoji: "✨" },
+  { text: "Optimizing data processing...", emoji: "🤖" },
+  { text: "Establishing intelligent connections...", emoji: "🧠" },
+  { text: "Deploying digital assistants...", emoji: "👾" },
+  { text: "Crafting documentation templates...", emoji: "📚" },
+  { text: "Refining interface aesthetics...", emoji: "💎" },
+  { text: "Calibrating system modules...", emoji: "⚡" },
+  { text: "Empowering AI capabilities...", emoji: "🐕" },
+  { text: "Reshaping digital workflows...", emoji: "🌀" },
 ];
 
 const LoadingScreen = () => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [fadeState, setFadeState] = useState<"in" | "out">("in");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const doc_name = searchParams.get("doc_name");
+  const { user } = useUser();
+  const { setInitialTree, allFilePaths, setAllFilePaths, setFileTreeError, setSelectedFiles } = useContext(FileTreeContext) as FileTreeContextType;
+
+  async function fetchFileTree() {
+    try {
+      const response = await axios.get("/api/fetch/filetreedata", {
+        params: {
+          userId: user?.id || "",
+          doc_name: doc_name,
+          path: ""
+        }
+      });
+
+      if (response.data.length === 0) {
+          setFileTreeError("All files are included for this project");
+      } else {
+          setInitialTree(response.data.fileTree);
+          setAllFilePaths(response.data.allFilePaths);
+      }
+    } catch (error: any) {
+      console.error("Error fetching initial tree:", error);
+      setFileTreeError("Error fetching initial tree");
+    }
+  }
 
   useEffect(() => {
-
-    const wait = setTimeout(() => {
-      router.push("/dashboard");
-    }, 2000);
-
-    return () => clearTimeout(wait);
-
-  }, [router]);
+    const execute = async () => {
+      if (doc_name) {
+        await fetchFileTree();
+        router.push(`/update_readme/${doc_name}`);
+      } else {
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
+      }
+    };
+  
+    execute();
+  }, [router, doc_name]);
 
   useEffect(() => {
     // Set up message change animation
     const intervalId = setInterval(() => {
       setFadeState("out"); // Start fade-out
       setTimeout(() => {
-        setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
+        setCurrentMessageIndex((prevIndex) => (prevIndex + 1 ) % messages.length);
         setFadeState("in"); // Fade-in new message
       }, 500);
-    }, 3000); // Change message every 3 seconds
+    }, 1500); // Change message every 3 seconds
 
     return () => clearInterval(intervalId);
   }, []);
@@ -85,9 +120,6 @@ const LoadingScreen = () => {
           {messages[currentMessageIndex].text}
         </p>
       </div>
-
-      {/* Loading spinner */}
-      <Loader2 className="h-8 w-8 text-[#4263EB] animate-spin" />
 
       {/* Decorative elements */}
       <div className="fixed top-40 left-40 w-64 h-64 bg-[#0EA5E9] rounded-full blur-[120px] opacity-10 animate-pulse"></div>

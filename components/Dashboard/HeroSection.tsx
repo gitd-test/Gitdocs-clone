@@ -2,8 +2,8 @@
 
 import { useUser } from "@clerk/nextjs";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
-import { useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { LuPlus, LuLayoutGrid, LuList } from "react-icons/lu";
+import { useContext, useEffect, useState } from "react";
+import { LuPlus, LuLayoutGrid, LuList, LuFolderOpen } from "react-icons/lu";
 import RepoCards from "../common/RepoCards";
 import LoadingAnimation from "../common/LoadingAnimation";
 import axios from "axios";
@@ -263,8 +263,20 @@ const HeroSection = () => {
                 ))
               )
             ) : (
-              <div className="flex items-center col-span-full justify-center h-full bg-[#141414] border border-[#262626] rounded-md py-10">
-                <h3 className="font-bold">Added repositories will appear here</h3>
+              <div className="flex flex-col items-center col-span-full justify-center h-full bg-[#141414] border border-[#262626] rounded-md py-10">
+                <LuFolderOpen className="text-[#a0a0a3] mb-5" size={40} />
+                <h3 className="font-bold text-2xl">No repositories added yet</h3>
+                <p className="text-[#a0a0a3]">Add a repository to get started</p>
+                <a
+                  href="https://github.com/apps/gitdocs-ai/installations/new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm bg-[#0791F9] mt-5 hover:bg-[#3196e3] text-white rounded-md px-4 py-2 flex items-center gap-2"
+                  onClick={() => handleAddRepository()}
+                >
+                  {repositoriesLoading ? <LoadingAnimation /> : <LuPlus size={16} />}
+                  Add New Repository
+                </a>
               </div>
             ))}
             

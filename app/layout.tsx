@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { Theme } from "@radix-ui/themes";
 import { AppProvider } from "@/contexts/AppContext";
+import { FileTreeProvider } from "@/contexts/FileTreeContext";
 import SessionWrapper from "@/lib/SessionWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -108,12 +109,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <GoogleAnalytics />
             <Theme>
               <AppProvider>
-                <ScrollPositionProvider>
-                  {children}
-                </ScrollPositionProvider>
-                <Analytics />
-                <SpeedInsights />
-                <Toaster />
+                <FileTreeProvider>
+                  <ScrollPositionProvider>
+                    {children}
+                  </ScrollPositionProvider>
+                  <Analytics />
+                  <SpeedInsights />
+                  <Toaster />
+                </FileTreeProvider>
               </AppProvider>
             </Theme>
           </body>

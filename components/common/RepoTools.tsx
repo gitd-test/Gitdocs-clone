@@ -6,9 +6,7 @@ import { useState, Dispatch, SetStateAction, useContext } from "react";
 import LoadingAnimation from "./LoadingAnimation";
 import { AppContext, AppContextType } from "@/contexts/AppContext";
 
-
 const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: number }) => {
-
 
     const { gridView, stopAllActions, setStopAllActions } = useContext(AppContext) as AppContextType;
 
@@ -20,7 +18,7 @@ const RepoTools = ({ doc_name, doc_score }: { doc_name: string, doc_score: numbe
         setStopAllActions(true);
         if (doc_name) {
             setLoading(true)
-            router.push(`/update_readme/${doc_name}`);
+            router.push(`/loading?doc_name=${doc_name}`);
         } else {
             console.error("doc_name is undefined or empty");
         }
