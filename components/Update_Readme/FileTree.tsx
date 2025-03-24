@@ -9,9 +9,6 @@ import {
 } from "@/components/ui/collapsible";
 import LoadingAnimation from '../common/LoadingAnimation';
 
-
-type TreeNode = string | [string, ...any[]];
-
 interface TreeNodeProps {
   item: any; 
   depth?: number;
@@ -147,9 +144,14 @@ const FileTree = ({ initialTree, fetchChildren, selectedFiles, setSelectedFiles,
           />
         </>
       )) :
-       <div className="flex gap-2 py-2 w-fit h-fit mt-14 mx-auto">
+        <div className="flex flex-col items-center gap-2 w-fit h-fit mt-14 mx-auto">
+          <div className="flex gap-2">
+            <span className="text-sm text-gray-500">Estimated time: 10 seconds</span>
+          </div>
+          <div className="flex gap-2">
             <LoadingAnimation />
-            <span className="text-sm text-gray-500">Loading...</span>
+            <span className="text-sm text-gray-500">Updating...</span>
+          </div>
         </div>
         }
     </div>}

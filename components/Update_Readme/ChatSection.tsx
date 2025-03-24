@@ -21,7 +21,7 @@ import axios from "axios";
 import ShinyButton from "../common/ShinyButton";
 import LoadingAnimation from "../common/LoadingAnimation";
 import { toast } from "sonner";
-
+import { FileTreeContext, FileTreeContextType } from "@/contexts/FileTreeContext";
 interface ChatSectionProps {
   doc_name: string;
   isPreview: boolean;
@@ -40,13 +40,13 @@ const ChatSection = ({
   const { user } = useUser();
   const router = useRouter();
   const { setShowModel, selectedModel, showModel, storedUser, setStoredUser } = useContext(AppContext) as AppContextType;
+  const { selectedFiles, setSelectedFiles } = useContext(FileTreeContext) as FileTreeContextType;
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState<{ role: string; content: string }[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const [showProjectMetadataForm, setShowProjectMetadataForm] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [projectMetadata, setProjectMetadata] = useState({
     type: "",
     technologies: "",
@@ -84,10 +84,8 @@ const ChatSection = ({
     };
     
     fetchUsageOverview();
-  }, [usageOverviewtrigger, user?.id, storedUser, setStoredUser]);
+  }, [usageOverviewtrigger, user?.id, storedUser, setStoredUser]);  
   
-  
-
   useEffect(() => {
     const fetchMetadata = async () => {
       if (doc_name === "#Chat-with-GitDocs-AI-Assistant#") return;
@@ -190,7 +188,7 @@ const ChatSection = ({
       
       // Track starting time for timeout detection
       const startTime = Date.now();
-      const timeoutDuration = 180000; // 180 seconds timeout
+      const timeoutDuration = 360000; // 6 minutes timeout
       let timeoutId: NodeJS.Timeout;
       
       // Create a timeout detection mechanism
@@ -281,6 +279,11 @@ const ChatSection = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      if (projectMetadata?.type === "") {
+        setShowProjectMetadataForm(true);
+        toast.error("Please select a project type before generating a Readme");
+        return;
+      };
       handleSend();
     }
   };
@@ -393,16 +396,6 @@ useEffect(() => {
   const handleFocus = () => {
     textareaRef.current?.focus();
   };
-
-  useEffect(() => {
-    if (doc_name === "#Chat-with-GitDocs-AI-Assistant#") {
-      setShowProjectMetadataForm(false);
-      return;
-    }
-    if (projectMetadata?.type === "") {
-      setShowProjectMetadataForm(true);
-    }
-  }, [doc_name]);
 
   return (
     <>
@@ -616,6 +609,11 @@ useEffect(() => {
                             isPreview={isPreview}
                             onClick={() => {
                               textareaRef.current!.value = option.value;
+                              if (projectMetadata?.type === "") {
+                                setShowProjectMetadataForm(true);
+                                toast.error("Please select a project type before generating a Readme");
+                                return;
+                              };
                               handleSend();
                             }}
                           />
@@ -645,7 +643,14 @@ useEffect(() => {
             {!isAiGenerating ? (
               <CircleArrowUp
                 className="text-[#B4B4B4] hover:text-white cursor-pointer w-14"
-                onClick={handleSend}
+                onClick={() => {
+                  if (projectMetadata?.type === "") {
+                    setShowProjectMetadataForm(true);
+                    toast.error("Please select a project type before generating a Readme");
+                    return;
+                  };
+                  handleSend();
+                }}
               />
             ) : (
               <div className="me-5 mb-1 scale-150">

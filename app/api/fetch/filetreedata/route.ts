@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFileTree, getFileData } from "@/app/api/auth/filetree/clientFileTreeServices";
+import { getFileTree, getFileData, getAllFilePaths } from "@/app/api/auth/filetree/clientFileTreeServices";
 
 export async function GET(request: NextRequest) {
 
@@ -15,6 +15,11 @@ export async function GET(request: NextRequest) {
 
     if (fileTree === "Data not found") {
         return NextResponse.json({ error: "Data not found" }, { status: 404 });
+    }
+
+    if (path === "") {
+        const allFilePaths = await getAllFilePaths(userId, doc_name, path as string);
+        return NextResponse.json({fileTree, allFilePaths}, { status: 200 });
     }
 
     return NextResponse.json(fileTree);

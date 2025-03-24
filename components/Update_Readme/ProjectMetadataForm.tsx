@@ -5,35 +5,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import FileTree from "./FileTree";
 import { useUser } from "@clerk/nextjs";
+import { FileTreeContext, FileTreeContextType } from "@/contexts/FileTreeContext";
+import { useContext } from "react";
 
 const ProjectMetadataForm = ({ doc_name, projectMetadata, setProjectMetadata, setShowProjectMetadataForm, selectedFiles, setSelectedFiles }: { doc_name: string, projectMetadata: any, setProjectMetadata: (projectMetadata: any) => void, setShowProjectMetadataForm: (show: boolean) => void, selectedFiles: string[], setSelectedFiles: (selectedFiles: string[]) => void }) => {
 
     const { user } = useUser();
     const [error, setError] = useState("");
-    const [fileTreeError, setFileTreeError] = useState("");
-    const [initialTree, setInitialTree] = useState<any[]>([]);
-
-    // Initial tree structure displayed when the page loads
-
-    useEffect(() => {
-        (async () => {
-          try {
-            const response = await axios.get("/api/fetch/filetreedata", {
-              params: {
-                userId: user?.id || "",
-                doc_name: doc_name,
-                path: ""
-              }
-            });
-                  
-            setInitialTree(response.data);
-          } catch (error: any) {
-            console.error("Error fetching initial tree:", error);
-            setFileTreeError("Error fetching initial tree");
-          }
-        })();
-    }, []);
-      
+    const { initialTree, allFilePaths, setAllFilePaths, fileTreeError, setFileTreeError } = useContext(FileTreeContext) as FileTreeContextType;      
         
     const fetchChildren = async (path: string[]): Promise<any[]> => {
         

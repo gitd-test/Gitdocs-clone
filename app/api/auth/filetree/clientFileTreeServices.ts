@@ -1,6 +1,7 @@
 import { getAuthenticatedOctokit } from "@/app/api/lib/githubOctokit";
 import User from "@/app/api/lib/models/User";
 import { minimatch } from "minimatch";
+import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 const ignoreFileTreeItemsList = [
   // Dependency and build artifacts
@@ -88,6 +89,7 @@ type RepoContent = RepoContentItem | RepoContentItem[];
 
 export async function getFileTree(userId: string, doc_name: string, path: string) {
   try {
+    await connectMongoWithRetry();
     const user = await User.findOne(
       { clerkUid: userId },
       { installationId: 1, githubUsername: 1 }
@@ -161,7 +163,7 @@ export async function getFileData(userId: string, files: string[], doc_name: str
     return "Data not found";
   }
 
-
+  await connectMongoWithRetry();
   const user = await User.findOne(
     { clerkUid: userId },
     { installationId: 1, githubUsername: 1 }
@@ -215,4 +217,159 @@ export async function getFileData(userId: string, files: string[], doc_name: str
   }
   
   
+}
+
+const ignorePatterns = [
+  // High-level directories to completely ignore
+  "dist/**", "build/**", ".next/**", "out/**", "node_modules/**", "bower_components/**", "**/vendor/**",
+  "**/public/**", "**/.git/**", "**/.github/**",
+  
+  // Test directories
+  "**/tests/**", "**/test/**", "**/__tests__/**", "**/__mocks__/**", "**/cypress/**",
+  
+  // Common utility/UI folders
+  "**/ui/**", "**/components/**", "**/component/**", 
+  "**/hooks/**", "**/contexts/**", "**/utils/**", "**/helpers/**", "**/styles/**",
+  
+  // Static/asset files
+  "**/*.svg", "**/*.png", "**/*.jpg", "**/*.ico", "**/*.css", "**/*.scss", "**/*.less",
+  
+  // Config files (consolidated)
+  "**/*.config.*", "**/*.json", "**/webpack.*", "**/babel.*", "**/postcss.*", "**/eslint.*",
+  
+  // Static site pages
+  "**/app/privacy/**", "**/app/terms/**", "**/app/contact/**", "**/app/blog/**",
+  "**/app/sign-in/**", "**/app/sign-up/**", "**/app/loading/**", "**/app/not-found.tsx"
+];
+
+// Simplified include list focusing on core application code patterns
+const includePatterns = [
+  // Core app files
+  "app/layout.tsx", "app/page.tsx",
+  
+  // Main code directories across frameworks
+  "app/api/**", "api/**", 
+  "**/models/**", "**/controllers/**", "**/services/**", "**/routes/**",
+  "**/core/**", "**/features/**", "**/domain/**", "**/resolvers/**",
+  
+  // Important config files
+  "**/settings.py", "**/urls.py", "Dockerfile", "docker-compose.yml"
+];
+
+export async function getAllFilePaths(userId: string, repo: string, path: string = ""): Promise<string[]> {
+  try {
+    await connectMongoWithRetry();
+    const user = await User.findOne(
+      { clerkUid: userId },
+      { installationId: 1, githubUsername: 1 }
+    );
+
+    if (!user?.installationId || !user?.githubUsername) {
+      return [];
+    }
+
+    const octokit = getAuthenticatedOctokit(Number(user.installationId));
+    
+    // Use GitHub's recursive parameter to get all content at once instead of traversing directories
+    // This drastically reduces API calls
+    async function getAllRepoContent(path: string = ""): Promise<string[]> {
+      try {
+        // Get the git tree recursively
+        const { data } = await octokit.git.getTree({
+          owner: user.githubUsername,
+          repo: repo,
+          tree_sha: 'HEAD',
+          recursive: '1'
+        });
+        
+        if (!data.tree) {
+          return [];
+        }
+        
+        // Filter to just files (not directories)
+        return data.tree
+          .filter(item => item.type === 'blob' && item.path)
+          .map(item => item.path!)
+          .filter(filePath => {
+            // A file is included if it matches any include pattern AND doesn't match any ignore pattern
+            const isIncluded = includePatterns.some(pattern => 
+              minimatch(filePath, pattern, { dot: true, matchBase: true })
+            );
+            
+            const isIgnored = ignorePatterns.some(pattern => 
+              minimatch(filePath, pattern, { dot: true, matchBase: true })
+            );
+            
+            return isIncluded && !isIgnored;
+          });
+      } catch (error) {
+        console.error("Error fetching repository content:", error);
+        
+        // Fallback to traditional traversal if recursive fetch fails
+        // Some repos may be too large for recursive fetching
+        return fallbackFetchFiles(path);
+      }
+    }
+    
+    // Fallback method for large repositories where the tree API might time out
+    async function fallbackFetchFiles(path: string = ""): Promise<string[]> {
+      const allFiles: string[] = [];
+      const dirQueue: string[] = [path];
+      
+      // Use a queue-based approach instead of recursion to avoid stack overflow
+      while (dirQueue.length > 0) {
+        const currentPath = dirQueue.shift() || "";
+        
+        // Skip the directory completely if it matches any ignore pattern
+        if (ignorePatterns.some(pattern => 
+          minimatch(currentPath, pattern, { dot: true, matchBase: true })
+        )) {
+          continue;
+        }
+        
+        try {
+          const response = await octokit.repos.getContent({
+            owner: user.githubUsername,
+            repo: repo,
+            path: currentPath,
+          });
+          
+          const data = response.data as RepoContent;
+          
+          if (Array.isArray(data)) {
+            for (const item of data) {
+              const itemPath = currentPath ? `${currentPath}/${item.name}` : item.name;
+              
+              if (item.type === "dir") {
+                dirQueue.push(itemPath);
+              } else if (item.type === "file") {
+                // Apply our filtering rules
+                const isIncluded = includePatterns.some(pattern => 
+                  minimatch(itemPath, pattern, { dot: true, matchBase: true })
+                );
+                
+                const isIgnored = ignorePatterns.some(pattern => 
+                  minimatch(itemPath, pattern, { dot: true, matchBase: true })
+                );
+                
+                if (isIncluded && !isIgnored) {
+                  allFiles.push(itemPath);
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error(`Error reading ${currentPath}:`, error);
+        }
+      }
+      
+      return allFiles;
+    }
+    
+    // Try the faster method first, fall back to traditional if needed
+    return await getAllRepoContent(path);
+  } catch (error) {
+    console.error("Error fetching files:", error);
+    return [];
+  }
 }
