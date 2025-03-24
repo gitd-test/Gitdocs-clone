@@ -8,6 +8,31 @@ import { FileTreeContext, FileTreeContextType } from "@/contexts/FileTreeContext
 import { useContext } from "react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
+import { toast } from "sonner";
+
+interface OptimizedContent {
+  data: {
+    file_selection: [
+      {
+        file_path: string;
+        importance: string;
+        reason: string;
+      }
+    ];
+    readme_type: {
+      primary_type: string;
+      subtype: string;
+      use_existing_readme: boolean;
+      reasoning: string;
+    };
+    new_readme_prompt: string;
+    enhancement_prompt: string;
+    specialized_prompt: {
+      prompt_type: string;
+      prompt_content: string;
+    };
+  }
+}
 
 const messages = [
   { text: "Enhancing code insights...", emoji: "✨" },
@@ -28,7 +53,32 @@ const LoadingScreen = () => {
   const searchParams = useSearchParams();
   const doc_name = searchParams.get("doc_name");
   const { user } = useUser();
-  const { setInitialTree, allFilePaths, setAllFilePaths, setFileTreeError, setSelectedFiles } = useContext(FileTreeContext) as FileTreeContextType;
+  const { setInitialTree, allFilePaths, setAllFilePaths, setFileTreeError, setSelectedFiles, selectedFiles } = useContext(FileTreeContext) as FileTreeContextType;
+
+  async function fetchOptimizedContent() {
+    try {
+      const response: OptimizedContent = await axios.post("/api/fetch/airesponse/optimize", {
+        userId: user?.id || "",
+        prompt: allFilePaths,
+        doc_name: doc_name
+      });
+      if (response.data.file_selection) {
+        response.data.file_selection.forEach((file) => {
+          console.log(file, "file");
+          setSelectedFiles((prevFiles: string[]) => {
+            const newFiles = new Set([...prevFiles, file.file_path]);
+            return Array.from(newFiles);
+          });
+        });
+      }
+      
+
+      console.log(selectedFiles, "selectedFiles");
+    } catch (error: any) {
+      console.error("Error fetching optimized content:", error);
+      toast.error("Our AI is having high CPU usage, please try again later");
+    }
+  }
 
   async function fetchFileTree() {
     try {
@@ -56,6 +106,7 @@ const LoadingScreen = () => {
     const execute = async () => {
       if (doc_name) {
         await fetchFileTree();
+        await fetchOptimizedContent();
         router.push(`/update_readme/${doc_name}`);
       } else {
         setTimeout(() => {

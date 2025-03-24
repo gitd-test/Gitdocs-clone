@@ -1,32 +1,40 @@
-"use client"
+"use client";
 
-import { createContext, useState } from "react";
+import { createContext, useState, Dispatch, SetStateAction } from "react";
 
 export type FileTreeContextType = {
   selectedFiles: string[];
-  setSelectedFiles: (selectedFiles: string[]) => void;
+  setSelectedFiles: Dispatch<SetStateAction<string[]>>;
   initialTree: any[];
-  setInitialTree: (initialTree: any[]) => void;
+  setInitialTree: Dispatch<SetStateAction<any[]>>;
   allFilePaths: string[];
-  setAllFilePaths: (allFilePaths: string[]) => void;
+  setAllFilePaths: Dispatch<SetStateAction<string[]>>;
   fileTreeError: string;
-  setFileTreeError: (fileTreeError: string) => void;
+  setFileTreeError: Dispatch<SetStateAction<string>>;
 };
 
 export const FileTreeContext = createContext<FileTreeContextType | undefined>(undefined);
 
 export const FileTreeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [selectedFiles, setSelectedFiles] = useState<string[]>(["README.md", "package.json"]);
+  const [initialTree, setInitialTree] = useState<any[]>([]);
+  const [allFilePaths, setAllFilePaths] = useState<string[]>([]);
+  const [fileTreeError, setFileTreeError] = useState("");
 
-    const [selectedFiles, setSelectedFiles] = useState<string[]>(["README.md", "package.json"]);
-    const [initialTree, setInitialTree] = useState<any[]>([]);
-    const [allFilePaths, setAllFilePaths] = useState<string[]>([]);
-    const [fileTreeError, setFileTreeError] = useState("");
-
-
-    return (
-        <FileTreeContext.Provider 
-            value={{ selectedFiles, setSelectedFiles, initialTree, setInitialTree, allFilePaths, setAllFilePaths, fileTreeError, setFileTreeError }}>
-            {children}
-        </FileTreeContext.Provider>
-    );
+  return (
+    <FileTreeContext.Provider
+      value={{
+        selectedFiles,
+        setSelectedFiles,
+        initialTree,
+        setInitialTree,
+        allFilePaths,
+        setAllFilePaths,
+        fileTreeError,
+        setFileTreeError,
+      }}
+    >
+      {children}
+    </FileTreeContext.Provider>
+  );
 };

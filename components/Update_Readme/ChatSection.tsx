@@ -188,7 +188,7 @@ const ChatSection = ({
       
       // Track starting time for timeout detection
       const startTime = Date.now();
-      const timeoutDuration = 180000; // 180 seconds timeout
+      const timeoutDuration = 360000; // 6 minutes timeout
       let timeoutId: NodeJS.Timeout;
       
       // Create a timeout detection mechanism

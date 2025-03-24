@@ -1,6 +1,7 @@
 import { getAuthenticatedOctokit } from "@/app/api/lib/githubOctokit";
 import User from "@/app/api/lib/models/User";
 import { minimatch } from "minimatch";
+import connectMongoWithRetry from "@/app/api/lib/db/connectMongo";
 
 const ignoreFileTreeItemsList = [
   // Dependency and build artifacts
@@ -88,6 +89,7 @@ type RepoContent = RepoContentItem | RepoContentItem[];
 
 export async function getFileTree(userId: string, doc_name: string, path: string) {
   try {
+    await connectMongoWithRetry();
     const user = await User.findOne(
       { clerkUid: userId },
       { installationId: 1, githubUsername: 1 }
@@ -161,7 +163,7 @@ export async function getFileData(userId: string, files: string[], doc_name: str
     return "Data not found";
   }
 
-
+  await connectMongoWithRetry();
   const user = await User.findOne(
     { clerkUid: userId },
     { installationId: 1, githubUsername: 1 }
@@ -256,6 +258,7 @@ const includePatterns = [
 
 export async function getAllFilePaths(userId: string, repo: string, path: string = ""): Promise<string[]> {
   try {
+    await connectMongoWithRetry();
     const user = await User.findOne(
       { clerkUid: userId },
       { installationId: 1, githubUsername: 1 }
